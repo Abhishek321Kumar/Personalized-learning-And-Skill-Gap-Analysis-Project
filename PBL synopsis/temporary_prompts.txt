@@ -1,0 +1,57 @@
+
+
+
+Filename: HomePage.jsx
+Element: 
+Problem: 
+Changes Required: 
+
+
+Filename: SignInPage.jsx
+Element: 
+Problem: 
+Changes required:
+
+
+Element: 
+Problem: 
+Changes required: 
+
+
+Filename: RegistrationFlow.jsx   
+
+
+Problem: Latest design of Education and Information part of RegistrationFlow.jsx  is not implemented.
+Changes: The design has been changed. Use the Stitch project id: 7928833044385601972 and screen name:"SkillBridge - Registration (Part 2) - Clean Refined Structure" and for its validation use "SkillBridge - Registration (Part 2) - Refined Labels & Structure"
+
+
+Problem: Resume parsing is not working properly in Personal information section.
+Changes Required: The application must be able to parse the data from the document uploaded carefully and fill in the form details accordingly whichever is empty.
+
+Problem: User details are not stored in database after email OTP verification.
+Changes required:  After entering the Education & Internships and then email verification (OTP) in RegistrationFlow.jsx, all the data that user entered must be saved in the database.
+
+
+Problem: Email OTP verification is not working. OTP is not sent to mail. It is accepting any random number currently
+Changes required: Email OTP verification should be done properly. OTP must be recived on the users email and that OTP must be entered by the user.
+
+Element: 
+Problem: 
+Changes required: 
+
+
+Element: 
+Problem: 
+Changes: 
+
+
+Filename: AssessmentSetupPage.jsx
+Problem: The design has been changed and latest design has not been implemented.
+Changes required: Implement the latest design using  Stitch project id: 7928833044385601972 and screen name: SkillBridge - Assessments (Part 1). 
+validation part of the same screen is implemented in screen names: SkillBridge - Assessment Setup (Validation States)
+and SkillBridge - Assessment Setup (No Role Found).
+
+
+
+
+
