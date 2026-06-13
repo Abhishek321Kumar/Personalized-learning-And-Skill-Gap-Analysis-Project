@@ -1,0 +1,228 @@
+<!DOCTYPE html><html lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>SkillBridge - Close the gap between who you are and the role you want.</title>
+<!-- Tailwind CSS v3 CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts for typography -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            'skillblue': '#2563eb',
+            'skillblack': '#111111',
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-layout">
+    body {
+      background-color: #ffffff;
+      color: #1a1a1a;
+      -webkit-font-smoothing: antialiased;
+    }
+    /* Section block styling */
+    .module-card {
+      border: 1px solid #e5e7eb;
+      transition: all 0.2s ease;
+    }
+    .module-card:hover {
+      border-color: #2563eb;
+    }
+  </style>
+</head>
+<body class="font-sans max-w-[1280px] min-h-[1010px] mx-auto flex flex-col">
+<!-- BEGIN: TopNavBar -->
+<header class="bg-white border-b border-gray-100 py-6 px-8 md:px-12 lg:px-24 flex justify-between items-center fixed top-0 w-full z-50 mb-12" data-purpose="main-header">
+<div class="flex items-center gap-2"><span class="text-3xl font-bold tracking-tight text-[#1a1a1a]">Skill<span class="text-[#0052FF]">Bridge</span></span></div>
+<nav class="hidden md:flex items-center gap-10 text-lg font-medium text-gray-600"><a class="hover:text-blue-600 transition-colors text-lg" href="#">Home</a><a class="hover:text-blue-600 transition-colors text-lg" href="#">About</a><a class="hover:text-blue-600 transition-colors text-lg" href="#">Blogs</a><a class="bg-[#0052FF] text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors" href="#">Log in</a></nav>
+</header>
+<!-- END: TopNavBar -->
+<main class="flex-grow pt-32">
+<!-- BEGIN: HeroSection -->
+<section class="max-w-7xl mx-auto px-6 pt-16 pb-24 grid lg:grid-cols-2 gap-12 items-center">
+<div data-purpose="hero-content">
+<!-- SDG Tag -->
+
+<!-- Hero Title -->
+<h1 class="text-5xl md:text-7xl font-bold leading-[1.1] mb-8 tracking-tight">
+          Close the gap between <br>
+<span class="text-skillblue">who you are</span> and <br>
+          the role you want.
+        </h1>
+<!-- Hero Description -->
+<p class="text-lg text-gray-500 leading-relaxed max-w-xl mb-10">
+          SkillBridge parses your resume, compares it to a target job, runs adaptive timed assessments, and quantifies your job-readiness — all in one editorial-grade workspace.
+        </p>
+<!-- CTA Buttons -->
+<div class="flex flex-wrap gap-4 mb-16">
+<button class="bg-skillblue text-white px-8 py-3.5 rounded font-semibold text-sm flex items-center gap-2 hover:bg-blue-700 transition-all">
+            Start free assessment <span class="text-lg">→</span>
+</button>
+<button class="bg-white border border-gray-300 text-gray-900 px-8 py-3.5 rounded font-semibold text-sm hover:bg-gray-50 transition-all">
+            Sign in
+          </button>
+</div>
+<!-- Quick Stats -->
+<div class="flex gap-12 border-t border-gray-100 pt-8">
+<div class="flex flex-col">
+<span class="text-2xl font-bold">5</span>
+<span class="font-mono text-[10px] tracking-widest text-gray-400 uppercase border-t border-gray-900 pt-1 mt-1">Modules Live</span>
+</div>
+<div class="flex flex-col">
+<span class="text-2xl font-bold uppercase">NLP</span>
+<span class="font-mono text-[10px] tracking-widest text-gray-400 uppercase border-t border-gray-200 pt-1 mt-1">Resume Parsing</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<svg class="w-5 h-5 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<span class="font-mono text-[10px] tracking-widest text-gray-400 uppercase border-t border-gray-200 pt-1 mt-1">Timed Quizzes</span>
+</div>
+</div>
+</div>
+<!-- Hero Visual -->
+<div class="relative rounded-2xl overflow-hidden shadow-2xl" data-purpose="hero-image-container">
+<!-- Placeholder for hero_page.jpeg -->
+<img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsLavKB9rc9DBU3i1tk602XH99H5okribgCMtSbLKnQaHSn2olO_wO-SaNHhJ2XFvcwiZUI8rnfs-3dUG99zn2luG6SUzgEpi9gfnV548uNZBuixnVer03KtUSD3tC6S4iKQAQ7xmkdVyZOg6AaAiUh6XfCeBPSi9L-1VbTS3KTWLlMSPDPL6bpaImsANgh9q67B8hMaDgShqvgtXdFbAOc57nvkE5f2-pgbjsBjpWXHTmrXD_2JIOVUHCqRkQDEok3H00ccNJpA" alt="Modern office workspace" class="w-full h-auto object-cover grayscale-[0.2]">
+
+</div>
+</section>
+<!-- END: HeroSection -->
+<!-- BEGIN: PlatformSection -->
+<section class="bg-gray-50/50 py-24 border-y border-gray-100">
+<div class="max-w-7xl mx-auto px-6">
+<!-- Section Header -->
+<div class="mb-16">
+<div class="font-mono text-[10px] tracking-[0.2em] text-gray-400 uppercase mb-4">
+            The Platform
+          </div>
+<h2 class="text-4xl font-semibold tracking-tight text-gray-900 max-w-xl">
+            Five modules. One coherent flow. Built to grow.
+          </h2>
+</div>
+<!-- Bento Grid -->
+<div class="grid md:grid-cols-2 lg:grid-cols-3 bg-white border border-gray-200 shadow-sm overflow-hidden">
+<!-- Card M1 -->
+<div class="p-8 module-card flex flex-col h-full">
+<span class="font-mono text-[10px] text-skillblue font-bold mb-4">M1</span>
+<h3 class="text-xl font-semibold mb-4 text-gray-800">Authentication &amp; Profile</h3>
+<p class="text-sm text-gray-500 leading-relaxed mt-auto">
+              JWT sessions, target role configuration, resume linking.
+            </p>
+</div>
+<!-- Card M2 -->
+<div class="p-8 module-card flex flex-col h-full border-l border-gray-200">
+<span class="font-mono text-[10px] text-skillblue font-bold mb-4">M2</span>
+<h3 class="text-xl font-semibold mb-4 text-gray-800">Resume &amp; JD Parsing</h3>
+<p class="text-sm text-gray-500 leading-relaxed mt-auto">
+              NLP-powered skill, qualification &amp; experience extraction.
+            </p>
+</div>
+<!-- Card M3 -->
+<div class="p-8 module-card flex flex-col h-full border-l border-gray-200">
+<span class="font-mono text-[10px] text-skillblue font-bold mb-4">M3</span>
+<h3 class="text-xl font-semibold mb-4 text-gray-800">Skill Gap Analysis</h3>
+<p class="text-sm text-gray-500 leading-relaxed mt-auto">
+              Severity scoring + an objective Job-Readiness percentage.
+            </p>
+</div>
+<!-- Card M4 -->
+<div class="p-8 module-card flex flex-col h-full border-t border-gray-200">
+<span class="font-mono text-[10px] text-skillblue font-bold mb-4">M4</span>
+<h3 class="text-xl font-semibold mb-4 text-gray-800">Timed Adaptive Quiz</h3>
+<p class="text-sm text-gray-500 leading-relaxed mt-auto">
+              Domain-specific MCQs validate real proficiency. No proctoring.
+            </p>
+</div>
+<!-- Card M7 -->
+<div class="p-8 module-card flex flex-col h-full border-t border-l border-gray-200">
+<span class="font-mono text-[10px] text-skillblue font-bold mb-4">M7</span>
+<h3 class="text-xl font-semibold mb-4 text-gray-800">Progress Analytics</h3>
+<p class="text-sm text-gray-500 leading-relaxed mt-auto">
+              Radar charts, trends, session history on a bento dashboard.
+            </p>
+</div>
+<!-- Card M5+ -->
+<div class="p-8 module-card flex flex-col h-full border-t border-l border-gray-200">
+<span class="font-mono text-[10px] text-skillblue font-bold mb-4">M5+</span>
+<h3 class="text-xl font-semibold mb-4 text-gray-800">Roadmap &amp; Re-Assessment</h3>
+<p class="text-sm text-gray-500 leading-relaxed mt-auto">
+              Coming soon — modular hooks already wired in.
+            </p>
+</div>
+</div>
+</div>
+</section>
+<!-- END: PlatformSection -->
+<!-- BEGIN: SDGAlignment -->
+<section class="bg-skillblack text-white pt-24 pb-24">
+<div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-start">
+<div>
+<div class="font-mono text-[10px] tracking-widest text-gray-400 uppercase mb-4">Aligned With</div>
+<h2 class="text-4xl font-medium leading-tight">
+            UN SDG 4 – Quality Education.
+          </h2>
+</div>
+<div class="space-y-8">
+<p class="text-lg leading-relaxed text-gray-300">
+            SkillBridge contributes to <span class="text-white font-semibold">Target 4.4:</span> substantially increasing the number of youth and adults possessing relevant skills for employment, decent jobs and entrepreneurship by 2030 — measured by <span class="text-white font-semibold">Indicator 4.4.1</span>, the proportion of youth and adults with ICT skills.
+          </p>
+
+</div>
+</div>
+</section>
+<!-- END: SDGAlignment -->
+</main>
+<!-- BEGIN: MainFooter -->
+<footer class="px-8 md:px-16 mt-auto border-t border-slate-100 py-12" data-purpose="site-footer"><div class="max-w-7xl mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-8">
+<div class="space-y-6">
+<div class="flex items-center gap-1">
+<span class="text-[24px] font-bold tracking-tight leading-none text-black">Skill<span class="text-[#0052FF]">Bridge</span></span>
+</div>
+<p class="text-gray-500 text-sm leading-relaxed max-w-md">A personalised learning &amp; skill-gap analysis platform to create a breakthrough for your career.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-6">
+<h4 class="text-sm font-bold text-slate-900">Quick Links</h4>
+<ul class="space-y-4 text-sm text-gray-500">
+<li class=""><a class="hover:text-slate-900 transition-colors" href="#">About Us</a></li>
+<li class=""><a class="hover:text-slate-900 transition-colors" href="#">Pricing (Free)</a></li>
+</ul>
+</div>
+<div class="space-y-6 md:pt-11">
+<ul class="space-y-4 text-sm text-gray-500">
+<li class=""><a class="hover:text-slate-900 transition-colors" href="#">Login</a></li>
+<li class=""><a class="hover:text-slate-900 transition-colors" href="#">Blogs</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="text-center pt-8 border-t border-slate-100">
+<p class="text-gray-400 text-[10px] font-mono tracking-widest uppercase">SkillBridge © 2026</p>
+</div>
+</div></footer>
+<!-- END: MainFooter -->
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

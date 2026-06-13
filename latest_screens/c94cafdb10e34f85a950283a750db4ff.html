@@ -1,0 +1,188 @@
+<!DOCTYPE html><html lang="en" style=""><head></head><body class="text-slate-900 max-w-[1280px] mx-auto min-h-[1010px] flex flex-col"><svg class="inline-defs-container" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>SkillBridge Dashboard</title>
+<!-- Tailwind CSS CDN with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style data-purpose="custom-typography">
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #fbfbfb;
+    }
+    .mono-label {
+      font-family: monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      color: #6b7280;
+    }
+  </style>
+<style data-purpose="layout-adjustments">
+    /* Custom borders to match the clean grid style in the image */
+    .dashboard-grid-container {
+      border-top: 1px solid #e5e7eb;
+      border-left: 1px solid #e5e7eb;
+    }
+    .grid-item {
+      border-right: 1px solid #e5e7eb;
+      border-bottom: 1px solid #e5e7eb;
+      background-color: white;
+    }
+    /* Specific height for the larger grid areas */
+    .min-h-card {
+      min-height: 240px;
+    }
+  </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" data-snapdom="injected-import"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" class="">
+
+<!-- BEGIN: TopNavBar -->
+<header class="bg-white border-b border-gray-100 py-6 px-8 md:px-12 lg:px-24 flex justify-between items-center" data-purpose="main-header">
+<div class="flex items-center gap-2"><span class="text-3xl font-bold tracking-tight text-[#1a1a1a]">Skill<span class="text-[#0052FF]">Bridge</span></span></div>
+<nav class="hidden md:flex items-center gap-10 text-lg font-medium text-gray-600"><a class="text-blue-600 text-lg" data-purpose="nav-link-active" href="#">Dashboard</a><a class="hover:text-blue-600 transition-colors text-lg" href="#">Assessments</a><a class="hover:text-blue-600 transition-colors text-lg" href="#">Skill Gap</a><a class="hover:text-blue-600 transition-colors flex items-center" href="#"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9ZkAwzbIVtlKUfgAYn6gpmHvvBEzdN7k-HCotCnhcs1geAOwAHtZW_RZC83z2OnOrfD5SfVqN4ACqBnh7pFlMl5w73MsCeeSyYTJD1bATo_BWDRYDNYZH4ZVcfEHcwdNxsP1LAmstDWBZQYZU6Qljnq0fOgJaPTQadXYCo6DQPU8gckoo7Zh3L_uzICSKV5ZK0BzIQoYbdm1Hdo1xrogjgkdMyaVUHZ43LoJ1c9K2Vd9xSzD95VmMRMukuAmhrPirtsrRVAcHvg" alt="Profile" class="w-8 h-8 rounded-full"></a></nav>
+</header>
+<!-- END: TopNavBar -->
+<!-- BEGIN: MainContent -->
+<main class="mx-auto px-8 md:px-12 lg:px-24 py-12 flex-grow">
+<!-- BEGIN: DashboardHeader -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6 mt-4" data-purpose="page-intro">
+<div class="space-y-1">
+
+<h1 class="text-5xl font-semibold tracking-tight">Hi, Rakesh.</h1>
+<p class="text-gray-500 text-sm mt-4 font-mono">Target role: — </p><div class="relative inline-flex items-center ml-1"><select class="appearance-none bg-transparent border-none p-0 pr-6 text-gray-800 font-medium underline cursor-pointer focus:ring-0 focus:outline-none text-sm"><option value="data-scientist" class="">Data Scientist</option><option value="frontend-developer" class="">Frontend Developer</option><option value="ux-designer" class="">UX Designer</option></select><span class="material-symbols-outlined absolute right-0 pointer-events-none text-sm">expand_more</span></div><p class=""></p>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-3 border border-gray-300 rounded-md font-medium text-sm hover:bg-gray-50 transition-colors flex items-center gap-2">
+          Skill gap →
+        </button>
+<button class="px-6 py-3 bg-blue-600 text-white rounded-md font-medium text-sm hover:bg-blue-700 transition-colors flex items-center gap-2">
+          New quiz →
+        </button>
+</div>
+</div>
+<!-- END: DashboardHeader -->
+<!-- BEGIN: BentoGrid -->
+<div class="dashboard-grid-container grid grid-cols-1 md:grid-cols-4 lg:grid-cols-12" data-purpose="dashboard-metrics-grid">
+<!-- Job Readiness Card -->
+<div class="grid-item lg:col-span-5 p-8 flex flex-col justify-between min-h-card"><div><p class="mono-label pb-2 mb-4 uppercase">Job Readiness</p><div class="flex items-baseline"><span class="text-8xl font-light">65</span><span class="text-3xl text-gray-400 font-light ml-1">%</span></div></div><div class="grid grid-cols-3 gap-4 pt-8 border-t border-gray-100"><div><p class="mono-label text-[10px] uppercase mb-1">Matched</p><p class="text-xl font-medium text-emerald-500">13</p></div><div><p class="mono-label text-[10px] uppercase mb-1">Missing</p><p class="text-xl font-medium text-orange-400">7</p></div><div><p class="mono-label text-[10px] uppercase mb-1">Quizzes</p><p class="text-xl font-medium">4</p></div></div></div>
+<!-- Avg Quiz Score Card -->
+<div class="grid-item lg:col-span-4 p-8 flex flex-col justify-start min-h-card"><p class="mono-label pb-2 mb-4 uppercase">Avg Quiz Score</p><div class="flex items-baseline mb-2"><span class="text-8xl font-light">78</span><span class="text-3xl text-gray-400 font-light ml-1">%</span></div><p class="text-gray-400 text-sm">4 sessions</p></div>
+<!-- Top Missing Card -->
+<div class="grid-item lg:col-span-3 p-8 flex flex-col min-h-card"><p class="mono-label pb-2 mb-4 uppercase">Top Missing</p><div class="flex-grow flex flex-col gap-2"><div class="flex items-center gap-2 text-sm text-gray-600"><span class="material-symbols-outlined text-orange-400 text-sm">warning</span> TensorFlow</div><div class="flex items-center gap-2 text-sm text-gray-600"><span class="material-symbols-outlined text-orange-400 text-sm">warning</span> Cloud Computing (AWS/GCP)</div><div class="flex items-center gap-2 text-sm text-gray-600"><span class="material-symbols-outlined text-orange-400 text-sm">warning</span> Advanced SQL</div></div></div>
+<!-- Quiz Trend Card -->
+<div class="grid-item lg:col-span-6 p-8 min-h-[320px] flex flex-col relative"><p class="mono-label pb-2 mb-4 uppercase">Quiz Trend</p><h3 class="text-2xl font-normal text-gray-800 mb-8">Progress over time</h3><div class="flex-grow flex flex-col relative mt-4">
+  <!-- Y-axis reference lines -->
+  <div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-10">
+    <div class="border-t border-gray-400 w-full"></div>
+    <div class="border-t border-gray-400 w-full"></div>
+    <div class="border-t border-gray-400 w-full"></div>
+    <div class="border-t border-gray-400 w-full"></div>
+  </div>
+  
+  <!-- SVG Line Graph -->
+  <div class="relative flex-grow">
+    <svg viewBox="0 0 400 160" class="w-full h-full overflow-visible">
+      <defs>
+        <linearGradient id="graphGradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0052ff" stop-opacity="0.2"></stop>
+          <stop offset="100%" stop-color="#0052ff" stop-opacity="0"></stop>
+        </linearGradient>
+      </defs>
+      
+      <!-- Area Fill -->
+      <path d="M 0 160 L 0 56 L 133 48 L 266 40 L 400 35 L 400 160 Z" fill="url(#graphGradient)"></path>
+      
+      <!-- Line -->
+      <path d="M 0 56 L 133 48 L 266 40 L 400 35" fill="none" stroke="#0052ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+      
+      <!-- Data Points -->
+      <circle cx="0" cy="56" r="4" fill="white" stroke="#0052ff" stroke-width="2"></circle>
+      <circle cx="133" cy="48" r="4" fill="white" stroke="#0052ff" stroke-width="2"></circle>
+      <circle cx="266" cy="40" r="4" fill="white" stroke="#0052ff" stroke-width="2"></circle>
+      <circle cx="400" cy="35" r="4" fill="#0052ff"></circle>
+      
+      <!-- Tooltip/Value for Q4 -->
+      <text x="400" y="20" text-anchor="end" class="text-[10px] font-bold fill-[#0052ff] font-mono">78%</text>
+    </svg>
+  </div>
+
+  <!-- X-axis Labels -->
+  <div class="flex justify-between mt-4 px-1">
+    <span class="text-[10px] text-gray-400 uppercase font-mono">Q1</span>
+    <span class="text-[10px] text-gray-400 uppercase font-mono">Q2</span>
+    <span class="text-[10px] text-gray-400 uppercase font-mono">Q3</span>
+    <span class="text-[10px] text-gray-400 uppercase font-mono">Q4</span>
+  </div>
+</div></div>
+<!-- Skill Radar Card -->
+<div class="grid-item lg:col-span-6 p-8 min-h-[320px] flex flex-col relative"><p class="mono-label pb-2 mb-4 uppercase">Skill Radar</p><div class="flex-grow flex flex-col justify-center gap-4"><div class="space-y-1"><div class="flex justify-between text-xs font-medium"><span class="">Python</span><span class="">85%</span></div><div class="w-full bg-gray-100 h-1.5 rounded-full"><div class="bg-blue-600 h-1.5 rounded-full" style="width: 85%"></div></div></div><div class="space-y-1"><div class="flex justify-between text-xs font-medium"><span class="">Statistics</span><span class="">70%</span></div><div class="w-full bg-gray-100 h-1.5 rounded-full"><div class="bg-blue-600 h-1.5 rounded-full" style="width: 70%"></div></div></div><div class="space-y-1"><div class="flex justify-between text-xs font-medium"><span class="">Machine Learning</span><span class="">60%</span></div><div class="w-full bg-gray-100 h-1.5 rounded-full"><div class="bg-blue-600 h-1.5 rounded-full" style="width: 60%"></div></div></div><div class="space-y-1"><div class="flex justify-between text-xs font-medium"><span class="">Data Visualization</span><span class="">75%</span></div><div class="w-full bg-gray-100 h-1.5 rounded-full"><div class="bg-blue-600 h-1.5 rounded-full" style="width: 75%"></div></div></div></div></div>
+<!-- Recent Quizzes Card -->
+<div class="grid-item lg:col-span-12 p-8 min-h-[200px]"><p class="mono-label pb-2 mb-4 uppercase">Recent Assessments</p><div class="max-h-[300px] overflow-y-auto pr-6 space-y-4 custom-scrollbar" style="scrollbar-width: thin; scrollbar-color: rgb(229, 231, 235) transparent;"><div class="flex justify-between items-center py-3 border-b border-gray-50"><div class="flex flex-col"> <span class="text-sm font-medium text-gray-800">Python for Data Science</span> <span class="text-[11px] text-gray-400 uppercase font-mono">2 days ago</span></div><div class="text-sm font-bold text-emerald-500">85%</div></div><div class="flex justify-between items-center py-3 border-b border-gray-50"><div class="flex flex-col"> <span class="text-sm font-medium text-gray-800">Statistical Analysis</span> <span class="text-[11px] text-gray-400 uppercase font-mono">5 days ago</span></div><div class="text-sm font-bold text-blue-600">72%</div></div><div class="flex justify-between items-center py-3"><div class="flex flex-col"> <span class="text-sm font-medium text-gray-800">Machine Learning Basics</span> <span class="text-[11px] text-gray-400 uppercase font-mono">1 week ago</span></div><div class="text-sm font-bold text-orange-400">60%</div></div></div></div>
+</div>
+<!-- END: BentoGrid -->
+<!-- SDG Footer Note -->
+
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: SiteFooter -->
+<footer class="px-8 md:px-16 mt-auto border-t border-slate-100 py-12" data-purpose="site-footer" style="background-color: rgb(243, 244, 243); margin-top: 20px;"><div class="max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-8">
+        <div class="space-y-6">
+            <div class="flex items-center gap-1">
+                <span class="text-[24px] font-bold tracking-tight leading-none text-black">Skill<span class="text-[#0052FF]">Bridge</span></span>
+            </div>
+            <p class="text-gray-500 text-sm leading-relaxed max-w-md">A personalised learning &amp; skill-gap analysis platform to create a breakthrough for your career.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="space-y-6">
+                <h4 class="text-sm font-bold text-slate-900">Quick Links</h4>
+                <ul class="space-y-4 text-sm text-gray-500">
+                    <li class=""><a class="hover:text-slate-900 transition-colors" href="#">About Us</a></li>
+                    <li class=""><a class="hover:text-slate-900 transition-colors" href="#">Pricing (Free)</a></li>
+                </ul>
+            </div>
+            <div class="space-y-6 md:pt-11">
+                <ul class="space-y-4 text-sm text-gray-500">
+                    <li class=""><a class="hover:text-slate-900 transition-colors" href="#">Login</a></li>
+                    <li class=""><a class="hover:text-slate-900 transition-colors" href="#">Blogs</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="text-center pt-8 border-t border-slate-100">
+        <p class="text-gray-400 text-[10px] font-mono tracking-widest uppercase">SkillBridge © 2026</p>
+    </div>
+</div></footer>
+<!-- END: SiteFooter -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

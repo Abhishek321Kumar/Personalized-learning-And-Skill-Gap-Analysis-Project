@@ -1,0 +1,269 @@
+<!DOCTYPE html><html lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Registration - Education &amp; Internships - SkillBridge</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#1b1b1b",
+                        "inverse-surface": "#2f3130",
+                        "primary-container": "#0052ff",
+                        "on-surface-variant": "#434656",
+                        "on-error": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "tertiary-container": "#5f6674",
+                        "tertiary": "#474e5b",
+                        "surface-tint": "#004ced",
+                        "secondary": "#5e5e5e",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#151c27",
+                        "on-tertiary-container": "#dee4f5",
+                        "surface-container-low": "#f3f4f3",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#dde1ff",
+                        "on-primary-fixed": "#001452",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#e2e2e2",
+                        "background": "#f9f9f8",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-tertiary-fixed-variant": "#404754",
+                        "surface-bright": "#f9f9f8",
+                        "on-secondary-fixed-variant": "#474747",
+                        "on-primary-container": "#dfe3ff",
+                        "tertiary-fixed-dim": "#c0c7d6",
+                        "on-secondary-container": "#646464",
+                        "on-primary-fixed-variant": "#0038b6",
+                        "surface-variant": "#e2e2e2",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#dce2f3",
+                        "outline-variant": "#c3c5d9",
+                        "surface-container": "#eeeeed",
+                        "secondary-fixed-dim": "#c6c6c6",
+                        "inverse-on-surface": "#f1f1f0",
+                        "surface-dim": "#dadad9",
+                        "secondary-fixed": "#e2e2e2",
+                        "surface": "#f9f9f8",
+                        "primary-fixed-dim": "#b7c4ff",
+                        "on-background": "#1a1c1c",
+                        "primary": "#003ec7",
+                        "inverse-primary": "#b7c4ff",
+                        "on-surface": "#1a1c1c",
+                        "surface-container-high": "#e8e8e7",
+                        "outline": "#737688"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "40px",
+                        "gutter": "24px",
+                        "container-max": "1280px",
+                        "card-padding": "32px",
+                        "stack-gap": "12px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-caps": ["Courier Prime"],
+                        "headline-lg-mobile": ["Inter"],
+                        "button": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.15em", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                        "button": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f9f9f8; color: #1a1c1c; }
+        .font-label-caps { font-family: 'Courier Prime', monospace; text-transform: uppercase; }
+        .input-field {
+            width: 100%;
+            border: 1px solid #c3c5d9;
+            padding: 12px 16px;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            background-color: transparent;
+            transition: border-color 0.2s ease;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #003ec7;
+        }
+        .input-label {
+            display: block;
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #737688;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #c3c5d9;
+            padding-bottom: 4px;
+        }
+        .section-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1a1c1c;
+        }
+        .section-divider {
+            height: 1px;
+            background-color: #e2e2e2;
+            margin: 32px 0;
+        }
+    </style>
+</head>
+<body class="bg-background min-h-screen flex flex-col">
+<!-- TopNavBar (Suppressed for transactional flow) -->
+<!-- Navigation intentionally omitted for focused onboarding task -->
+<header class="bg-white border-b border-gray-100 py-6 px-8 md:px-12 lg:px-24 flex justify-between items-center fixed top-0 w-full z-50 mb-12" data-purpose="main-header">
+<div class="flex items-center gap-2"><span class="text-3xl font-bold tracking-tight text-[#1a1a1a]">Skill<span class="text-[#0052FF]">Bridge</span></span></div>
+<nav class="hidden md:flex items-center gap-10 text-lg font-medium text-gray-600"><a class="hover:text-blue-600 transition-colors text-lg" href="#">Home</a><a class="hover:text-blue-600 transition-colors text-lg" href="#">About</a><a class="hover:text-blue-600 transition-colors text-lg" href="#">Blogs</a><a class="bg-[#0052FF] text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors" href="#">Log in</a></nav>
+</header><main class="flex-grow py-12 px-margin-mobile md:px-margin-desktop pt-32">
+<div class="mx-auto w-full max-w-[1280px]" style="min-height: 1010px;">
+<!-- Header Section -->
+<div class="text-center mb-12">
+<span class="font-label-caps text-label-caps text-outline mb-4 inline-block tracking-widest text-primary">STEP 02</span>
+<h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Education &amp; Internships</h1>
+<!-- Progress Indicators -->
+<div class="flex justify-center gap-2 mt-8"><div class="h-1 w-24 bg-surface-variant rounded-full"></div><div class="h-1 w-24 bg-surface-variant rounded-full overflow-hidden"><div class="h-full w-full bg-primary"></div></div></div>
+</div>
+<!-- Form Container -->
+<div class="bg-surface-container-lowest border border-surface-variant p-8 shadow-sm"><!-- High School Details (Mandatory) -->
+<div class="mb-10">
+<h2 class="section-title">High School / Secondary Education<span class="text-error ml-1">*</span></h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="input-label">INSTITUTION NAME</label>
+<input class="input-field" placeholder="Enter school name" type="text">
+</div>
+<div>
+<label class="input-label">YEAR OF COMPLETION</label>
+<input class="input-field" placeholder="YYYY" type="text">
+</div>
+<div class="">
+<label class="input-label">GRADE / PERCENTAGE</label>
+<input class="input-field" placeholder="Enter grade or percentage" type="text">
+</div>
+</div>
+</div>
+<div class="section-divider"></div>
+<!-- Undergraduate Details (Mandatory) -->
+<div class="mb-10">
+<h2 class="section-title">Undergraduate Degree<span class="text-error ml-1">*</span></h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="md:col-span-2">
+<label class="input-label">DEGREE / MAJOR</label>
+<input class="input-field" placeholder="e.g. Bachelor of Science in Computer Science" type="text">
+</div>
+<div>
+<label class="input-label">UNIVERSITY NAME</label>
+<input class="input-field" placeholder="Enter university name" type="text">
+</div>
+<div>
+<label class="input-label">GRADUATION YEAR</label>
+<input class="input-field" placeholder="YYYY" type="text">
+</div>
+<div>
+<label class="input-label">CGPA / PERCENTAGE</label>
+<input class="input-field" placeholder="Enter CGPA or percentage" type="text">
+</div>
+</div>
+</div>
+<div class="section-divider"></div>
+<!-- Postgraduate Details (Optional/Collapsed) -->
+<div class="mb-10">
+<button class="flex items-center justify-between w-full text-left group">
+<h2 class="section-title mb-0">Postgraduate Degree</h2>
+<span class="material-symbols-outlined text-primary group-hover:opacity-80">add</span>
+</button>
+</div>
+<div class="section-divider"></div>
+<!-- PhD Details (Optional/Collapsed) -->
+<div class="mb-10">
+<button class="flex items-center justify-between w-full text-left group">
+<h2 class="section-title mb-0">PhD / Doctorate</h2>
+<span class="material-symbols-outlined text-primary group-hover:opacity-80">add</span>
+</button>
+</div>
+<div class="section-divider"></div>
+<!-- Internship Experience (Optional/Collapsed) -->
+<div class="mb-10">
+<button class="flex items-center justify-between w-full text-left group">
+<div class="flex flex-col">
+<h2 class="section-title mb-0">Internship Experience</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Add any relevant internships or projects to boost your profile.</p>
+</div>
+<span class="material-symbols-outlined text-primary group-hover:opacity-80">add</span>
+</button>
+</div>
+<!-- Action Buttons -->
+<div class="mt-12 flex flex-col sm:flex-row justify-end gap-4">
+<button class="font-button text-button px-6 py-3 border border-on-surface text-on-surface hover:bg-surface-container transition-colors w-full sm:w-auto text-center">
+        BACK
+    </button>
+<button class="font-button text-button px-6 py-3 bg-primary-container text-on-primary hover:bg-primary transition-colors flex items-center justify-center gap-2 w-full sm:w-auto">
+        SUBMIT
+        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div></div>
+</div>
+</main>
+<!-- Footer (Suppressed for transactional flow as per instructions to maintain focus, though JSON included it, transactional intent overrides) -->
+<footer class="px-8 md:px-16 mt-auto border-t border-slate-100 py-12" data-purpose="site-footer" style="background-color: rgb(243, 244, 243); margin-top: 20px;"><div class="max-w-7xl mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-8">
+<div class="space-y-6">
+<div class="flex items-center gap-1">
+<span class="text-[24px] font-bold tracking-tight leading-none text-black">Skill<span class="text-[#0052FF]">Bridge</span></span>
+</div>
+<p class="text-gray-500 text-sm leading-relaxed max-w-md">A personalised learning &amp; skill-gap analysis platform to create a breakthrough for your career.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-6">
+<h4 class="text-sm font-bold text-slate-900">Quick Links</h4>
+<ul class="space-y-4 text-sm text-gray-500">
+<li class=""><a class="hover:text-slate-900 transition-colors" href="#">About Us</a></li>
+<li class=""><a class="hover:text-slate-900 transition-colors" href="#">Pricing (Free)</a></li>
+</ul>
+</div>
+<div class="space-y-6 md:pt-11">
+<ul class="space-y-4 text-sm text-gray-500">
+<li class=""><a class="hover:text-slate-900 transition-colors" href="#">Login</a></li>
+<li class=""><a class="hover:text-slate-900 transition-colors" href="#">Blogs</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="text-center pt-8 border-t border-slate-100">
+<p class="text-gray-400 text-[10px] font-mono tracking-widest uppercase">SkillBridge © 2026</p>
+</div>
+</div></footer>
+
+
+
+
+
+
+</body></html>
