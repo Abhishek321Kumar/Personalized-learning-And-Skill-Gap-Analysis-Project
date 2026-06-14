@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { User } from "../../models/User.js";
 import { env } from "../../config/env.js";
+import { emailService } from "../../services/email.service.js";
 
 const router = Router();
 
@@ -18,12 +19,34 @@ router.post("/register/part1", async (req, res, next) => {
 
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
-      return res.status(409).json({ message: "An account already exists for this email." });
+      if (existingUser.isVerified) {
+        return res.status(409).json({ message: "An account already exists for this email." });
+      } else {
+        // User abandoned registration before verifying OTP. 
+        // Update their details and let them continue.
+        const nameParts = name.trim().split(" ");
+        existingUser.firstName = nameParts[0] || "Unknown";
+        existingUser.lastName = nameParts.slice(1).join(" ") || "Unknown";
+        existingUser.passwordHash = await bcrypt.hash(password, 10);
+        existingUser.targetRole = targetRole || existingUser.targetRole;
+        await existingUser.save();
+        
+        return res.status(200).json({
+          message: "Part 1 successful (re-registration)",
+          userId: existingUser._id
+        });
+      }
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
+    
+    const nameParts = name.trim().split(" ");
+    const firstName = nameParts[0] || "Unknown";
+    const lastName = nameParts.slice(1).join(" ") || "Unknown";
+
     const user = await User.create({
-      name,
+      firstName,
+      lastName,
       email: email.toLowerCase(),
       passwordHash,
       targetRole: targetRole || "",
@@ -34,6 +57,18 @@ router.post("/register/part1", async (req, res, next) => {
       message: "Part 1 successful",
       userId: user._id
     });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/register/cancel/:userId", async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (user && !user.isVerified) {
+      await User.findByIdAndDelete(req.params.userId);
+    }
+    res.status(200).json({ message: "Registration cancelled" });
   } catch (error) {
     next(error);
   }
@@ -61,9 +96,17 @@ router.post("/register/part2", async (req, res, next) => {
 
     await user.save();
 
+    let previewUrl = null;
+    try {
+      previewUrl = await emailService.sendOTP(user.email, otp);
+    } catch (e) {
+      console.error("Failed to send OTP", e);
+    }
+
     res.status(200).json({
       message: "Part 2 successful. OTP sent.",
-      userId: user._id
+      userId: user._id,
+      previewUrl
     });
   } catch (error) {
     next(error);
