@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { api } from "../api/client";
 
 const MOCK_QUESTIONS = [
   { id: 1, text: "Which language is primarily used for Android development?", options: ["Java/Kotlin", "Swift", "Python", "Ruby"] },
@@ -43,6 +44,7 @@ export function QuizPage() {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 mins
   const [direction, setDirection] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -87,8 +89,32 @@ export function QuizPage() {
     }));
   };
 
-  const handleFinish = () => {
-    navigate("/skill-gap/loading");
+  const handleFinish = async () => {
+    // calculate a mock score based on selected answers
+    const totalQuestions = MOCK_QUESTIONS.length;
+    let correctCount = 0;
+    
+    // Simple heuristic for mock calculation: if option 0 is selected, let's call it correct for some, just randomizing slightly for demo.
+    // In reality we'd have correctAnswers in MOCK_QUESTIONS.
+    // Let's assume the first option [0] is always correct in this mock dataset.
+    Object.values(selectedAnswers).forEach(answerIdx => {
+      if (answerIdx === 0) correctCount++;
+    });
+
+    const calculatedScore = Math.round((correctCount / totalQuestions) * 100);
+
+    setIsSubmitting(true);
+    try {
+      await api.submitMockQuiz({
+        score: calculatedScore,
+        quizTitle: "Technical Readiness Assessment"
+      });
+    } catch (e) {
+      console.error("Failed to submit quiz score", e);
+    } finally {
+      setIsSubmitting(false);
+      navigate("/skill-gap/loading");
+    }
   };
 
   const formatTime = (seconds) => {
@@ -214,23 +240,23 @@ export function QuizPage() {
                 </div>
 
                 {/* Navigation Actions */}
-                <div className="flex justify-between items-center pt-6 mt-16 border-t border-[#c3c5d9]">
+                <div className="flex justify-between items-center pt-6 mt-16 border-t border-[#e2e2e2]">
                   <button 
-                    className="px-6 py-3 border border-[#737688] text-[#1a1c1c] hover:bg-[#f3f4f3] transition-colors flex items-center gap-2 font-medium text-sm disabled:opacity-50 rounded-sm"
+                    className="px-8 py-3.5 border border-gray-300 text-[#1a1c1c] hover:bg-gray-50 transition-colors flex items-center gap-2 font-medium text-[15px] disabled:opacity-50 rounded shadow-sm"
                     onClick={handlePrevious}
                     disabled={currentQuestionIndex === 0}
                   >
-                    <span className="text-lg leading-none">←</span>
+                    <span className="material-symbols-outlined text-[20px]">arrow_back</span>
                     Previous
                   </button>
                   
                   <button 
-                    className="px-6 py-3 bg-blue-600 text-white flex items-center gap-2 hover:bg-blue-700 transition-colors font-medium text-sm disabled:opacity-50 rounded-sm"
+                    className="px-8 py-3.5 bg-[#0052ff] text-white flex items-center gap-2 hover:bg-blue-700 transition-colors font-medium text-[15px] disabled:opacity-50 rounded shadow-sm"
                     onClick={handleNext}
-                    disabled={selectedAnswers[MOCK_QUESTIONS[currentQuestionIndex].id] === undefined}
+                    disabled={selectedAnswers[MOCK_QUESTIONS[currentQuestionIndex].id] === undefined || isSubmitting}
                   >
-                    {currentQuestionIndex === MOCK_QUESTIONS.length - 1 ? 'Submit Assessment' : 'Next'}
-                    <span className="text-lg leading-none">→</span>
+                    {isSubmitting ? "Submitting..." : (currentQuestionIndex === MOCK_QUESTIONS.length - 1 ? 'Submit Assessment' : 'Next Question')}
+                    {!isSubmitting && <span className="material-symbols-outlined text-[20px]">arrow_forward</span>}
                   </button>
                 </div>
               </div>

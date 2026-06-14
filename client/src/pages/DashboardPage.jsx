@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { api } from "../api/client";
 
 const staggerContainer = {
   hidden: { opacity: 0 },
@@ -33,8 +34,69 @@ export function DashboardPage({ user }) {
       { name: "Machine Learning Basics", time: "1 week ago", score: 60, color: "text-orange-400" }
     ]
   });
-  
   const [targetRole, setTargetRole] = useState(user?.targetRole || "data-scientist");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchDashboard() {
+      try {
+        const res = await api.getDashboard();
+        
+        // If no quizzes taken, set everything to 0/null as requested
+        if (!res.attempts || res.attempts.length === 0) {
+          setData({
+            jobReadiness: 0,
+            matchedSkills: 0,
+            missingSkills: 0,
+            quizzesTaken: 0,
+            avgScore: 0,
+            topMissing: [],
+            skills: [],
+            recentAssessments: []
+          });
+        } else {
+          // Map backend data to frontend model
+          const latestAnalysis = res.latestAnalysis || {};
+          const attempts = res.attempts || [];
+          
+          setData({
+            jobReadiness: latestAnalysis.readinessScore || 0,
+            matchedSkills: latestAnalysis.matchedSkills?.length || 0,
+            missingSkills: latestAnalysis.missingSkills?.length || 0,
+            quizzesTaken: attempts.length,
+            avgScore: res.averageAssessmentScore || 0,
+            topMissing: latestAnalysis.missingSkills?.slice(0, 3) || [],
+            skills: latestAnalysis.categoryBreakdown?.map(cat => ({
+              name: cat.category,
+              score: cat.score
+            })) || [],
+            recentAssessments: attempts.map(att => {
+              // Convert date to generic text for simplicity
+              const dateStr = new Date(att.createdAt).toLocaleDateString();
+              let color = "text-emerald-500";
+              if (att.score < 50) color = "text-orange-400";
+              else if (att.score < 80) color = "text-blue-600";
+              return {
+                name: att.quizId?.title || "Assessment",
+                time: dateStr,
+                score: att.score,
+                color
+              };
+            })
+          });
+        }
+      } catch (err) {
+        console.error("Failed to load dashboard data", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchDashboard();
+  }, []);
+
+  if (loading) {
+    return <div className="flex h-screen items-center justify-center font-sans text-gray-500">Loading your dashboard...</div>;
+  }
 
   return (
     <>
@@ -211,17 +273,21 @@ export function DashboardPage({ user }) {
           <motion.div variants={fadeUp} className="grid-item lg:col-span-6 p-8 min-h-[320px] flex flex-col relative">
             <p className="mono-label pb-2 mb-4 uppercase">Skill Radar</p>
             <div className="flex-grow flex flex-col justify-center gap-4">
-              {data.skills.map((skill, index) => (
-                <div key={index} className="space-y-1">
-                  <div className="flex justify-between text-xs font-medium">
-                    <span>{skill.name}</span>
-                    <span>{skill.score}%</span>
+              {data.skills.length === 0 ? (
+                <p className="text-sm text-gray-400 text-center">No skill data available yet.</p>
+              ) : (
+                data.skills.map((skill, index) => (
+                  <div key={index} className="space-y-1">
+                    <div className="flex justify-between text-xs font-medium">
+                      <span>{skill.name}</span>
+                      <span>{skill.score}%</span>
+                    </div>
+                    <div className="w-full bg-gray-100 h-1.5 rounded-full">
+                      <div className="bg-blue-600 h-1.5 rounded-full" style={{ width: `${skill.score}%` }}></div>
+                    </div>
                   </div>
-                  <div className="w-full bg-gray-100 h-1.5 rounded-full">
-                    <div className="bg-blue-600 h-1.5 rounded-full" style={{ width: `${skill.score}%` }}></div>
-                  </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </motion.div>
 
@@ -229,15 +295,19 @@ export function DashboardPage({ user }) {
           <motion.div variants={fadeUp} className="grid-item lg:col-span-12 p-8 min-h-[200px]">
             <p className="mono-label pb-2 mb-4 uppercase">Recent Assessments</p>
             <div className="max-h-[300px] overflow-y-auto pr-6 space-y-4 custom-scrollbar" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgb(229, 231, 235) transparent' }}>
-              {data.recentAssessments.map((assessment, index) => (
-                <div key={index} className={`flex justify-between items-center py-3 ${index !== data.recentAssessments.length - 1 ? 'border-b border-gray-50' : ''}`}>
-                  <div className="flex flex-col"> 
-                    <span className="text-sm font-medium text-gray-800">{assessment.name}</span> 
-                    <span className="text-[11px] text-gray-400 uppercase font-mono">{assessment.time}</span>
+              {data.recentAssessments.length === 0 ? (
+                <p className="text-sm text-gray-400">No assessments taken yet.</p>
+              ) : (
+                data.recentAssessments.map((assessment, index) => (
+                  <div key={index} className={`flex justify-between items-center py-3 ${index !== data.recentAssessments.length - 1 ? 'border-b border-gray-50' : ''}`}>
+                    <div className="flex flex-col"> 
+                      <span className="text-sm font-medium text-gray-800">{assessment.name}</span> 
+                      <span className="text-[11px] text-gray-400 uppercase font-mono">{assessment.time}</span>
+                    </div>
+                    <div className={`text-sm font-bold ${assessment.color}`}>{assessment.score}%</div>
                   </div>
-                  <div className={`text-sm font-bold ${assessment.color}`}>{assessment.score}%</div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </motion.div>
         </motion.div>

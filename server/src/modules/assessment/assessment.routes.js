@@ -66,6 +66,38 @@ router.post("/start", requireAuth, async (req, res, next) => {
   }
 });
 
+router.post("/submit-mock", requireAuth, async (req, res, next) => {
+  try {
+    const { score, quizTitle } = req.body;
+    
+    // Find or create a dummy quiz for this submission
+    let quiz = await Quiz.findOne({ title: quizTitle || "Mock Assessment" });
+    if (!quiz) {
+      quiz = await Quiz.create({
+        title: quizTitle || "Mock Assessment",
+        domain: "General",
+        timeLimitMinutes: 15,
+        totalQuestions: 15,
+        questions: []
+      });
+    }
+
+    const attempt = await AssessmentAttempt.create({
+      userId: req.user._id,
+      quizId: quiz._id,
+      score: score,
+      completedAt: new Date(),
+      readinessImpact: Math.round((score / 100) * 15),
+      answers: [], // mock
+      adaptiveTrail: []
+    });
+
+    res.json({ attemptId: attempt._id, score: attempt.score });
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.post("/answer", requireAuth, async (req, res, next) => {
   try {
     const { attemptId, questionPrompt, selectedAnswer } = req.body;

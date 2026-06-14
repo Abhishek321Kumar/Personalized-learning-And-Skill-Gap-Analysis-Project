@@ -28,8 +28,20 @@ async function request(path, options = {}) {
 
 export const api = {
   getModules: () => request("/meta/modules"),
-  register: (data) =>
-    request("/auth/register", {
+  registerPart1: (data) =>
+    request("/auth/register/part1", {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify(data)
+    }),
+  registerPart2: (data) =>
+    request("/auth/register/part2", {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify(data)
+    }),
+  registerVerify: (data) =>
+    request("/auth/register/verify", {
       method: "POST",
       headers: getHeaders(),
       body: JSON.stringify(data)
@@ -67,6 +79,23 @@ export const api = {
 
     return payload;
   },
+  parseResume: async (file) => {
+    const formData = new FormData();
+    formData.append("resume", file);
+
+    const response = await fetch(`${API_BASE_URL}/analysis/parse-resume`, {
+      method: "POST",
+      headers: getHeaders(false),
+      body: formData
+    });
+
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.message || "Resume parsing failed.");
+    }
+
+    return payload;
+  },
   getJobs: () =>
     request("/jobs", {
       headers: getHeaders(false)
@@ -93,6 +122,12 @@ export const api = {
     }),
   submitAnswer: (data) =>
     request("/assessment/answer", {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify(data)
+    }),
+  submitMockQuiz: (data) =>
+    request("/assessment/submit-mock", {
       method: "POST",
       headers: getHeaders(),
       body: JSON.stringify(data)
