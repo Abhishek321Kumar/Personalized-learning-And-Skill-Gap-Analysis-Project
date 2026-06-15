@@ -76,7 +76,7 @@ router.post("/register/cancel/:userId", async (req, res, next) => {
 
 router.post("/register/part2", async (req, res, next) => {
   try {
-    const { userId, education, internships, resumeText, declaredSkills } = req.body;
+    const { userId, personalInfo, education, experience, internships, resumeText, declaredSkills } = req.body;
 
     const user = await User.findById(userId);
     if (!user) {
@@ -87,8 +87,22 @@ router.post("/register/part2", async (req, res, next) => {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     console.log(`[SIMULATED OTP for ${user.email}]: ${otp}`);
 
+    if (personalInfo) {
+      user.firstName = personalInfo.firstName || user.firstName;
+      user.lastName = personalInfo.lastName || user.lastName;
+      if (personalInfo.dob) user.dob = new Date(personalInfo.dob);
+      user.phone = personalInfo.phone || user.phone;
+      user.address = {
+        residentialAddress: personalInfo.residentialAddress || "",
+        city: personalInfo.city || "",
+        state: personalInfo.state || "",
+        pincode: personalInfo.pincode || "",
+        country: personalInfo.country || "in"
+      };
+    }
+
     user.education = education || user.education;
-    user.internships = internships || user.internships;
+    user.internships = experience || internships || user.internships;
     user.resumeText = resumeText || user.resumeText;
     user.declaredSkills = declaredSkills || user.declaredSkills;
     user.otp = otp;

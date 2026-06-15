@@ -117,29 +117,26 @@ export function AssessmentSetupPage({ user }) {
 
               {/* Role Selection */}
               <div>
-                <label className="block text-[13px] font-bold text-gray-700 uppercase tracking-wide mb-3" htmlFor="role-select">Target Role <span className="text-red-500">*</span></label>
+                <label className="flex items-center text-[13px] font-bold text-gray-700 mb-3" htmlFor="role-select">Target role <span className="text-red-500 ml-1 whitespace-nowrap">*</span></label>
                 <div className="relative">
-                  <motion.input 
+                  <motion.select 
                     animate={roleError && !roleError.includes("No role found") ? "shake" : false}
                     variants={shakeAnimation}
                     className={`w-full border-b-2 ${roleError && !roleError.includes("No role found") ? 'border-red-500' : 'border-gray-300'} bg-transparent px-2 py-3 text-base focus:outline-none focus:border-[#0052ff] transition-colors`}
                     id="role-select" 
-                    list="role-options" 
-                    placeholder="e.g. Full-stack Engineer" 
-                    type="text"
                     value={role}
                     onChange={(e) => {
                       setRoleError("");
                       setRole(e.target.value);
                     }}
-                  />
-                  <datalist id="role-options">
-                    <option value="Full-stack Engineer"></option>
-                    <option value="Product Manager"></option>
-                    <option value="Data Scientist"></option>
-                    <option value="UX Designer"></option>
-                    <option value="Marketing Manager"></option>
-                  </datalist>
+                  >
+                    <option value="">Select a role</option>
+                    <option value="Full-stack Engineer">Full-stack Engineer</option>
+                    <option value="Product Manager">Product Manager</option>
+                    <option value="Data Scientist">Data Scientist</option>
+                    <option value="UX Designer">UX Designer</option>
+                    <option value="Marketing Manager">Marketing Manager</option>
+                  </motion.select>
                 </div>
                 <AnimatePresence>
                   {roleError && !roleError.includes("No role found") && (
@@ -153,7 +150,7 @@ export function AssessmentSetupPage({ user }) {
 
               {/* Job Description */}
               <div>
-                <label className="block text-[13px] font-bold text-gray-700 uppercase tracking-wide mb-3" htmlFor="job-description">Job Description / Requirements <span className="text-red-500">*</span></label>
+                <label className="flex items-center text-[13px] font-bold text-gray-700 mb-3" htmlFor="job-description">Job description / requirements <span className="text-red-500 ml-1 whitespace-nowrap">*</span></label>
                 <motion.textarea 
                   animate={jdError ? "shake" : false}
                   variants={shakeAnimation}
