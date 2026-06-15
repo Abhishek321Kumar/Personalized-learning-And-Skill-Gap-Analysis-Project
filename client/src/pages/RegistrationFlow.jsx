@@ -71,7 +71,12 @@ export function RegistrationFlow({ onAuthSuccess }) {
         password: accountForm.password
       });
       setUserId(res.userId);
-      setPart1Form({ ...part1Form, email: accountForm.email });
+      setPart1Form({
+        ...part1Form,
+        firstName: accountForm.fullName.split(' ')[0] || "",
+        lastName: accountForm.fullName.split(' ').slice(1).join(' ') || "",
+        email: accountForm.email || ""
+      });
       setStep(1);
     } catch (err) {
       setError(err.message || "Account creation failed.");
@@ -90,10 +95,10 @@ export function RegistrationFlow({ onAuthSuccess }) {
       const data = await api.parseResume(file);
       setPart1Form({
         ...part1Form,
-        firstName: data.firstName || accountForm.fullName.split(' ')[0] || "",
-        lastName: data.lastName || accountForm.fullName.split(' ')[1] || "",
-        phone: data.phone || "",
-        email: data.email || accountForm.email,
+        firstName: part1Form.firstName || data.firstName || "",
+        lastName: part1Form.lastName || data.lastName || "",
+        email: part1Form.email || data.email || "",
+        phone: part1Form.phone || data.phone || "",
         city: "",
         state: "",
         pincode: "",
@@ -144,6 +149,7 @@ export function RegistrationFlow({ onAuthSuccess }) {
 
       await api.registerPart2({
         userId,
+        personalInfo: part1Form,
         education: educationData,
         experience: experienceData
       });
@@ -297,7 +303,7 @@ export function RegistrationFlow({ onAuthSuccess }) {
                     <div><label className="form-label">Last Name<span className="required">*</span></label><input className={`form-input ${error && !part1Form.lastName ? 'border-red-500' : ''}`} placeholder="e.g. Sharma" required type="text" value={part1Form.lastName} onChange={e => setPart1Form({ ...part1Form, lastName: e.target.value })} disabled={!resumeUploaded} /></div>
                     <div><label className="form-label">Date of Birth<span className="required">*</span></label><input className={`form-input ${error && !part1Form.dob ? 'border-red-500' : ''}`} required type="date" value={part1Form.dob} onChange={e => setPart1Form({ ...part1Form, dob: e.target.value })} disabled={!resumeUploaded} /></div>
                     <div><label className="form-label">Email Address<span className="required">*</span></label><input className={`form-input ${error && !part1Form.email ? 'border-red-500' : ''}`} placeholder="aarav.s@skillbridge.edu" required type="email" value={part1Form.email} onChange={e => setPart1Form({ ...part1Form, email: e.target.value })} disabled={!resumeUploaded} /></div>
-                    <div><label className="form-label">Phone Number<span className="required">*</span></label><input className={`form-input ${error && !part1Form.phone ? 'border-red-500' : ''}`} placeholder="+91 98765 43210" required type="tel" value={part1Form.phone} onChange={e => setPart1Form({ ...part1Form, phone: e.target.value })} disabled={!resumeUploaded} /></div>
+                    <div><label className="form-label">Phone Number<span className="required">*</span></label><input className={`form-input ${error && !part1Form.phone ? 'border-red-500' : ''}`} placeholder="XXXXXXXXXX" required type="tel" value={part1Form.phone} onChange={e => setPart1Form({ ...part1Form, phone: e.target.value })} disabled={!resumeUploaded} /></div>
                     <div>
                       <label className="form-label">Country<span className="required">*</span></label>
                       <select className={`form-input ${error && !part1Form.country ? 'border-red-500' : ''}`} required value={part1Form.country} onChange={e => setPart1Form({ ...part1Form, country: e.target.value })} disabled={!resumeUploaded}>
@@ -326,7 +332,7 @@ export function RegistrationFlow({ onAuthSuccess }) {
                         <option value="">Select State</option><option value="maharashtra">Maharashtra</option><option value="karnataka">Karnataka</option><option value="delhi">Delhi</option><option value="telangana">Telangana</option>
                       </select>
                     </div>
-                    <div><label className="form-label">Pincode<span className="required">*</span></label><input className={`form-input ${error && !part1Form.pincode ? 'border-red-500' : ''}`} placeholder="400001" required type="text" value={part1Form.pincode} onChange={e => setPart1Form({ ...part1Form, pincode: e.target.value })} disabled={!resumeUploaded} /></div>
+                    <div><label className="form-label">Pincode<span className="required">*</span></label><input className={`form-input ${error && !part1Form.pincode ? 'border-red-500' : ''}`} placeholder="Enter Pincode" required type="text" value={part1Form.pincode} onChange={e => setPart1Form({ ...part1Form, pincode: e.target.value })} disabled={!resumeUploaded} /></div>
                   </div>
                 </div>
 
@@ -394,7 +400,16 @@ export function RegistrationFlow({ onAuthSuccess }) {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-6">
                     <div>
                       <label className="form-label text-sm">Degree / major<span className="text-[#ba1a1a] ml-1">*</span></label>
-                      <input className={`input-field ${error && !part2Form.ugDegree ? 'border-[#ba1a1a]' : ''}`} placeholder="e.g. Bachelor of Science in Computer Science" required type="text" value={part2Form.ugDegree} onChange={e => setPart2Form({ ...part2Form, ugDegree: e.target.value })} />
+                      <select className={`input-field ${error && !part2Form.ugDegree ? 'border-[#ba1a1a]' : ''}`} required value={part2Form.ugDegree} onChange={e => setPart2Form({ ...part2Form, ugDegree: e.target.value })}>
+                        <option value="">Select Degree</option>
+                        <option value="BCA">BCA (Bachelor of Computer Applications)</option>
+                        <option value="BBA">BBA (Bachelor of Business Administration)</option>
+                        <option value="BTech">BTech (Bachelor of Technology)</option>
+                        <option value="BSc">BSc (Bachelor of Science)</option>
+                        <option value="BCom">BCom (Bachelor of Commerce)</option>
+                        <option value="BE">BE (Bachelor of Engineering)</option>
+                        <option value="Other">Other specialization</option>
+                      </select>
                       {error && !part2Form.ugDegree && <span className="text-[#ba1a1a] text-xs mt-1 block">This field is required.</span>}
                     </div>
                     <div>
@@ -428,7 +443,16 @@ export function RegistrationFlow({ onAuthSuccess }) {
                     <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-6">
                       <div>
                         <label className="form-label text-sm">Degree / major<span className="text-[#ba1a1a] ml-1">*</span></label>
-                        <input className={`input-field ${error && !part2Form.pgDegree ? 'border-[#ba1a1a]' : ''}`} placeholder="e.g. Master of Science" required type="text" value={part2Form.pgDegree} onChange={e => setPart2Form({ ...part2Form, pgDegree: e.target.value })} />
+                        <select className={`input-field ${error && !part2Form.pgDegree ? 'border-[#ba1a1a]' : ''}`} required value={part2Form.pgDegree} onChange={e => setPart2Form({ ...part2Form, pgDegree: e.target.value })}>
+                          <option value="">Select Degree</option>
+                          <option value="MCA">MCA (Master of Computer Applications)</option>
+                          <option value="MTech">MTech (Master of Technology)</option>
+                          <option value="MBA">MBA (Master of Business Administration)</option>
+                          <option value="MSc">MSc (Master of Science)</option>
+                          <option value="MCom">MCom (Master of Commerce)</option>
+                          <option value="ME">ME (Master of Engineering)</option>
+                          <option value="Other">Other specialization</option>
+                        </select>
                       </div>
                       <div>
                         <label className="form-label text-sm">University name<span className="text-[#ba1a1a] ml-1">*</span></label>

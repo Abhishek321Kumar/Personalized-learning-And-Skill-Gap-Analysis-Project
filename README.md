@@ -90,6 +90,14 @@ Ensure your MongoDB service is running locally. By default, the application will
    npm run dev
    ```
    *Note: If you are using a custom MongoDB URI, open `server/.env` and update the `MONGO_URI` before running `npm run dev`.*
+
+   **Configuring Real Email Delivery for OTP:**
+   By default, the application uses Ethereal Email (a mock testing service) which only prints a preview URL in the console. To send the 6-digit OTP code to real user inboxes, add the following to `server/.env`:
+   ```env
+   SMTP_USER=your_email@gmail.com
+   SMTP_PASS=your_app_password
+   ```
+   *(If using Gmail, use a generated 16-character "App Password" from your Google Account Security settings).*
 3. You should see a message indicating the server is running on `http://localhost:5000` and connected to MongoDB. **Leave this terminal open.**
 
 ### Step 4: Run the Python ML Service (Terminal 2)

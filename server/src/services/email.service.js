@@ -8,20 +8,33 @@ class EmailService {
 
   async init() {
     try {
-      // Create a test account using Ethereal email for testing
-      const testAccount = await nodemailer.createTestAccount();
+      if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+        this.transporter = nodemailer.createTransport({
+          host: process.env.SMTP_HOST || "smtp.gmail.com",
+          port: Number(process.env.SMTP_PORT) || 587,
+          secure: process.env.SMTP_SECURE === "true", 
+          auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
+          },
+        });
+        console.log(`[Email Service] Initialized with SMTP user: ${process.env.SMTP_USER}`);
+      } else {
+        // Create a test account using Ethereal email for testing
+        const testAccount = await nodemailer.createTestAccount();
 
-      this.transporter = nodemailer.createTransport({
-        host: "smtp.ethereal.email",
-        port: 587,
-        secure: false, // true for 465, false for other ports
-        auth: {
-          user: testAccount.user, // generated ethereal user
-          pass: testAccount.pass, // generated ethereal password
-        },
-      });
+        this.transporter = nodemailer.createTransport({
+          host: "smtp.ethereal.email",
+          port: 587,
+          secure: false, // true for 465, false for other ports
+          auth: {
+            user: testAccount.user, // generated ethereal user
+            pass: testAccount.pass, // generated ethereal password
+          },
+        });
 
-      console.log(`[Email Service] Initialized with ethereal user: ${testAccount.user}`);
+        console.log(`[Email Service] Initialized with ethereal user: ${testAccount.user}`);
+      }
     } catch (error) {
       console.warn(`[Email Service] Ethereal email initialization failed (${error.message}). Using fallback mock transport.`);
       // Fallback transport that doesn't actually send emails, just streams them
@@ -40,7 +53,7 @@ class EmailService {
 
     try {
       const info = await this.transporter.sendMail({
-        from: '"SkillBridge" <noreply@skillbridge.edu>', // sender address
+        from: process.env.SMTP_USER ? `"SkillBridge" <${process.env.SMTP_USER}>` : '"SkillBridge" <noreply@skillbridge.edu>', // sender address
         to: email, // list of receivers
         subject: "Your SkillBridge Verification Code", // Subject line
         text: `Your OTP for SkillBridge registration is: ${otp}. It is valid for 10 minutes.`, // plain text body

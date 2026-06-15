@@ -4,7 +4,6 @@ import { SiteFooter } from "./SiteFooter";
 
 const publicNavItems = [
   { to: "/", label: "Home" },
-  { to: "#", label: "About" },
   { to: "#", label: "Blogs" },
   { to: "/login", label: "Log in", isButton: true }
 ];
