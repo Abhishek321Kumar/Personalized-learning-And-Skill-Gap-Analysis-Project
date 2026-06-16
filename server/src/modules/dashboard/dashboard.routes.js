@@ -25,6 +25,7 @@ router.get("/overview", requireAuth, async (req, res, next) => {
       latestAnalysis,
       attempts,
       averageAssessmentScore: avgAssessmentScore,
+      user: { firstName: req.user.firstName },
       measuredLearnersIndicator: {
         sdgTarget: "4.4",
         sdgIndicator: "4.4.1",

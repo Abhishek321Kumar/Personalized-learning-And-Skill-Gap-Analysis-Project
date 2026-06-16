@@ -16,31 +16,32 @@ const fadeUp = {
 export function DashboardPage({ user }) {
   const navigate = useNavigate();
   const [data, setData] = useState({
-    jobReadiness: 65,
-    matchedSkills: 13,
-    missingSkills: 7,
-    quizzesTaken: 4,
-    avgScore: 78,
-    topMissing: ["TensorFlow", "Cloud Computing (AWS/GCP)", "Advanced SQL"],
-    skills: [
-      { name: "Python", score: 85 },
-      { name: "Statistics", score: 70 },
-      { name: "Machine Learning", score: 60 },
-      { name: "Data Visualization", score: 75 }
-    ],
-    recentAssessments: [
-      { name: "Python for Data Science", time: "2 days ago", score: 85, color: "text-emerald-500" },
-      { name: "Statistical Analysis", time: "5 days ago", score: 72, color: "text-blue-600" },
-      { name: "Machine Learning Basics", time: "1 week ago", score: 60, color: "text-orange-400" }
-    ]
+    jobReadiness: 0,
+    matchedSkills: 0,
+    missingSkills: 0,
+    quizzesTaken: 0,
+    avgScore: 0,
+    topMissing: [],
+    skills: [],
+    recentAssessments: []
   });
-  const [targetRole, setTargetRole] = useState(user?.targetRole || "data-scientist");
+  const [targetRole, setTargetRole] = useState("");
+  const [firstName, setFirstName] = useState(user?.firstName || user?.name?.split(' ')[0] || "Student");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchDashboard() {
       try {
-        const res = await api.getDashboard();
+        const [res, profileRes] = await Promise.all([
+          api.getDashboard(),
+          api.getProfile().catch(() => null)
+        ]);
+
+        if (profileRes?.user?.firstName) {
+          setFirstName(profileRes.user.firstName);
+        } else if (res?.user?.firstName) {
+          setFirstName(res.user.firstName);
+        }
         
         // If no quizzes taken, set everything to 0/null as requested
         if (!res.attempts || res.attempts.length === 0) {
@@ -54,10 +55,13 @@ export function DashboardPage({ user }) {
             skills: [],
             recentAssessments: []
           });
+          setTargetRole("");
         } else {
           // Map backend data to frontend model
           const latestAnalysis = res.latestAnalysis || {};
           const attempts = res.attempts || [];
+          
+          setTargetRole(latestAnalysis.targetRole || attempts[0]?.targetRole || user?.targetRole || "data-scientist");
           
           setData({
             jobReadiness: latestAnalysis.readinessScore || 0,
@@ -130,7 +134,7 @@ export function DashboardPage({ user }) {
           data-purpose="page-intro"
         >
           <div className="space-y-1">
-            <h1 className="text-5xl font-semibold tracking-tight">Hi, {user?.name?.split(' ')[0] || "Student"}.</h1>
+            <h1 className="text-5xl font-semibold tracking-tight">Hi, {firstName}.</h1>
             <p className="text-gray-500 text-sm mt-4 font-mono flex items-center">
               Target role: — 
               <div className="relative inline-flex items-center ml-1">
@@ -139,6 +143,7 @@ export function DashboardPage({ user }) {
                   value={targetRole}
                   onChange={(e) => setTargetRole(e.target.value)}
                 >
+                  <option value="" disabled></option>
                   <option value="data-scientist">Data Scientist</option>
                   <option value="frontend-developer">Frontend Developer</option>
                   <option value="ux-designer">UX Designer</option>
@@ -149,7 +154,7 @@ export function DashboardPage({ user }) {
           </div>
           <div className="flex gap-4">
             <button 
-              className="px-6 py-3 border border-gray-300 rounded-md font-medium text-sm hover:bg-gray-50 transition-colors flex items-center gap-2"
+              className="px-6 py-3 border-2 border-blue-100 bg-blue-50 text-blue-700 rounded-md font-medium text-sm hover:bg-blue-100 hover:border-blue-200 transition-colors flex items-center gap-2"
               onClick={() => navigate("/skill-gap")}
             >
               Skill gap →

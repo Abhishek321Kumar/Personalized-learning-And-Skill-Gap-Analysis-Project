@@ -150,7 +150,8 @@ router.post("/register/verify", async (req, res, next) => {
       token,
       user: {
         id: user._id,
-        name: user.name,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         targetRole: user.targetRole,
         isVerified: user.isVerified
@@ -181,7 +182,8 @@ router.post("/login", async (req, res, next) => {
       token,
       user: {
         id: user._id,
-        name: user.name,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         targetRole: user.targetRole
       }

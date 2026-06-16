@@ -26,6 +26,7 @@ export function SignInPage({ onAuthSuccess }) {
 
     try {
       const response = await api.login(formData);
+      window.localStorage.setItem("skillbridge-token", response.token);
       onAuthSuccess(response.user);
       navigate("/dashboard");
     } catch (err) {
