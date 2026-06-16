@@ -4,6 +4,7 @@ import { SiteFooter } from "./SiteFooter";
 
 const publicNavItems = [
   { to: "/", label: "Home" },
+  { to: "#", label: "About" },
   { to: "#", label: "Blogs" },
   { to: "/login", label: "Log in", isButton: true }
 ];
@@ -62,7 +63,7 @@ export function Layout({ children, user }) {
               <Link
                 key={item.to}
                 to={item.to}
-                className={`hover:text-blue-600 transition-colors text-lg ${isActive ? 'text-blue-600' : ''}`}
+                className={`transition-colors text-lg ${isActive ? 'nav-active-blue font-semibold' : 'text-gray-600 hover-nav-blue'}`}
               >
                 {item.label}
               </Link>

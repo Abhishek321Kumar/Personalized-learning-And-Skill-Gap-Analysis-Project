@@ -47,6 +47,16 @@ a {
   text-decoration: none;
 }
 
+.hover-nav-blue {
+  transition: color 0.15s ease-in-out;
+}
+.hover-nav-blue:hover {
+  color: #0052FF !important;
+}
+.nav-active-blue {
+  color: #0052FF !important;
+}
+
 button,
 input,
 textarea,
