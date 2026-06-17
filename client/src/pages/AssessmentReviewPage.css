@@ -87,7 +87,7 @@
 }
 
 .card-label {
-  font-family: 'Courier Prime', monospace;
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -99,7 +99,7 @@
   background-color: #eeeeed;
   padding: 0.25rem 0.75rem;
   border-radius: 0.25rem;
-  font-family: 'Courier Prime', monospace;
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;

@@ -26,7 +26,7 @@
 }
 
 .welcome-kicker {
-  font-family: 'Courier Prime', monospace;
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -89,7 +89,7 @@
 }
 
 .stat-card-title {
-  font-family: 'Courier Prime', monospace;
+  font-family: var(--font-mono);
   font-size: 0.625rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;

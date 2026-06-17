@@ -10,6 +10,7 @@ export function AssessmentLoadingPage() {
 
   const analysis = location.state?.analysis;
   const targetRole = location.state?.targetRole || "Unknown Role";
+  const jobDescription = location.state?.jobDescription || "";
 
   const phrases = [
     "Analyzing the job roles and description",
@@ -26,10 +27,10 @@ export function AssessmentLoadingPage() {
     // Simulated background loading time for ML service
     const timer = setTimeout(() => {
       if (analysis) {
-        navigate("/assessments/review", { state: { analysis, targetRole } });
+        navigate("/assessments/review", { state: { analysis, targetRole, jobDescription } });
       } else {
         // Mock fallback if navigated directly
-        navigate("/assessments/review", { state: { targetRole } });
+        navigate("/assessments/review", { state: { targetRole, jobDescription } });
       }
     }, 9000);
 
