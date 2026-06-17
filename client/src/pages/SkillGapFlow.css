@@ -26,7 +26,7 @@
 }
 
 .page-kicker {
-  font-family: 'Courier Prime', monospace;
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -257,7 +257,7 @@
 }
 
 .roadmap-step {
-  font-family: 'Courier Prime', monospace;
+  font-family: var(--font-mono);
   font-size: 1.5rem;
   font-weight: 700;
   color: #c3c5d9;

@@ -28,6 +28,7 @@ export function Layout({ children, user }) {
   };
 
   const isPublicPage = !user && (location.pathname === "/" || location.pathname === "/login" || location.pathname.startsWith("/register"));
+  const isPrivatePage = location.pathname.startsWith("/dashboard") || location.pathname.startsWith("/assessments") || location.pathname.startsWith("/skill-gap") || location.pathname.startsWith("/profile");
 
   return (
     <div className={isPublicPage ? "site-shell public-shell" : "site-shell"}>
@@ -44,33 +45,52 @@ export function Layout({ children, user }) {
         </div>
 
         <nav className="hidden md:flex items-center gap-10 text-lg font-medium text-gray-600">
-          {(user ? privateNavItems : publicNavItems).map((item) => {
-            const isActive = location.pathname === item.to || (item.isActiveRoute && location.pathname.startsWith(item.isActiveRoute));
-            
-            if (item.isButton) {
-              return (
-                <Link 
-                  key={item.to} 
-                  to={item.to} 
-                  className="bg-[#0052FF] !text-white px-4 py-1.5 rounded-md text-base hover:bg-blue-700 transition-colors"
-                >
-                  {item.label}
-                </Link>
-              );
-            }
+          {isPrivatePage ? (
+            <>
+              {privateNavItems.map((item) => {
+                const isActive = location.pathname === item.to || (item.isActiveRoute && location.pathname.startsWith(item.isActiveRoute));
+                return (
+                  <Link
+                    key={item.label}
+                    to={item.to}
+                    className={`transition-colors text-lg ${isActive ? 'nav-active-blue font-semibold' : 'text-gray-600 hover-nav-blue'}`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </>
+          ) : (
+            <>
+              {publicNavItems.map((item) => {
+                const isActive = location.pathname === item.to || (item.isActiveRoute && location.pathname.startsWith(item.isActiveRoute));
+                
+                if (item.isButton) {
+                  return (
+                    <Link 
+                      key={item.label} 
+                      to={item.to} 
+                      className="bg-[#0052FF] !text-white px-4 py-1.5 rounded-md text-base hover:bg-blue-700 transition-colors"
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                }
 
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                className={`transition-colors text-lg ${isActive ? 'nav-active-blue font-semibold' : 'text-gray-600 hover-nav-blue'}`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
+                return (
+                  <Link
+                    key={item.label}
+                    to={item.to}
+                    className={`transition-colors text-lg ${isActive ? 'nav-active-blue font-semibold' : 'text-gray-600 hover-nav-blue'}`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </>
+          )}
 
-          {user && (
+          {user && isPrivatePage && (
             <div className="relative">
               <button 
                 onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}

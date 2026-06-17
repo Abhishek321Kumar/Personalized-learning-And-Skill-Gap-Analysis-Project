@@ -214,10 +214,10 @@ export function RegistrationFlow({ onAuthSuccess }) {
         .form-label { display: block; font-size: 0.875rem; font-weight: 500; color: #4b5563; margin-bottom: 0.5rem; }
         .form-label span.required { color: #ef4444; }
         
-        .font-label-caps { font-family: 'Courier Prime', monospace; text-transform: uppercase; }
+        .font-label-caps { font-family: var(--font-mono); text-transform: uppercase; }
         .input-field { width: 100%; border: 1px solid #c3c5d9; padding: 12px 16px; font-family: 'Inter', sans-serif; font-size: 16px; background-color: transparent; transition: border-color 0.2s ease; }
         .input-field:focus { outline: none; border-color: #003ec7; }
-        .input-label { display: block; font-family: 'Courier Prime', monospace; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: #737688; margin-bottom: 8px; border-bottom: 1px solid #c3c5d9; padding-bottom: 4px; }
+        .input-label { display: block; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: #737688; margin-bottom: 8px; border-bottom: 1px solid #c3c5d9; padding-bottom: 4px; }
         .section-title { font-family: 'Inter', sans-serif; font-size: 18px; font-weight: 600; margin-bottom: 16px; color: #1a1c1c; }
         .section-divider { height: 1px; background-color: #e2e2e2; margin: 32px 0; }
         

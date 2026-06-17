@@ -117,12 +117,6 @@ export function DashboardPage({ user }) {
         .min-h-card {
           min-height: 240px;
         }
-        .mono-label {
-          font-family: monospace;
-          font-size: 0.75rem;
-          letter-spacing: 0.05em;
-          color: #6b7280;
-        }
       `}</style>
       <main className="mx-auto px-8 md:px-12 lg:px-24 py-12 flex-grow text-slate-900 max-w-[1280px]">
         {/* BEGIN: DashboardHeader */}
@@ -180,7 +174,7 @@ export function DashboardPage({ user }) {
           {/* Job Readiness Card */}
           <motion.div variants={fadeUp} className="grid-item lg:col-span-5 p-8 flex flex-col justify-between min-h-card">
             <div>
-              <p className="mono-label pb-2 mb-4 uppercase">Job Readiness</p>
+              <p className="font-mono text-xs tracking-wider text-gray-500 pb-2 mb-4 uppercase">Job Readiness</p>
               <div className="flex items-baseline">
                 <span className="text-8xl font-light">{data.jobReadiness}</span>
                 <span className="text-3xl text-gray-400 font-light ml-1">%</span>
@@ -188,15 +182,15 @@ export function DashboardPage({ user }) {
             </div>
             <div className="grid grid-cols-3 gap-4 pt-8 border-t border-gray-100">
               <div>
-                <p className="mono-label text-[10px] uppercase mb-1">Matched</p>
+                <p className="font-mono text-xs tracking-wider text-gray-500 uppercase mb-1">Matched</p>
                 <p className="text-xl font-medium text-emerald-500">{data.matchedSkills}</p>
               </div>
               <div>
-                <p className="mono-label text-[10px] uppercase mb-1">Missing</p>
+                <p className="font-mono text-xs tracking-wider text-gray-500 uppercase mb-1">Missing</p>
                 <p className="text-xl font-medium text-orange-400">{data.missingSkills}</p>
               </div>
               <div>
-                <p className="mono-label text-[10px] uppercase mb-1">Quizzes</p>
+                <p className="font-mono text-xs tracking-wider text-gray-500 uppercase mb-1">Quizzes</p>
                 <p className="text-xl font-medium">{data.quizzesTaken}</p>
               </div>
             </div>
@@ -204,7 +198,7 @@ export function DashboardPage({ user }) {
 
           {/* Avg Quiz Score Card */}
           <motion.div variants={fadeUp} className="grid-item lg:col-span-4 p-8 flex flex-col justify-start min-h-card">
-            <p className="mono-label pb-2 mb-4 uppercase">Avg Quiz Score</p>
+            <p className="font-mono text-xs tracking-wider text-gray-500 pb-2 mb-4 uppercase">Avg Quiz Score</p>
             <div className="flex items-baseline mb-2">
               <span className="text-8xl font-light">{data.avgScore}</span>
               <span className="text-3xl text-gray-400 font-light ml-1">%</span>
@@ -214,7 +208,7 @@ export function DashboardPage({ user }) {
 
           {/* Top Missing Card */}
           <motion.div variants={fadeUp} className="grid-item lg:col-span-3 p-8 flex flex-col min-h-card">
-            <p className="mono-label pb-2 mb-4 uppercase">Top Missing</p>
+            <p className="font-mono text-xs tracking-wider text-gray-500 pb-2 mb-4 uppercase">Top Missing</p>
             <div className="flex-grow flex flex-col gap-2">
               {data.topMissing.map((skill, index) => (
                 <div key={index} className="flex items-center gap-2 text-sm text-gray-600">
@@ -226,7 +220,7 @@ export function DashboardPage({ user }) {
 
           {/* Quiz Trend Card */}
           <motion.div variants={fadeUp} className="grid-item lg:col-span-6 p-8 min-h-[320px] flex flex-col relative">
-            <p className="mono-label pb-2 mb-4 uppercase">Quiz Trend</p>
+            <p className="font-mono text-xs tracking-wider text-gray-500 pb-2 mb-4 uppercase">Quiz Trend</p>
             <h3 className="text-2xl font-normal text-gray-800 mb-8">Progress over time</h3>
             <div className="flex-grow flex flex-col relative mt-4">
               {/* Y-axis reference lines */}
@@ -276,7 +270,7 @@ export function DashboardPage({ user }) {
 
           {/* Skill Radar Card */}
           <motion.div variants={fadeUp} className="grid-item lg:col-span-6 p-8 min-h-[320px] flex flex-col relative">
-            <p className="mono-label pb-2 mb-4 uppercase">Skill Radar</p>
+            <p className="font-mono text-xs tracking-wider text-gray-500 pb-2 mb-4 uppercase">Skill Radar</p>
             <div className="flex-grow flex flex-col justify-center gap-4">
               {data.skills.length === 0 ? (
                 <p className="text-sm text-gray-400 text-center">No skill data available yet.</p>
@@ -298,7 +292,7 @@ export function DashboardPage({ user }) {
 
           {/* Recent Quizzes Card */}
           <motion.div variants={fadeUp} className="grid-item lg:col-span-12 p-8 min-h-[200px]">
-            <p className="mono-label pb-2 mb-4 uppercase">Recent Assessments</p>
+            <p className="font-mono text-xs tracking-wider text-gray-500 pb-2 mb-4 uppercase">Recent Assessments</p>
             <div className="max-h-[300px] overflow-y-auto pr-6 space-y-4 custom-scrollbar" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgb(229, 231, 235) transparent' }}>
               {data.recentAssessments.length === 0 ? (
                 <p className="text-sm text-gray-400">No assessments taken yet.</p>

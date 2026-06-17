@@ -37,7 +37,7 @@
   color: #b91c1c;
   padding: 0.5rem 1rem;
   border-radius: 9999px;
-  font-family: 'Courier Prime', monospace;
+  font-family: var(--font-mono);
   font-weight: 700;
   font-size: 1.25rem;
 }
@@ -51,7 +51,7 @@
 }
 
 .question-progress {
-  font-family: 'Courier Prime', monospace;
+  font-family: var(--font-mono);
   font-size: 0.875rem;
   letter-spacing: 0.1em;
   color: #434656;

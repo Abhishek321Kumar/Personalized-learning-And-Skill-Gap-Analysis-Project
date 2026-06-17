@@ -22,18 +22,36 @@ export function AssessmentReviewPage() {
 
   const analysis = location.state?.analysis;
   const targetRole = location.state?.targetRole || "Senior Data Analyst";
+  const jobDescription = location.state?.jobDescription || "";
 
-  const extractedSkills = analysis?.matchedSkills || [
-    "Python", "SQL", "Tableau", "Statistical Analysis", 
-    "Data Visualization", "A/B Testing", "Machine Learning Basics", "ETL Processes"
+  const ALL_SKILLS = [
+    "ReactJS", "React", "Next.js", "Node.js", "Django", "MongoDB", "Python", 
+    "JavaScript", "TypeScript", "Angular", "FastAPI", "PostgreSQL", "MySQL", 
+    "AWS", "GCP", "Azure", "Docker", "Kubernetes", "CI/CD", "Prometheus", "Grafana", 
+    "ELK", "SQL", "HTML5", "CSS", "jQuery", "Nginx", "Linux", "GitHub", "Microservices", 
+    "Machine Learning", "Deep Learning", "TensorFlow", "PyTorch", "NLP", "Spark", 
+    "Hadoop", "Tableau", "Looker", "Figma", "Sketch", "UX", "UI", "SEO", "SEM", 
+    "Google Analytics", "Data Visualization", "A/B Testing", "ETL", "REST API",
+    "Copilot", "Cybersecurity", "Jira", "Confluence"
   ];
+
+  const extractSkills = (text) => {
+    if (!text) return ["Python", "SQL", "Tableau", "Statistical Analysis", "Data Visualization"];
+    const matched = ALL_SKILLS.filter(skill => {
+      const regex = new RegExp(`\\b${skill.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\$&')}\\b`, 'i');
+      return regex.test(text);
+    });
+    return matched.length > 0 ? Array.from(new Set(matched)) : ["Analytical Skills", "Problem Solving", "Communication"];
+  };
+
+  const extractedSkills = analysis?.matchedSkills || extractSkills(jobDescription);
 
   const handleStart = () => {
     navigate("/assessments/quiz");
   };
 
   return (
-    <div className="bg-[#f9f9f8] text-[#1a1c1c] font-sans antialiased min-h-screen flex flex-col pt-16">
+    <div className="bg-[#f9f9f8] text-[#1a1c1c] font-sans antialiased min-h-screen flex flex-col">
       {/* Main Content Canvas */}
       <main className="flex-grow w-full max-w-[1280px] mx-auto px-4 md:px-10 py-12 md:py-20 flex flex-col gap-12 overflow-hidden">
         <motion.div 
@@ -44,6 +62,13 @@ export function AssessmentReviewPage() {
         >
           <div className="md:col-span-7 flex flex-col gap-12">
             <motion.header variants={fadeUp} className="max-w-3xl">
+              <button 
+                onClick={() => navigate("/assessments/setup")} 
+                className="flex items-center text-[#434656] hover:text-[#0052ff] font-medium text-sm transition-colors w-fit mb-6"
+              >
+                <span className="material-symbols-outlined mr-1 text-[18px]">arrow_back</span>
+                Back to Setup
+              </button>
               <h1 className="text-4xl md:text-5xl font-medium text-[#1a1c1c] mb-4 tracking-tight">Ready to start your assessment?</h1>
               <p className="text-[#434656] text-base max-w-2xl leading-relaxed">
                 We've analyzed your target role and identified the key skills required for success. Review the extracted targets before beginning your readiness assessment.

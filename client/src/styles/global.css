@@ -86,10 +86,6 @@ textarea {
 }
 
 label {
-  display: grid;
-  gap: 0.45rem;
-  color: var(--muted);
-  font-size: 0.88rem;
 }
 
 .site-shell {
