@@ -7,13 +7,12 @@ const router = Router();
 
 router.get("/overview", requireAuth, async (req, res, next) => {
   try {
-    const latestAnalysis = await AnalysisSnapshot.findOne({ userId: req.user._id }).sort({
+    const analyses = await AnalysisSnapshot.find({ userId: req.user._id }).sort({
       createdAt: -1
     });
     const attempts = await AssessmentAttempt.find({ userId: req.user._id })
       .populate("quizId", "title domain")
-      .sort({ createdAt: -1 })
-      .limit(8);
+      .sort({ createdAt: -1 });
 
     const avgAssessmentScore = attempts.length
       ? Math.round(
@@ -22,7 +21,7 @@ router.get("/overview", requireAuth, async (req, res, next) => {
       : 0;
 
     res.json({
-      latestAnalysis,
+      analyses,
       attempts,
       averageAssessmentScore: avgAssessmentScore,
       user: { firstName: req.user.firstName },

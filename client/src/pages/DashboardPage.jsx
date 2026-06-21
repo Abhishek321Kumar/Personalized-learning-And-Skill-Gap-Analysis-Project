@@ -25,6 +25,8 @@ export function DashboardPage({ user }) {
     skills: [],
     recentAssessments: []
   });
+  const [rawAttempts, setRawAttempts] = useState([]);
+  const [rawAnalyses, setRawAnalyses] = useState([]);
   const [targetRole, setTargetRole] = useState("");
   const [firstName, setFirstName] = useState(user?.firstName || user?.name?.split(' ')[0] || "Student");
   const [loading, setLoading] = useState(true);
@@ -57,37 +59,22 @@ export function DashboardPage({ user }) {
           });
           setTargetRole("");
         } else {
-          // Map backend data to frontend model
-          const latestAnalysis = res.latestAnalysis || {};
+          setRawAttempts(res.attempts || []);
+          setRawAnalyses(res.analyses || []);
+          
+          // Determine roles from attempts
           const attempts = res.attempts || [];
+          const extractedRoles = attempts
+            .map(a => a.quizId?.title?.replace("Technical Readiness Assessment - ", "").trim())
+            .filter(Boolean);
+            
+          const uniqueRoles = [...new Set(extractedRoles)];
           
-          setTargetRole(latestAnalysis.targetRole || attempts[0]?.targetRole || user?.targetRole || "data-scientist");
-          
-          setData({
-            jobReadiness: latestAnalysis.readinessScore || 0,
-            matchedSkills: latestAnalysis.matchedSkills?.length || 0,
-            missingSkills: latestAnalysis.missingSkills?.length || 0,
-            quizzesTaken: attempts.length,
-            avgScore: res.averageAssessmentScore || 0,
-            topMissing: latestAnalysis.missingSkills?.slice(0, 3) || [],
-            skills: latestAnalysis.categoryBreakdown?.map(cat => ({
-              name: cat.category,
-              score: cat.score
-            })) || [],
-            recentAssessments: attempts.map(att => {
-              // Convert date to generic text for simplicity
-              const dateStr = new Date(att.createdAt).toLocaleDateString();
-              let color = "text-emerald-500";
-              if (att.score < 50) color = "text-orange-400";
-              else if (att.score < 80) color = "text-blue-600";
-              return {
-                name: att.quizId?.title || "Assessment",
-                time: dateStr,
-                score: att.score,
-                color
-              };
-            })
-          });
+          if (uniqueRoles.length > 0) {
+            setTargetRole(uniqueRoles[0]);
+          } else {
+            setTargetRole(user?.targetRole || "Data Scientist");
+          }
         }
       } catch (err) {
         console.error("Failed to load dashboard data", err);
@@ -97,6 +84,62 @@ export function DashboardPage({ user }) {
     }
     fetchDashboard();
   }, []);
+
+  useEffect(() => {
+    if (!targetRole || rawAttempts.length === 0) return;
+
+    // Filter attempts by selected role
+    const filteredAttempts = rawAttempts.filter(a => 
+      a.quizId?.title?.includes(targetRole)
+    );
+
+    // Filter analyses by selected role
+    const filteredAnalyses = rawAnalyses.filter(a => 
+      a.targetRole?.toLowerCase() === targetRole.toLowerCase()
+    );
+    const latestAnalysis = filteredAnalyses.length > 0 ? filteredAnalyses[0] : {};
+
+    // Calculate aggregated Job Readiness
+    const baseScore = latestAnalysis.readinessScore || 0;
+    const addedImpact = filteredAttempts.reduce((sum, att) => sum + (att.readinessImpact || 0), 0);
+    const jobReadiness = Math.min(100, Math.round(baseScore + addedImpact));
+
+    // Calculate Average Score for this role
+    const avgScore = filteredAttempts.length 
+      ? Math.round(filteredAttempts.reduce((sum, att) => sum + att.score, 0) / filteredAttempts.length)
+      : 0;
+
+    setData({
+      jobReadiness: jobReadiness || avgScore || 0, // Fallback to avgScore if no readiness logic
+      matchedSkills: latestAnalysis.matchedSkills?.length || 0,
+      missingSkills: latestAnalysis.missingSkills?.length || 0,
+      quizzesTaken: filteredAttempts.length,
+      avgScore: avgScore,
+      topMissing: latestAnalysis.missingSkills?.slice(0, 3) || [],
+      skills: latestAnalysis.categoryBreakdown?.map(cat => ({
+        name: cat.category,
+        score: cat.score
+      })) || [],
+      recentAssessments: filteredAttempts.slice(0, 8).map(att => {
+        const dateStr = new Date(att.createdAt).toLocaleDateString();
+        let color = "text-emerald-500";
+        if (att.score < 50) color = "text-orange-400";
+        else if (att.score < 80) color = "text-blue-600";
+        return {
+          name: att.quizId?.title || "Assessment",
+          time: dateStr,
+          score: att.score,
+          color
+        };
+      })
+    });
+  }, [targetRole, rawAttempts, rawAnalyses]);
+
+  // Derive unique roles for dropdown
+  const uniqueRoles = [...new Set(rawAttempts
+    .map(a => a.quizId?.title?.replace("Technical Readiness Assessment - ", "").trim())
+    .filter(Boolean)
+  )];
 
   if (loading) {
     return <div className="flex h-screen items-center justify-center font-sans text-gray-500">Loading your dashboard...</div>;
@@ -138,9 +181,9 @@ export function DashboardPage({ user }) {
                   onChange={(e) => setTargetRole(e.target.value)}
                 >
                   <option value="" disabled></option>
-                  <option value="data-scientist">Data Scientist</option>
-                  <option value="frontend-developer">Frontend Developer</option>
-                  <option value="ux-designer">UX Designer</option>
+                  {uniqueRoles.map((role, idx) => (
+                    <option key={idx} value={role}>{role}</option>
+                  ))}
                 </select>
                 <span className="material-symbols-outlined absolute right-0 pointer-events-none text-sm">expand_more</span>
               </div>

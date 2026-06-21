@@ -47,7 +47,7 @@ export function AssessmentReviewPage() {
   const extractedSkills = analysis?.matchedSkills || extractSkills(jobDescription);
 
   const handleStart = () => {
-    navigate("/assessments/quiz");
+    navigate("/assessments/quiz", { state: { targetRole, jobDescription } });
   };
 
   return (
@@ -88,7 +88,7 @@ export function AssessmentReviewPage() {
                 <div className="mt-8 pt-6 border-t border-[#c3c5d9]">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm text-[#434656]">Estimated Quiz Time</span>
-                    <span className="font-bold text-[#1a1c1c]">15 mins</span>
+                    <span className="font-bold text-[#1a1c1c]">20 mins</span>
                   </div>
                 </div>
               </div>

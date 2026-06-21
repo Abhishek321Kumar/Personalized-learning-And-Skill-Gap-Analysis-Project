@@ -99,11 +99,34 @@ export function RegistrationFlow({ onAuthSuccess }) {
         lastName: part1Form.lastName || data.lastName || "",
         email: part1Form.email || data.email || "",
         phone: part1Form.phone || data.phone || "",
-        city: "",
-        state: "",
-        pincode: "",
-        residentialAddress: ""
+        city: data.city || "",
+        state: data.state || "",
+        pincode: data.pincode || "",
+        residentialAddress: data.residentialAddress || ""
       });
+
+      if (data.education || data.internship) {
+        setPart2Form((prev) => ({
+          ...prev,
+          ugDegree: data.education?.ugDegree || prev.ugDegree,
+          ugUniversity: data.education?.ugUniversity || prev.ugUniversity,
+          ugYear: data.education?.ugYear || prev.ugYear,
+          pgDegree: data.education?.pgDegree || prev.pgDegree,
+          pgUniversity: data.education?.pgUniversity || prev.pgUniversity,
+          pgYear: data.education?.pgYear || prev.pgYear,
+          internshipTitle: data.internship?.title || prev.internshipTitle,
+          internshipCompany: data.internship?.company || prev.internshipCompany,
+          internshipDuration: data.internship?.duration || prev.internshipDuration,
+        }));
+
+        if (data.education?.hasPostgrad) {
+          setShowPostgrad(true);
+        }
+        if (data.internship?.hasInternship) {
+          setShowInternship(true);
+        }
+      }
+
       setResumeUploaded(true);
     } catch (err) {
       setError(err.message || "Failed to parse resume.");
