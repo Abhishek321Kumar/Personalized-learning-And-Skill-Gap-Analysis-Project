@@ -46,6 +46,80 @@ router.post("/parse-resume", upload.single("resume"), async (req, res, next) => 
       }
     }
 
+    // Education & Internship Heuristics
+    const education = {};
+    const internship = {};
+
+    const textLower = extractedText.toLowerCase();
+    const linesArr = extractedText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+
+    for (let i = 0; i < linesArr.length; i++) {
+      const line = linesArr[i];
+      const lowerLine = line.toLowerCase();
+      
+      // Detect Master's / PG
+      if (lowerLine.includes("master") || lowerLine.includes("(mca)") || lowerLine.includes("m.sc") || lowerLine.includes("mba")) {
+        education.hasPostgrad = true;
+        // Map exact degree
+        if (lowerLine.includes("mca")) education.pgDegree = "MCA";
+        else if (lowerLine.includes("mtech") || lowerLine.includes("m.tech")) education.pgDegree = "MTech";
+        else if (lowerLine.includes("mba")) education.pgDegree = "MBA";
+        else if (lowerLine.includes("msc") || lowerLine.includes("m.sc")) education.pgDegree = "MSc";
+        else if (lowerLine.includes("mcom") || lowerLine.includes("m.com")) education.pgDegree = "MCom";
+        else if (lowerLine.includes("me") || lowerLine.includes("m.e")) education.pgDegree = "ME";
+        else education.pgDegree = "Other";
+
+        // Try to find University name on the line above
+        if (i > 0 && !education.pgUniversity) {
+          const prevLine = linesArr[i - 1];
+          if (prevLine.toLowerCase() !== "education" && prevLine.length > 5) {
+             // Split by comma to drop location (e.g., "Presidency College, Bangalore" -> "Presidency College")
+             education.pgUniversity = prevLine.split(',')[0].trim();
+          }
+        }
+        
+        // Extract graduation year (e.g. 2025)
+        const yearMatch = line.match(/(?:19|20)\d{2}/g);
+        if (yearMatch) {
+          education.pgYear = yearMatch[yearMatch.length - 1]; // get the last year mentioned (usually graduation)
+        }
+      }
+
+      // Detect Bachelor's / UG
+      if (lowerLine.includes("bachelor") || lowerLine.includes("(bca)") || lowerLine.includes("b.sc") || lowerLine.includes("btech")) {
+        if (lowerLine.includes("bca")) education.ugDegree = "BCA";
+        else if (lowerLine.includes("btech") || lowerLine.includes("b.tech")) education.ugDegree = "BTech";
+        else if (lowerLine.includes("bba")) education.ugDegree = "BBA";
+        else if (lowerLine.includes("bsc") || lowerLine.includes("b.sc")) education.ugDegree = "BSc";
+        else if (lowerLine.includes("bcom") || lowerLine.includes("b.com")) education.ugDegree = "BCom";
+        else if (lowerLine.includes("be") || lowerLine.includes("b.e")) education.ugDegree = "BE";
+        else education.ugDegree = "Other";
+
+        // Try to find University name on the line above
+        if (i > 0 && !education.ugUniversity) {
+          const prevLine = linesArr[i - 1];
+          if (prevLine.toLowerCase() !== "education" && prevLine.length > 5) {
+             education.ugUniversity = prevLine.split(',')[0].trim();
+          }
+        }
+        
+        // Extract graduation year
+        const yearMatch = line.match(/(?:19|20)\d{2}/g);
+        if (yearMatch) {
+          education.ugYear = yearMatch[yearMatch.length - 1];
+        }
+      }
+    }
+
+    // Check for Internships
+    const internMatch = extractedText.match(/Internship at ([A-Za-z0-9\s]+?)(?:[.,\n]|$)/i);
+    if (internMatch || textLower.includes("internship") || textLower.includes("intern")) {
+      internship.hasInternship = true;
+      internship.company = internMatch ? internMatch[1].trim() : "";
+      internship.title = extractedText.match(/([A-Za-z\s]+ Intern(?:ship)?)/i)?.[1]?.trim() || "Intern";
+      internship.duration = "3"; // Mock duration
+    }
+
     res.status(200).json({
       firstName,
       lastName,
@@ -56,6 +130,8 @@ router.post("/parse-resume", upload.single("resume"), async (req, res, next) => 
       country: "in",
       pincode: "400001",
       residentialAddress: "Extracted Address St",
+      education,
+      internship,
       rawText: extractedText.substring(0, 500) // snippet
     });
   } catch (error) {
@@ -65,7 +141,7 @@ router.post("/parse-resume", upload.single("resume"), async (req, res, next) => 
 
 router.post("/run", requireAuth, async (req, res, next) => {
   try {
-    const { jobRoleId, jobDescription } = req.body;
+    const { jobRoleId, jobDescription, targetRole } = req.body;
     const user = await User.findById(req.user._id);
     const role = jobRoleId ? await JobRole.findById(jobRoleId) : null;
     const assessmentAttempts = await AssessmentAttempt.find({ userId: req.user._id })
@@ -76,7 +152,7 @@ router.post("/run", requireAuth, async (req, res, next) => {
       resumeText: user?.resumeText || "",
       declaredSkills: user?.declaredSkills || [],
       jobDescription: jobDescription || role?.jobDescription || "",
-      targetRole: role?.title || user?.targetRole || "Selected role",
+      targetRole: targetRole || role?.title || user?.targetRole || "Selected role",
       requiredSkills: role?.requiredSkills || [],
       assessmentSignals: assessmentAttempts.map((attempt) => ({
         score: attempt.score,

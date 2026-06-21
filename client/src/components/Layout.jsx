@@ -27,15 +27,17 @@ export function Layout({ children, user }) {
     window.location.reload();
   };
 
+  const isQuizPage = location.pathname === "/assessments/quiz";
   const isPublicPage = !user && (location.pathname === "/" || location.pathname === "/login" || location.pathname.startsWith("/register"));
   const isPrivatePage = location.pathname.startsWith("/dashboard") || location.pathname.startsWith("/assessments") || location.pathname.startsWith("/skill-gap") || location.pathname.startsWith("/profile");
 
   return (
     <div className={isPublicPage ? "site-shell public-shell" : "site-shell"}>
-      <header 
-        className="bg-white border-b border-gray-100 py-6 px-8 md:px-12 lg:px-24 flex justify-between items-center fixed top-0 w-full z-50 mb-12" 
-        data-purpose="main-header"
-      >
+      {!isQuizPage && (
+        <header 
+          className="bg-white border-b border-gray-100 py-6 px-8 md:px-12 lg:px-24 flex justify-between items-center fixed top-0 w-full z-50 mb-12" 
+          data-purpose="main-header"
+        >
         <div className="flex items-center gap-2">
           <Link to={user ? "/dashboard" : "/"} className="no-underline">
             <span className="text-3xl font-bold tracking-tight text-[#1a1a1a]">
@@ -127,14 +129,15 @@ export function Layout({ children, user }) {
             </div>
           )}
         </nav>
-      </header>
+        </header>
+      )}
 
-      <main className="min-h-[calc(100vh-120px)] mt-24">
+      <main className={isQuizPage ? "" : "min-h-[calc(100vh-120px)] mt-24"}>
         {children}
       </main>
 
       {/* Global Footer rendered here so individual pages don't need it */}
-      <SiteFooter />
+      {!isQuizPage && <SiteFooter />}
     </div>
   );
 }
