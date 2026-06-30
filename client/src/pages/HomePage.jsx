@@ -18,10 +18,10 @@ export function HomePage({ user }) {
   return (
     <>
       {/* BEGIN: HeroSection */}
-      <section className="max-w-7xl mx-auto px-6 pt-16 pb-24 grid lg:grid-cols-2 gap-12 items-center">
+      <section className="max-w-7xl mx-auto px-6 pt-8 pb-8 grid lg:grid-cols-2 gap-12 items-center">
         <motion.div data-purpose="hero-content" initial="hidden" animate="visible" variants={staggerContainer}>
           {/* Hero Title */}
-          <motion.h1 variants={fadeUp} className="text-5xl md:text-7xl font-bold leading-[1.1] mb-8 tracking-tight text-[#1a1a1a]">
+          <motion.h1 variants={fadeUp} className="text-5xl md:text-[4rem] font-bold leading-[1.1] mb-8 tracking-tight text-[#1a1a1a]">
             Close the gap between <br />
             <span className="text-skillblue">who you are</span> and <br />
             the role you want.
@@ -78,8 +78,58 @@ export function HomePage({ user }) {
       </section>
       {/* END: HeroSection */}
 
+      {/* BEGIN: HowItWorksSection */}
+      <section className="max-w-7xl mx-auto px-6 pt-8 pb-16">
+        <div className="text-center mb-16 flex flex-col items-center">
+          <span className="font-mono text-[10px] tracking-[0.2em] text-gray-400 uppercase mb-4 block">Process</span>
+          <h2 className="text-4xl font-semibold tracking-tight text-gray-900 text-center">How it works</h2>
+        </div>
+        
+        <div className="grid md:grid-cols-3 gap-12 relative">
+          {/* Connector Line */}
+          <div className="hidden md:block absolute top-12 left-[15%] right-[15%] h-[2px] bg-gray-100 z-0"></div>
+
+          {/* Step 1 */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}
+            className="flex flex-col items-center text-center relative z-10"
+          >
+            <div className="w-24 h-24 bg-white border-2 border-gray-100 rounded-2xl shadow-sm flex items-center justify-center mb-6">
+              <svg className="w-10 h-10 text-skillblue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+            </div>
+            <h3 className="text-xl font-bold mb-2">1. Upload Resume</h3>
+            <p className="text-gray-500 text-sm leading-relaxed max-w-[250px]">Our NLP engine parses your experience and identifies your baseline skills.</p>
+          </motion.div>
+
+          {/* Step 2 */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }}
+            className="flex flex-col items-center text-center relative z-10"
+          >
+            <div className="w-24 h-24 bg-white border-2 border-gray-100 rounded-2xl shadow-sm flex items-center justify-center mb-6">
+              <svg className="w-10 h-10 text-skillblue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+            </div>
+            <h3 className="text-xl font-bold mb-2">2. Take Assessment</h3>
+            <p className="text-gray-500 text-sm leading-relaxed max-w-[250px]">Complete adaptive quizzes tailored to the specific role you want.</p>
+          </motion.div>
+
+          {/* Step 3 */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.4 }}
+            className="flex flex-col items-center text-center relative z-10"
+          >
+            <div className="w-24 h-24 bg-skillblue rounded-2xl shadow-lg shadow-blue-600/30 flex items-center justify-center mb-6">
+              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+            </div>
+            <h3 className="text-xl font-bold mb-2">3. Get Ready</h3>
+            <p className="text-gray-500 text-sm leading-relaxed max-w-[250px]">Follow the personalized roadmap to close your skill gaps and get hired.</p>
+          </motion.div>
+        </div>
+      </section>
+      {/* END: HowItWorksSection */}
+
       {/* BEGIN: PlatformSection */}
-      <section className="bg-gray-50/50 py-24 border-y border-gray-100">
+      <section className="bg-gray-50/50 py-16 border-y border-gray-100">
         <motion.div 
           initial="hidden" 
           whileInView="visible" 
@@ -88,18 +138,18 @@ export function HomePage({ user }) {
           className="max-w-7xl mx-auto px-6"
         >
           {/* Section Header */}
-          <motion.div variants={fadeUp} className="mb-16">
+          <motion.div variants={fadeUp} className="mb-16 text-center flex flex-col items-center">
             <div className="font-mono text-[10px] tracking-[0.2em] text-gray-400 uppercase mb-4">
               The Platform
             </div>
-            <h2 className="text-4xl font-semibold tracking-tight text-gray-900 max-w-xl">
+            <h2 className="text-4xl font-semibold tracking-tight text-gray-900 max-w-xl text-center">
               Five modules. One coherent flow. Built to grow.
             </h2>
           </motion.div>
           {/* Bento Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 bg-white border border-gray-200 shadow-sm overflow-hidden">
             {/* Card M1 */}
-            <motion.div variants={fadeUp} className="p-8 module-card flex flex-col h-full hover:border-skillblue border border-transparent transition-all duration-200">
+            <motion.div variants={fadeUp} className="p-8 module-card flex flex-col h-full hover:-translate-y-1 hover:shadow-xl relative hover:z-10 hover:border-skillblue border border-transparent hover:bg-blue-50/40 transition-all duration-300 cursor-pointer group">
               <span className="font-mono text-[10px] text-skillblue font-bold mb-4">M1</span>
               <h3 className="text-xl font-semibold mb-4 text-gray-800">Authentication &amp; Profile</h3>
               <p className="text-sm text-gray-500 leading-relaxed mt-auto m-0">
@@ -107,7 +157,7 @@ export function HomePage({ user }) {
               </p>
             </motion.div>
             {/* Card M2 */}
-            <motion.div variants={fadeUp} className="p-8 module-card flex flex-col h-full border-l border-gray-200 hover:border-skillblue transition-all duration-200">
+            <motion.div variants={fadeUp} className="p-8 module-card flex flex-col h-full border-l border-transparent md:border-gray-200 hover:-translate-y-1 hover:shadow-xl relative hover:z-10 hover:border-skillblue hover:bg-blue-50/40 transition-all duration-300 cursor-pointer group">
               <span className="font-mono text-[10px] text-skillblue font-bold mb-4">M2</span>
               <h3 className="text-xl font-semibold mb-4 text-gray-800">Resume &amp; JD Parsing</h3>
               <p className="text-sm text-gray-500 leading-relaxed mt-auto m-0">
@@ -115,7 +165,7 @@ export function HomePage({ user }) {
               </p>
             </motion.div>
             {/* Card M3 */}
-            <motion.div variants={fadeUp} className="p-8 module-card flex flex-col h-full border-l border-gray-200 hover:border-skillblue transition-all duration-200">
+            <motion.div variants={fadeUp} className="p-8 module-card flex flex-col h-full border-l border-transparent lg:border-gray-200 hover:-translate-y-1 hover:shadow-xl relative hover:z-10 hover:border-skillblue hover:bg-blue-50/40 transition-all duration-300 cursor-pointer group">
               <span className="font-mono text-[10px] text-skillblue font-bold mb-4">M3</span>
               <h3 className="text-xl font-semibold mb-4 text-gray-800">Skill Gap Analysis</h3>
               <p className="text-sm text-gray-500 leading-relaxed mt-auto m-0">
@@ -123,24 +173,24 @@ export function HomePage({ user }) {
               </p>
             </motion.div>
             {/* Card M4 */}
-            <motion.div variants={fadeUp} className="p-8 module-card flex flex-col h-full border-t border-gray-200 hover:border-skillblue transition-all duration-200">
+            <motion.div variants={fadeUp} className="p-8 module-card flex flex-col h-full border-t border-transparent md:border-gray-200 hover:-translate-y-1 hover:shadow-xl relative hover:z-10 hover:border-skillblue hover:bg-blue-50/40 transition-all duration-300 cursor-pointer group">
               <span className="font-mono text-[10px] text-skillblue font-bold mb-4">M4</span>
               <h3 className="text-xl font-semibold mb-4 text-gray-800">Timed Adaptive Quiz</h3>
               <p className="text-sm text-gray-500 leading-relaxed mt-auto m-0">
                 Domain-specific MCQs validate real proficiency. No proctoring.
               </p>
             </motion.div>
-            {/* Card M7 */}
-            <motion.div variants={fadeUp} className="p-8 module-card flex flex-col h-full border-t border-l border-gray-200 hover:border-skillblue transition-all duration-200">
-              <span className="font-mono text-[10px] text-skillblue font-bold mb-4">M7</span>
+            {/* Card M5 */}
+            <motion.div variants={fadeUp} className="p-8 module-card flex flex-col h-full border-t border-l border-transparent md:border-gray-200 hover:-translate-y-1 hover:shadow-xl relative hover:z-10 hover:border-skillblue hover:bg-blue-50/40 transition-all duration-300 cursor-pointer group">
+              <span className="font-mono text-[10px] text-skillblue font-bold mb-4">M5</span>
               <h3 className="text-xl font-semibold mb-4 text-gray-800">Progress Analytics</h3>
               <p className="text-sm text-gray-500 leading-relaxed mt-auto m-0">
                 Radar charts, trends, session history on a bento dashboard.
               </p>
             </motion.div>
-            {/* Card M5+ */}
-            <motion.div variants={fadeUp} className="p-8 module-card flex flex-col h-full border-t border-l border-gray-200 hover:border-skillblue transition-all duration-200">
-              <span className="font-mono text-[10px] text-skillblue font-bold mb-4">M5+</span>
+            {/* Card M6 */}
+            <motion.div variants={fadeUp} className="p-8 module-card flex flex-col h-full border-t border-l border-transparent md:border-gray-200 hover:-translate-y-1 hover:shadow-xl relative hover:z-10 hover:border-skillblue hover:bg-blue-50/40 transition-all duration-300 cursor-pointer group">
+              <span className="font-mono text-[10px] text-skillblue font-bold mb-4">M6</span>
               <h3 className="text-xl font-semibold mb-4 text-gray-800">Roadmap &amp; Re-Assessment</h3>
               <p className="text-sm text-gray-500 leading-relaxed mt-auto m-0">
                 Coming soon — modular hooks already wired in.
@@ -150,30 +200,6 @@ export function HomePage({ user }) {
         </motion.div>
       </section>
       {/* END: PlatformSection */}
-
-      {/* BEGIN: SDGAlignment */}
-      <section className="bg-skillblack text-white pt-24 pb-24">
-        <motion.div 
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.7 }}
-          className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-start"
-        >
-          <div>
-            <div className="font-mono text-[10px] tracking-widest text-gray-400 uppercase mb-4">Aligned With</div>
-            <h2 className="text-4xl font-medium leading-tight text-white m-0">
-              UN SDG 4 – Quality Education.
-            </h2>
-          </div>
-          <div className="space-y-8">
-            <p className="text-lg leading-relaxed text-gray-300 m-0">
-              SkillBridge contributes to <span className="text-white font-semibold">Target 4.4:</span> substantially increasing the number of youth and adults possessing relevant skills for employment, decent jobs and entrepreneurship by 2030 — measured by <span className="text-white font-semibold">Indicator 4.4.1</span>, the proportion of youth and adults with ICT skills.
-            </p>
-          </div>
-        </motion.div>
-      </section>
-      {/* END: SDGAlignment */}
     </>
   );
 }

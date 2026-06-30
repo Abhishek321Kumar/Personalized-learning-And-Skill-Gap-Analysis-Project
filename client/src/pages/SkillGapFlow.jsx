@@ -104,24 +104,23 @@ export function SkillGapFlow() {
   }, [location.state]);
 
   return (
-    <div className="bg-[#f9f9f8] text-[#1a1c1c] font-sans min-h-screen flex flex-col selection:bg-blue-600 selection:text-white pt-20">
+    <div className="bg-[#f9f9f8] text-[#1a1c1c] font-sans flex flex-col selection:bg-blue-600 selection:text-white">
       <AnimatePresence mode="wait">
         {selectedReport ? (
           <motion.main 
-            key="detailed"
+            key="details"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="flex-grow w-full max-w-[1280px] mx-auto px-4 md:px-10 py-12 md:py-20"
+            className="flex-grow w-full max-w-[1280px] mx-auto px-4 md:px-10 py-12"
           >
-            {/* Header Section */}
-            <header className="mb-16">
+            <header className="mb-12">
               <button 
                 onClick={() => setSelectedReport(null)}
                 className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors font-medium text-sm mb-6 group"
               >
-                <span className="text-lg transition-transform group-hover:-translate-x-1">←</span>
+                <svg className="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 Back to Overview
               </button>
             </header>
@@ -133,9 +132,7 @@ export function SkillGapFlow() {
               className="w-full flex flex-col gap-8"
             >
               <section className="flex flex-col gap-8 w-full">
-                {/* Top Row: Summary & Match */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {/* Target Role Card */}
                   <motion.div variants={fadeUp} className="bg-white border border-[#c3c5d9] p-10 flex flex-col gap-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                     <span className="font-mono text-[12px] text-[#737688] uppercase tracking-widest">Identified Role</span>
                     <div className="h-px w-8 bg-[#c3c5d9]"></div>
@@ -143,7 +140,6 @@ export function SkillGapFlow() {
                     <p className="text-[#434656] mt-4 text-base md:text-lg leading-relaxed">{selectedReport.description}</p>
                   </motion.div>
                   
-                  {/* Match Card */}
                   <motion.div variants={fadeUp} className="bg-white border border-[#c3c5d9] p-10 flex flex-col items-center justify-center text-center gap-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                     <span className="font-mono text-[12px] text-[#737688] uppercase tracking-widest w-full text-left">Overall Match</span>
                     <div className="relative w-40 h-40 flex items-center justify-center my-2">
@@ -158,12 +154,42 @@ export function SkillGapFlow() {
                       </svg>
                       <span className="absolute text-4xl font-bold text-[#1a1c1c]">{selectedReport.score}%</span>
                     </div>
-                    <div className="flex gap-8 w-full justify-center text-sm mt-2">
-                      <div className="flex items-center gap-3"><div className="w-4 h-4 bg-blue-600 rounded-sm"></div><span className="font-medium">Matched</span></div>
-                      <div className="flex items-center gap-3"><div className="w-4 h-4 bg-[#e8e8e7] rounded-sm"></div><span className="font-medium text-[#434656]">Gap</span></div>
-                    </div>
                   </motion.div>
                 </div>
+
+                <motion.div variants={fadeUp} className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="bg-[#fff5f5] border border-[#ffcdcd] p-8 flex flex-col gap-4 rounded-xl shadow-sm">
+                    <div className="flex items-center gap-2 mb-2">
+                      <svg className="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                      <span className="font-mono text-[12px] text-red-600 uppercase tracking-widest font-bold">Critical Gaps</span>
+                    </div>
+                    {(selectedReport.missingSkills || []).length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {(selectedReport.missingSkills || []).map((s, i) => (
+                          <span key={i} className="px-3 py-1.5 bg-white text-red-700 text-sm font-medium border border-red-200 rounded-md shadow-sm">{s}</span>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-[#737688] text-sm">No critical gaps identified!</div>
+                    )}
+                  </div>
+
+                  <div className="bg-[#f0fdf4] border border-[#bbf7d0] p-8 flex flex-col gap-4 rounded-xl shadow-sm">
+                    <div className="flex items-center gap-2 mb-2">
+                      <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                      <span className="font-mono text-[12px] text-green-700 uppercase tracking-widest font-bold">Verified Skills</span>
+                    </div>
+                    {(selectedReport.verifiedSkills || []).length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {(selectedReport.verifiedSkills || []).map((s, i) => (
+                          <span key={i} className="px-3 py-1.5 bg-white text-green-800 text-sm font-medium border border-green-200 rounded-md shadow-sm">{s}</span>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-[#737688] text-sm">Skills need verification.</div>
+                    )}
+                  </div>
+                </motion.div>
 
                 {/* Detailed Skill Radar/Bars */}
                 <motion.div variants={fadeUp} className="bg-white border border-[#c3c5d9] p-10 flex flex-col gap-8 rounded-xl shadow-sm hover:shadow-md transition-shadow">
@@ -202,7 +228,6 @@ export function SkillGapFlow() {
                   </div>
                 </motion.div>
 
-                {/* Recommendations */}
                 <motion.div variants={fadeUp} className="bg-white border border-[#c3c5d9] p-10 flex flex-col gap-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                   <div className="flex flex-col gap-2">
                     <span className="font-mono text-[12px] text-[#737688] uppercase tracking-widest">Recommended Learning Pathway</span>
@@ -254,7 +279,7 @@ export function SkillGapFlow() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.4 }}
-            className="flex-grow w-full max-w-[1280px] mx-auto px-4 md:px-10 py-12 md:py-20"
+            className="flex-grow w-full max-w-[1280px] mx-auto px-4 md:px-10 py-12"
           >
             <header className="mb-16">
               <div className="flex flex-col items-start">
@@ -307,7 +332,6 @@ export function SkillGapFlow() {
           </motion.main>
         )}
       </AnimatePresence>
-      <SiteFooter />
     </div>
   );
 }
