@@ -68,7 +68,7 @@ router.post("/start", requireAuth, async (req, res, next) => {
 
 router.post("/submit-mock", requireAuth, async (req, res, next) => {
   try {
-    const { score, quizTitle } = req.body;
+    const { score, quizTitle, answers } = req.body;
     
     // Find or create a dummy quiz for this submission
     let quiz = await Quiz.findOne({ title: quizTitle || "Mock Assessment" });
@@ -88,7 +88,8 @@ router.post("/submit-mock", requireAuth, async (req, res, next) => {
       score: score,
       completedAt: new Date(),
       readinessImpact: Math.round((score / 100) * 15),
-      answers: [], // mock
+      answers: answers || [], // Save provided mock answers
+
       adaptiveTrail: []
     });
 

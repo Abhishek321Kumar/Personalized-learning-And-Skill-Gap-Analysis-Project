@@ -56,6 +56,26 @@ export function QuizPage() {
     return () => clearInterval(timer);
   }, [timeLeft, showRules, questions.length]);
 
+  // Intercept back button to show exit prompt
+  useEffect(() => {
+    if (showRules || isExiting || isSubmitting) return;
+
+    // Trap the back button
+    window.history.pushState(null, null, window.location.href);
+
+    const handlePopState = (event) => {
+      // Prevent leaving by pushing the state back immediately
+      window.history.pushState(null, null, window.location.href);
+      setShowExitPrompt(true);
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [showRules, isExiting, isSubmitting]);
+
   const handleStart = () => {
     setShowRules(false);
   };
@@ -97,11 +117,30 @@ export function QuizPage() {
 
     const calculatedScore = Math.round((correctCount / totalQuestions) * 100);
 
+    const roleSkills = targetRole.toLowerCase().includes("design") ? ["UI/UX", "Prototyping", "User Research", "Wireframing", "Interaction Design"] :
+                       targetRole.toLowerCase().includes("data") ? ["Data Cleaning", "Machine Learning", "Statistics", "Data Visualization", "SQL"] :
+                       targetRole.toLowerCase().includes("product") ? ["Agile", "Product Strategy", "User Stories", "Analytics", "Prioritization"] :
+                       ["Frontend", "Backend", "Database", "Architecture", "DevOps"];
+
+    const finalAnswers = Object.keys(selectedAnswers).map((qId, index) => {
+      const q = questions.find(question => question.id == qId);
+      const assignedSkill = roleSkills[index % roleSkills.length];
+      return {
+        questionPrompt: q.text,
+        skill: assignedSkill,
+        selectedAnswer: q.options[selectedAnswers[qId]],
+        correctAnswer: q.options[q.correctIndex],
+        wasCorrect: q.correctIndex === selectedAnswers[qId],
+        difficulty: "Medium"
+      };
+    });
+
     setIsSubmitting(true);
     try {
       await api.submitMockQuiz({
         score: calculatedScore,
-        quizTitle: `Technical Readiness Assessment - ${targetRole}`
+        quizTitle: `Technical Readiness Assessment - ${targetRole}`,
+        answers: finalAnswers
       });
     } catch (e) {
       console.error("Failed to submit quiz score", e);
