@@ -12,7 +12,11 @@ import analysisRoutes from "./modules/analysis/analysis.routes.js";
 import assessmentRoutes from "./modules/assessment/assessment.routes.js";
 import dashboardRoutes from "./modules/dashboard/dashboard.routes.js";
 
-fs.mkdirSync(env.uploadsDir, { recursive: true });
+try {
+  fs.mkdirSync(env.uploadsDir, { recursive: true });
+} catch (error) {
+  console.warn("Could not create uploads directory (expected on Vercel read-only filesystem):", error.message);
+}
 
 const app = express();
 
