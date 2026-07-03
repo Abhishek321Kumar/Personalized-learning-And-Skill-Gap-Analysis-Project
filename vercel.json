@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/api/ml/(.*)", "destination": "/api/ml.py" },
+    { "source": "/api/(.*)", "destination": "/api/node.js" },
+    { "source": "/(.*)", "destination": "/client/$1" }
+  ],
+  "outputDirectory": "client/dist"
+}
