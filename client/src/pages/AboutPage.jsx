@@ -20,11 +20,7 @@ export function AboutPage() {
           <p className="text-blue-100 text-lg md:text-xl max-w-2xl mx-auto mb-8">
             Read more about us. Our vision, mission, success and many other things you might love.
           </p>
-          <div className="text-sm font-medium opacity-80 flex items-center justify-center gap-2">
-            <Link to="/" className="text-white hover:underline">Home</Link>
-            <span>&gt;</span>
-            <span>About</span>
-          </div>
+
         </div>
       </section>
 
