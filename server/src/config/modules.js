@@ -4,7 +4,7 @@ import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const modulesPath = path.join(process.cwd(), "modules.config.json");
+const modulesPath = fileURLToPath(new URL("../../../modules.config.json", import.meta.url));
 
 const rawConfig = JSON.parse(fs.readFileSync(modulesPath, "utf-8"));
 
