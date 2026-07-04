@@ -1,4 +1,7 @@
 import app from "../server/src/app.js";
+import { connectDatabase } from "../server/src/services/db.js";
 
-// Export the Express app for Vercel
-export default app;
+export default async function (req, res) {
+  await connectDatabase();
+  return app(req, res);
+}
