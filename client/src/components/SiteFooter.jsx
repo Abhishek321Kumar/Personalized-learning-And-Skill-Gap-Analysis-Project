@@ -19,7 +19,7 @@ export function SiteFooter() {
             <div className="space-y-6">
               <h4 className="text-sm font-bold text-slate-900">Quick Links</h4>
               <ul className="space-y-4 text-sm text-gray-500 list-none p-0 m-0">
-                <li><a className="hover:text-slate-900 transition-colors no-underline" href="#">About Us</a></li>
+                <li><Link className="hover:text-slate-900 transition-colors no-underline text-gray-500" to="/about">About Us</Link></li>
                 <li><a className="hover:text-slate-900 transition-colors no-underline" href="#">Pricing (Free)</a></li>
               </ul>
             </div>
