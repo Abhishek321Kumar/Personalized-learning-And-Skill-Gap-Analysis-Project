@@ -14,6 +14,7 @@ import { QuizSuccessPage } from "./pages/QuizSuccessPage";
 import { SkillGapLoadingPage } from "./pages/SkillGapLoadingPage";
 import { SkillGapFlow } from "./pages/SkillGapFlow";
 import { ProfilePage } from "./pages/ProfilePage";
+import { AboutPage } from "./pages/AboutPage";
 
 const getStoredUser = () => {
   try {
@@ -52,6 +53,7 @@ export default function App() {
     <Layout user={user} modules={modules} onUserUpdate={handleUserUpdate}>
       <Routes>
         <Route path="/" element={<HomePage modules={modules} user={user} />} />
+        <Route path="/about" element={<AboutPage />} />
         
         {/* Auth Routes */}
         <Route path="/login" element={<SignInPage onAuthSuccess={handleUserUpdate} />} />
