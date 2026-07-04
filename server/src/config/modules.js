@@ -4,9 +4,14 @@ import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const modulesPath = fileURLToPath(new URL("../../../modules.config.json", import.meta.url));
+const modulesPath = path.join(process.cwd(), "modules.config.json");
 
-const rawConfig = JSON.parse(fs.readFileSync(modulesPath, "utf-8"));
+let rawConfig = { activeModules: [] };
+try {
+  rawConfig = JSON.parse(fs.readFileSync(modulesPath, "utf-8"));
+} catch (e) {
+  console.warn("Could not load modules.config.json. Defaulting to empty.", e.message);
+}
 
 export const moduleConfig = rawConfig.activeModules;
 export const isModuleEnabled = (code) =>

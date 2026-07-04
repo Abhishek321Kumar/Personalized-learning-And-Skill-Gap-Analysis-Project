@@ -9,7 +9,11 @@ import { User } from "../../models/User.js";
 
 const router = Router();
 
-fs.mkdirSync(env.uploadsDir, { recursive: true });
+try {
+  fs.mkdirSync(env.uploadsDir, { recursive: true });
+} catch (e) {
+  console.warn("Could not create uploads dir in profile.routes:", e.message);
+}
 
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => cb(null, env.uploadsDir),
