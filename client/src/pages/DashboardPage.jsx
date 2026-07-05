@@ -268,7 +268,7 @@ export function DashboardPage({ user }) {
           data-purpose="page-intro"
         >
           <div className="space-y-1">
-            <h1 className="text-5xl font-semibold tracking-tight">Hi, {firstName}.</h1>
+            <h1 className="text-5xl font-semibold tracking-tight">Hi, {firstName}</h1>
             <div className="text-gray-500 text-sm mt-4 font-mono flex items-center">
               Target role: — 
               <div className="relative inline-flex items-center ml-2">

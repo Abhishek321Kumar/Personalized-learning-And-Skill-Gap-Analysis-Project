@@ -176,27 +176,75 @@ export function QuizPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-[#1a1c1c]/40 backdrop-blur-sm p-4"
           >
             <motion.div 
-              initial={{ scale: 0.9, y: 20 }}
+              initial={{ scale: 0.95, y: 10 }}
               animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              className="bg-white border border-[#c3c5d9] p-8 max-w-lg w-full rounded shadow-xl"
+              exit={{ scale: 0.95, y: 10 }}
+              className="bg-white border border-[#e2e2e2] p-8 md:p-10 max-w-2xl w-full rounded-xl shadow-2xl flex flex-col gap-6"
             >
-              <h2 className="text-2xl font-semibold mb-4 text-[#1a1c1c]">Assessment Rules</h2>
-              <ul className="list-disc pl-5 mb-8 text-[#434656] space-y-2 text-sm leading-relaxed">
-                <li>You will have 15 minutes to complete 15 questions.</li>
-                <li>Out of 15 questions, your top 10 correct answers are taken for calculating your total score.</li>
-                <li>Do not refresh or close this tab, or your progress will be lost.</li>
-                <li>Ensure you have a stable internet connection.</li>
-              </ul>
-              <button 
-                className="w-full bg-blue-600 text-white py-3 font-medium text-sm rounded hover:bg-blue-700 transition-colors shadow-md shadow-blue-600/20"
-                onClick={handleStart}
-              >
-                I Understand, Start Assessment
-              </button>
+              <div className="flex flex-col gap-2 border-b border-[#e2e2e2] pb-6">
+                <div className="flex items-center gap-3">
+                  <div className="bg-blue-50 text-[#0052ff] p-2.5 rounded-lg">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                  </div>
+                  <h2 className="text-2xl md:text-3xl font-bold text-[#1a1a1a] tracking-tight">Assessment Guidelines</h2>
+                </div>
+                <p className="text-[#434656] text-sm md:text-base mt-1">Please review these rules carefully before beginning your technical assessment.</p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 mb-2">
+                <div className="flex items-start gap-3">
+                  <div className="mt-0.5 text-[#0052ff]">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-[#1a1a1a] text-[15px]">20-Minute Timer</h4>
+                    <p className="text-[#737688] text-[13px] mt-1 leading-relaxed">The timer starts immediately and cannot be paused. The quiz will auto-submit when time expires.</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="mt-0.5 text-[#0052ff]">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-[#1a1a1a] text-[15px]">20 Questions</h4>
+                    <p className="text-[#737688] text-[13px] mt-1 leading-relaxed">All questions are multiple-choice and carry equal weight. There is no negative marking.</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="mt-0.5 text-red-500">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-[#1a1a1a] text-[15px]">Do Not Refresh</h4>
+                    <p className="text-[#737688] text-[13px] mt-1 leading-relaxed">Refreshing the page, closing the tab, or navigating away will permanently discard your progress.</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="mt-0.5 text-green-600">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-[#1a1a1a] text-[15px]">Stable Connection</h4>
+                    <p className="text-[#737688] text-[13px] mt-1 leading-relaxed">Ensure your internet connection is stable before starting to prevent data submission failures.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-[#e2e2e2]">
+                <button 
+                  className="w-full bg-[#0052ff] text-white py-3.5 font-medium text-[15px] rounded-md hover:bg-blue-700 transition-colors shadow-sm flex justify-center items-center gap-2 group"
+                  onClick={handleStart}
+                >
+                  I Understand, Start Assessment
+                  <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+              </div>
             </motion.div>
           </motion.div>
         )}
