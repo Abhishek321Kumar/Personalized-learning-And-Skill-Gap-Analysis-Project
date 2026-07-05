@@ -7,6 +7,8 @@ export default async function (req, res) {
     return app(req, res);
   } catch (error) {
     console.error("Database connection failed:", error);
-    return res.status(500).json({ message: "Failed to connect to the database. Check Vercel environment variables or MongoDB IP access." });
+    return res.status(500).json({ 
+      message: `Database Error: ${error.message}`
+    });
   }
 }
