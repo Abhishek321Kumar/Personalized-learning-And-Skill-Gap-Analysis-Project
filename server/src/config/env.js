@@ -18,7 +18,7 @@ export const env = {
   clientUrl: process.env.CLIENT_URL || "http://localhost:5173",
   mongodbUri: process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/skillbridge",
   jwtSecret: process.env.JWT_SECRET || "change-this-in-production",
-  mlServiceUrl: process.env.ML_SERVICE_URL || "http://127.0.0.1:8001",
+  mlServiceUrl: process.env.ML_SERVICE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/api/ml` : "http://127.0.0.1:8001"),
   uploadsDir
 };
 
