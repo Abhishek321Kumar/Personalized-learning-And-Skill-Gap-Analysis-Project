@@ -8,7 +8,7 @@
   "rewrites": [
     { "source": "/api/ml/(.*)", "destination": "/api/ml.py" },
     { "source": "/api/(.*)", "destination": "/api/node.js" },
-    { "source": "/(.*)", "destination": "/client/$1" }
+    { "source": "/(.*)", "destination": "/index.html" }
   ],
   "outputDirectory": "client/dist"
 }
