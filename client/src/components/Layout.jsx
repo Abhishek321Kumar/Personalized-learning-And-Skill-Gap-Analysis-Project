@@ -108,7 +108,7 @@ export function Layout({ children, user }) {
               {isProfileDropdownOpen && (
                 <div className="absolute top-full right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg py-2 min-w-[200px] flex flex-col z-50">
                   <div className="px-6 py-3 border-b border-gray-200 mb-2">
-                    <div className="font-semibold text-gray-900">{user.name || 'User'}</div>
+                    <div className="font-semibold text-gray-900">{user.firstName ? `${user.firstName} ${user.lastName}` : (user.name || 'User')}</div>
                     <div className="text-sm text-gray-500">{user.email || 'user@example.com'}</div>
                   </div>
                   <Link 
