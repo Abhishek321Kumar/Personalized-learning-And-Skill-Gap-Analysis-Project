@@ -68,6 +68,8 @@ export function Layout({ children, user }) {
                 const isActive = location.pathname === item.to || (item.isActiveRoute && location.pathname.startsWith(item.isActiveRoute));
                 
                 if (item.isButton) {
+                  if (user) return null; // Hide login button if already logged in
+                  
                   return (
                     <Link 
                       key={item.label} 
@@ -92,8 +94,8 @@ export function Layout({ children, user }) {
             </>
           )}
 
-          {user && isPrivatePage && (
-            <div className="relative">
+          {user && (
+            <div className="relative ml-2">
               <button 
                 onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
                 className="flex items-center bg-transparent border-none cursor-pointer p-0"
