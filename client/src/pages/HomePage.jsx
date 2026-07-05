@@ -33,7 +33,7 @@ export function HomePage({ user }) {
           {/* CTA Buttons */}
           <motion.div variants={fadeUp} className="flex flex-wrap gap-4 mb-16">
             {user ? (
-              <Link to="/dashboard" className="bg-skillblue text-white px-8 py-3.5 rounded font-semibold text-sm flex items-center gap-2 hover:bg-blue-700 transition-all no-underline">
+              <Link to="/dashboard" className="bg-skillblue !text-white px-8 py-3.5 rounded font-semibold text-sm flex items-center gap-2 hover:bg-blue-700 transition-all no-underline">
                 Go to Dashboard <span className="text-lg">→</span>
               </Link>
             ) : (

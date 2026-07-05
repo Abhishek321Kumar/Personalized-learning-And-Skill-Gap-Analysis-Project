@@ -9,11 +9,13 @@ CORS(app)
 
 
 @app.get("/health")
+@app.get("/api/ml/health")
 def health():
     return jsonify({"status": "ok", "service": "skillbridge-ml"})
 
 
 @app.post("/extract-file")
+@app.post("/api/ml/extract-file")
 def extract_file():
     payload = request.get_json(force=True)
     file_path = payload.get("filePath")
@@ -29,6 +31,7 @@ def extract_file():
 
 
 @app.post("/analyze")
+@app.post("/api/ml/analyze")
 def analyze():
     payload = request.get_json(force=True)
     result = analyze_profile(payload)
