@@ -113,12 +113,12 @@ export const generateRoleQuestions = (role) => {
   let technicalQuestions = [];
   let isTechnicalRole = true;
 
-  if (normalizedRole.includes("data scientist") || normalizedRole.includes("data analyst")) {
+  if (normalizedRole.includes("data") || normalizedRole.includes("analyst") || normalizedRole.includes("scientist") || normalizedRole.includes("machine learning")) {
     technicalQuestions = [...dataQuestions];
-  } else if (normalizedRole.includes("product manager")) {
+  } else if (normalizedRole.includes("product") || normalizedRole.includes("manager") || normalizedRole.includes("marketing")) {
     technicalQuestions = [...productQuestions];
     isTechnicalRole = false;
-  } else if (normalizedRole.includes("ux designer") || normalizedRole.includes("ui designer")) {
+  } else if (normalizedRole.includes("ux") || normalizedRole.includes("ui") || normalizedRole.includes("design")) {
     technicalQuestions = [...uxQuestions];
     isTechnicalRole = false;
   } else {

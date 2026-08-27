@@ -58,7 +58,7 @@ export function QuizPage() {
     return () => clearInterval(timer);
   }, [timeLeft, showRules, questions.length]);
 
-  // Intercept back button to show exit prompt
+  // Intercept back button and page refresh
   useEffect(() => {
     if (showRules || isExiting || isSubmitting) return;
 
@@ -71,10 +71,18 @@ export function QuizPage() {
       setShowExitPrompt(true);
     };
 
+    // Prevent page refresh / close
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+      e.returnValue = ''; // Required for most modern browsers to show the native warning prompt
+    };
+
     window.addEventListener("popstate", handlePopState);
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
       window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [showRules, isExiting, isSubmitting]);
 
