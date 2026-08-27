@@ -25,8 +25,7 @@ export function QuizPage() {
   const [showRules, setShowRules] = useState(true);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
-  const [timeLeft, setTimeLeft] = useState(0);
-  const [initialTimeSet, setInitialTimeSet] = useState(false);
+
   const [direction, setDirection] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showExitPrompt, setShowExitPrompt] = useState(false);
