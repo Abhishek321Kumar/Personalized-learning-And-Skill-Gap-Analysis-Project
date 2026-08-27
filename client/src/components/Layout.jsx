@@ -19,6 +19,7 @@ export function Layout({ children, user }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const logout = () => {
     window.localStorage.removeItem("skillbridge-token");
@@ -131,6 +132,107 @@ export function Layout({ children, user }) {
             </div>
           )}
         </nav>
+
+        {/* Mobile Hamburger Button */}
+        <button 
+          className="md:hidden block text-gray-600 focus:outline-none bg-transparent border-none cursor-pointer" 
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle navigation menu"
+        >
+          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {isMobileMenuOpen ? (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            )}
+          </svg>
+        </button>
+
+        {/* Mobile Menu Dropdown */}
+        {isMobileMenuOpen && (
+          <div className="absolute top-full left-0 w-full bg-white border-b border-gray-100 shadow-md md:hidden flex flex-col py-4 px-8 z-50 max-h-[calc(100vh-80px)] overflow-y-auto">
+            {isPrivatePage ? (
+              <>
+                {privateNavItems.map((item) => {
+                  const isActive = location.pathname === item.to || (item.isActiveRoute && location.pathname.startsWith(item.isActiveRoute));
+                  return (
+                    <Link
+                      key={item.label}
+                      to={item.to}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`transition-colors py-3 text-lg border-b border-gray-50 last:border-0 no-underline ${isActive ? 'text-[#0052FF] font-semibold' : 'text-gray-600'}`}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                })}
+              </>
+            ) : (
+              <>
+                {publicNavItems.map((item) => {
+                  const isActive = location.pathname === item.to || (item.isActiveRoute && location.pathname.startsWith(item.isActiveRoute));
+                  
+                  if (item.isButton) {
+                    if (user) return null;
+                    return (
+                      <Link 
+                        key={item.label} 
+                        to={item.to} 
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="bg-[#0052FF] !text-white px-4 py-2 rounded-md text-base text-center mt-4 mb-2 hover:bg-blue-700 transition-colors inline-block w-full no-underline"
+                      >
+                        {item.label}
+                      </Link>
+                    );
+                  }
+
+                  return (
+                    <Link
+                      key={item.label}
+                      to={item.to}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`transition-colors py-3 text-lg border-b border-gray-50 last:border-0 no-underline ${isActive ? 'text-[#0052FF] font-semibold' : 'text-gray-600'}`}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                })}
+              </>
+            )}
+
+            {user && (
+              <div className="mt-4 pt-4 border-t border-gray-100">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                    <svg width="24" height="24" fill="none" stroke="#6b7280" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-gray-900">{user.firstName ? `${user.firstName} ${user.lastName}` : (user.name || 'User')}</div>
+                    <div className="text-sm text-gray-500">{user.email || 'user@example.com'}</div>
+                  </div>
+                </div>
+                <Link 
+                  to="/profile" 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block py-2 text-base text-gray-600 no-underline hover:text-gray-900"
+                >
+                  Settings
+                </Link>
+                <button 
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    logout();
+                  }}
+                  className="block w-full text-left py-2 bg-transparent border-none text-base text-red-600 cursor-pointer no-underline hover:text-red-700 mt-1"
+                >
+                  Sign Out
+                </button>
+              </div>
+            )}
+          </div>
+        )}
         </header>
       )}
 
