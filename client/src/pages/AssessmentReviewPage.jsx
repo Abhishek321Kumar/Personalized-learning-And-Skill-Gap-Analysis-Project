@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { generateRoleQuestions } from "../utils/mockQuestions";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -23,6 +24,8 @@ export function AssessmentReviewPage() {
   const analysis = location.state?.analysis;
   const targetRole = location.state?.targetRole || "Senior Data Analyst";
   const jobDescription = location.state?.jobDescription || "";
+
+  const estimatedTime = generateRoleQuestions(targetRole).reduce((total, q) => total + (q.section === 'code_reasoning' ? 2 : 1), 0);
 
   const ALL_SKILLS = [
     "ReactJS", "React", "Next.js", "Node.js", "Django", "MongoDB", "Python", 
@@ -88,7 +91,7 @@ export function AssessmentReviewPage() {
                 <div className="mt-8 pt-6 border-t border-[#c3c5d9]">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm text-[#434656]">Estimated Quiz Time</span>
-                    <span className="font-bold text-[#1a1c1c]">20 mins</span>
+                    <span className="font-bold text-[#1a1c1c]">{estimatedTime} mins</span>
                   </div>
                 </div>
               </div>

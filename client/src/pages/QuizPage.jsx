@@ -25,7 +25,8 @@ export function QuizPage() {
   const [showRules, setShowRules] = useState(true);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
-  const [timeLeft, setTimeLeft] = useState(20 * 60); // 20 mins
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [initialTimeSet, setInitialTimeSet] = useState(false);
   const [direction, setDirection] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showExitPrompt, setShowExitPrompt] = useState(false);
@@ -38,7 +39,11 @@ export function QuizPage() {
 
   useEffect(() => {
     // Dynamically fetch role-specific questions
-    setQuestions(generateRoleQuestions(targetRole));
+    const fetchedQuestions = generateRoleQuestions(targetRole);
+    setQuestions(fetchedQuestions);
+    const calculatedMinutes = fetchedQuestions.reduce((total, q) => total + (q.section === 'code_reasoning' ? 2 : 1), 0);
+    setTimeLeft(calculatedMinutes * 60);
+    setInitialTimeSet(true);
   }, [targetRole]);
 
   useEffect(() => {
@@ -271,7 +276,7 @@ export function QuizPage() {
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                   </div>
                   <div>
-                    <h4 className="font-bold text-[#1a1a1a] text-[15px]">20-Minute Timer</h4>
+                    <h4 className="font-bold text-[#1a1a1a] text-[15px]">{questions.reduce((total, q) => total + (q.section === 'code_reasoning' ? 2 : 1), 0) || 20}-Minute Timer</h4>
                     <p className="text-[#737688] text-[13px] mt-1 leading-relaxed">The timer starts immediately and cannot be paused. The quiz will auto-submit when time expires.</p>
                   </div>
                 </div>
@@ -281,7 +286,7 @@ export function QuizPage() {
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
                   </div>
                   <div>
-                    <h4 className="font-bold text-[#1a1a1a] text-[15px]">20 Questions</h4>
+                    <h4 className="font-bold text-[#1a1a1a] text-[15px]">{questions.length || 20} Questions</h4>
                     <p className="text-[#737688] text-[13px] mt-1 leading-relaxed">All questions are multiple-choice and carry equal weight. There is no negative marking.</p>
                   </div>
                 </div>
