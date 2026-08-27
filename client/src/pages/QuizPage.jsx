@@ -107,39 +107,61 @@ export function QuizPage() {
     if (questions.length === 0) return;
     const totalQuestions = questions.length;
     let correctCount = 0;
-    
-    Object.keys(selectedAnswers).forEach(qId => {
+
+    const employabilitySkills = {
+      aptitude: { correct: 0, total: 0 },
+      verbal: { correct: 0, total: 0 },
+      codeReasoning: { correct: 0, total: 0 }
+    };
+    const competencyMatrix = {};
+
+    const finalAnswers = Object.keys(selectedAnswers).map((qId) => {
       const q = questions.find(question => question.id == qId);
-      if (q && q.correctIndex === selectedAnswers[qId]) {
-        correctCount++;
+      const isCorrect = q.correctAnswer === q.options[selectedAnswers[qId]];
+      
+      if (isCorrect) correctCount++;
+
+      // Aggregate skills
+      if (q.section === "technical") {
+        if (!competencyMatrix[q.skill]) {
+          competencyMatrix[q.skill] = { correct: 0, total: 0 };
+        }
+        competencyMatrix[q.skill].total++;
+        if (isCorrect) competencyMatrix[q.skill].correct++;
+      } else if (q.section === "aptitude") {
+        employabilitySkills.aptitude.total++;
+        if (isCorrect) employabilitySkills.aptitude.correct++;
+      } else if (q.section === "verbal") {
+        employabilitySkills.verbal.total++;
+        if (isCorrect) employabilitySkills.verbal.correct++;
+      } else if (q.section === "code_reasoning") {
+        employabilitySkills.codeReasoning.total++;
+        if (isCorrect) employabilitySkills.codeReasoning.correct++;
       }
-    });
 
-    const calculatedScore = Math.round((correctCount / totalQuestions) * 100);
-
-    const roleSkills = targetRole.toLowerCase().includes("design") ? ["UI/UX", "Prototyping", "User Research", "Wireframing", "Interaction Design"] :
-                       targetRole.toLowerCase().includes("data") ? ["Data Cleaning", "Machine Learning", "Statistics", "Data Visualization", "SQL"] :
-                       targetRole.toLowerCase().includes("product") ? ["Agile", "Product Strategy", "User Stories", "Analytics", "Prioritization"] :
-                       ["Frontend", "Backend", "Database", "Architecture", "DevOps"];
-
-    const finalAnswers = Object.keys(selectedAnswers).map((qId, index) => {
-      const q = questions.find(question => question.id == qId);
-      const assignedSkill = roleSkills[index % roleSkills.length];
       return {
         questionPrompt: q.text,
-        skill: assignedSkill,
+        skill: q.skill || q.section,
         selectedAnswer: q.options[selectedAnswers[qId]],
-        correctAnswer: q.options[q.correctIndex],
-        wasCorrect: q.correctIndex === selectedAnswers[qId],
+        correctAnswer: q.correctAnswer,
+        wasCorrect: isCorrect,
         difficulty: "Medium"
       };
     });
+
+    if (employabilitySkills.codeReasoning.total === 0) {
+      delete employabilitySkills.codeReasoning;
+    }
+
+    const calculatedScore = Math.round((correctCount / totalQuestions) * 100);
 
     setIsSubmitting(true);
     try {
       await api.submitMockQuiz({
         score: calculatedScore,
         quizTitle: `Technical Readiness Assessment - ${targetRole}`,
+        employabilitySkills,
+        competencyMatrix,
         answers: finalAnswers
       });
     } catch (e) {
@@ -167,6 +189,55 @@ export function QuizPage() {
   if (questions.length === 0) {
     return <div className="bg-[#f9f9f8] min-h-screen flex items-center justify-center text-gray-500 font-sans">Loading questions...</div>;
   }
+
+  const renderStepper = () => {
+    const sections = [];
+    let aptCount = 0, verbalCount = 0, codeCount = 0, techCount = 0;
+    questions.forEach(q => {
+      if (q.section === "aptitude") aptCount++;
+      else if (q.section === "verbal") verbalCount++;
+      else if (q.section === "code_reasoning") codeCount++;
+      else if (q.section === "technical") techCount++;
+    });
+    
+    if (aptCount > 0) sections.push({ id: "aptitude", label: `Aptitude & Reasoning (${aptCount})` });
+    if (verbalCount > 0) sections.push({ id: "verbal", label: `Verbal (${verbalCount})` });
+    if (codeCount > 0) sections.push({ id: "code_reasoning", label: `Code Reasoning (${codeCount})` });
+    if (techCount > 0) sections.push({ id: "technical", label: `${targetRole} Technical (${techCount})` });
+
+    const currentSection = questions[currentQuestionIndex].section;
+    
+    return (
+      <div className="flex flex-wrap items-center gap-2 mb-8 border-b border-[#e2e2e2] pb-6">
+        {sections.map((sec, idx) => (
+          <div key={sec.id} className="flex items-center gap-2">
+            <span className={`text-[11px] font-bold uppercase tracking-[0.1em] px-3 py-1.5 rounded-sm transition-colors ${currentSection === sec.id ? 'bg-[#0052ff] text-white' : 'bg-[#e2e2e2] text-[#737688]'}`}>
+              {sec.label}
+            </span>
+            {idx < sections.length - 1 && <span className="text-[#c3c5d9] font-bold">→</span>}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const renderQuestionText = (text) => {
+    if (text.includes("```")) {
+      const parts = text.split("```");
+      return (
+        <div className="flex flex-col text-left">
+          <span className="block mb-4">{parts[0]}</span>
+          {parts[1] && (
+            <pre className="bg-[#1a1c1c] text-white p-5 rounded-md text-[14px] font-mono overflow-x-auto mb-4 border border-[#434656] shadow-inner text-left">
+              <code>{parts[1].replace(/^(javascript|js)\n/, '')}</code>
+            </pre>
+          )}
+          {parts[2] && <span className="block">{parts[2]}</span>}
+        </div>
+      );
+    }
+    return text;
+  };
 
   return (
     <div className="bg-[#f9f9f8] text-[#1a1c1c] min-h-screen flex flex-col font-sans">
@@ -347,9 +418,7 @@ export function QuizPage() {
 
               {/* Quiz Container / Bento Card */}
               <div className="bg-white border border-[#c3c5d9] shadow-sm rounded-sm p-10 flex flex-col min-h-[450px]">
-                <div className="mb-8 border-b border-[#e2e2e2] pb-3">
-                  <span className="font-mono text-[11px] text-[#737688] font-bold uppercase tracking-[0.2em]">{targetRole}</span>
-                </div>
+                {renderStepper()}
 
                 <div className="flex-grow relative">
                   <AnimatePresence initial={false} custom={direction} mode="wait">
@@ -366,8 +435,8 @@ export function QuizPage() {
                       }}
                       className="w-full"
                     >
-                      <h2 className="text-[26px] md:text-[28px] font-medium mb-10 leading-snug text-[#1a1c1c]">
-                        {questions[currentQuestionIndex].text}
+                      <h2 className="text-[22px] md:text-[24px] font-medium mb-10 leading-snug text-[#1a1c1c]">
+                        {renderQuestionText(questions[currentQuestionIndex].text)}
                       </h2>
 
                       <div className="space-y-4 mb-12">
