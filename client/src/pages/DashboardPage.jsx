@@ -342,6 +342,7 @@ export function DashboardPage({ user }) {
 
         {!targetRole ? (
           <motion.div 
+            key="empty-banner"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="bg-white border-2 border-dashed border-gray-200 rounded-xl p-8 md:p-12 text-center max-w-2xl mx-auto mt-12"
@@ -368,6 +369,7 @@ export function DashboardPage({ user }) {
           </motion.div>
         ) : (
           <motion.div 
+            key={targetRole}
             variants={staggerContainer}
             initial="hidden"
             animate="visible"
