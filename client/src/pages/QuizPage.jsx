@@ -22,26 +22,51 @@ const questionVariants = {
 };
 
 export function QuizPage() {
-  const [showRules, setShowRules] = useState(true);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState({});
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  const targetRole = location.state?.targetRole || "DATA ANALYSIS";
+  const storageKey = `quizState_${targetRole.replace(/\s+/g, '_')}`;
+
+  const loadSavedState = () => {
+    try {
+      const saved = sessionStorage.getItem(storageKey);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.error(e);
+    }
+    return null;
+  };
+
+  const savedState = loadSavedState();
+
+  const [showRules, setShowRules] = useState(savedState ? false : true);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(savedState?.currentQuestionIndex || 0);
+  const [selectedAnswers, setSelectedAnswers] = useState(savedState?.selectedAnswers || {});
 
   const [direction, setDirection] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showExitPrompt, setShowExitPrompt] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
-  const navigate = useNavigate();
-  const location = useLocation();
-  
-  const targetRole = location.state?.targetRole || "DATA ANALYSIS";
   
   // Initialize state synchronously
-  const [questions, setQuestions] = useState(() => generateRoleQuestions(targetRole));
+  const [questions, setQuestions] = useState(() => savedState?.questions || generateRoleQuestions(targetRole));
   
   const [timeLeft, setTimeLeft] = useState(() => {
+    if (savedState?.endTime) {
+      const remaining = Math.floor((savedState.endTime - Date.now()) / 1000);
+      return remaining > 0 ? remaining : 0;
+    }
     const initialQuestions = generateRoleQuestions(targetRole);
     return initialQuestions.reduce((total, q) => total + (q.section === 'code_reasoning' ? 2 : 1), 0) * 60;
   });
+
+  const saveState = (newState) => {
+    try {
+      const existing = loadSavedState() || {};
+      sessionStorage.setItem(storageKey, JSON.stringify({ ...existing, ...newState }));
+    } catch(e) {}
+  };
 
   useEffect(() => {
     if (showRules || questions.length === 0 || showExitPrompt || isExiting) return;
@@ -88,12 +113,17 @@ export function QuizPage() {
 
   const handleStart = () => {
     setShowRules(false);
+    const endTime = Date.now() + timeLeft * 1000;
+    saveState({ questions, currentQuestionIndex: 0, selectedAnswers: {}, endTime });
   };
 
   const handleNext = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setDirection(1);
-      setCurrentQuestionIndex(prev => prev + 1);
+      setCurrentQuestionIndex(prev => {
+        saveState({ currentQuestionIndex: prev + 1 });
+        return prev + 1;
+      });
     } else {
       handleFinish();
     }
@@ -102,19 +132,24 @@ export function QuizPage() {
   const handlePrevious = () => {
     if (currentQuestionIndex > 0) {
       setDirection(-1);
-      setCurrentQuestionIndex(prev => prev - 1);
+      setCurrentQuestionIndex(prev => {
+        saveState({ currentQuestionIndex: prev - 1 });
+        return prev - 1;
+      });
     }
   }
 
   const handleOptionSelect = (questionId, optionIndex) => {
-    setSelectedAnswers(prev => ({
-      ...prev,
-      [questionId]: optionIndex
-    }));
+    setSelectedAnswers(prev => {
+      const next = { ...prev, [questionId]: optionIndex };
+      saveState({ selectedAnswers: next });
+      return next;
+    });
   };
 
   const handleFinish = async () => {
     if (questions.length === 0) return;
+    sessionStorage.removeItem(storageKey);
     const totalQuestions = questions.length;
     let correctCount = 0;
 
@@ -183,6 +218,7 @@ export function QuizPage() {
   };
 
   const handleExitConfirm = () => {
+    sessionStorage.removeItem(storageKey);
     setShowExitPrompt(false);
     setIsExiting(true);
     setTimeout(() => {
