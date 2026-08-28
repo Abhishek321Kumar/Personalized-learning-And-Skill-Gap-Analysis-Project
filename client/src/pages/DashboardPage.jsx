@@ -134,7 +134,7 @@ export function DashboardPage({ user }) {
 
     const jobReadiness = filteredAttempts.length > 0
       ? Math.round((baseScore * 0.3) + (highestQuizScore * 0.7))
-      : baseScore;
+      : 0;
 
     const percentile = Math.max(1, Math.round(100 - (jobReadiness * 1.1) + 10));
 
