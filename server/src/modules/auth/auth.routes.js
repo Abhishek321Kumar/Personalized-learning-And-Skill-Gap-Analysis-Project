@@ -90,6 +90,7 @@ router.post("/register/part2", async (req, res, next) => {
     if (personalInfo) {
       user.firstName = personalInfo.firstName || user.firstName;
       user.lastName = personalInfo.lastName || user.lastName;
+      user.gender = personalInfo.gender || user.gender;
       if (personalInfo.dob) user.dob = new Date(personalInfo.dob);
       user.phone = personalInfo.phone || user.phone;
       user.address = {
