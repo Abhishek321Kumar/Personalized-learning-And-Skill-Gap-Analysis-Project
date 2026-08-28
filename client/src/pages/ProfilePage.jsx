@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { api } from "../api/client";
 import { useNavigate } from "react-router-dom";
@@ -37,6 +37,38 @@ export function ProfilePage({ user, onUserUpdate }) {
 
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    async function fetchFullProfile() {
+      try {
+        const res = await api.getProfile();
+        const fullUser = res.user;
+        if (fullUser) {
+          setBasicInfo({
+            firstName: fullUser.firstName || "",
+            lastName: fullUser.lastName || "",
+            email: fullUser.email || "",
+            gender: fullUser.gender || "",
+            phone: fullUser.phone || "",
+            dob: fullUser.dob ? new Date(fullUser.dob).toISOString().split('T')[0] : "",
+            country: fullUser.address?.country || ""
+          });
+          setAddress({
+            residentialAddress: fullUser.address?.residentialAddress || "",
+            city: fullUser.address?.city || "",
+            state: fullUser.address?.state || "",
+            pincode: fullUser.address?.pincode || ""
+          });
+          setEducation(fullUser.education || []);
+          setInternships(fullUser.internships || []);
+          if (onUserUpdate) onUserUpdate(fullUser);
+        }
+      } catch (err) {
+        console.error("Failed to fetch full profile", err);
+      }
+    }
+    fetchFullProfile();
+  }, [onUserUpdate]);
 
   const handleSave = async (section) => {
     setIsSaving(true);
@@ -109,8 +141,6 @@ export function ProfilePage({ user, onUserUpdate }) {
         {/* Page Header Tabs */}
         <div className="flex gap-8 border-b border-gray-200 mb-6">
           <button className="pb-3 text-sm font-semibold text-blue-700 border-b-2 border-blue-700">Personal info</button>
-          <button className="pb-3 text-sm font-medium text-gray-500 hover:text-gray-700 cursor-not-allowed">Assessment details</button>
-          <button className="pb-3 text-sm font-medium text-gray-500 hover:text-gray-700 cursor-not-allowed">Skill history</button>
         </div>
 
         <h1 className="text-2xl font-bold text-gray-900 mb-6">Personal info</h1>

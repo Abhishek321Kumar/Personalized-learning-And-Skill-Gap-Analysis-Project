@@ -17,7 +17,7 @@ export function RegistrationFlow({ onAuthSuccess }) {
   // Step 1: Part 1 Form
   const [resumeUploaded, setResumeUploaded] = useState(false);
   const [part1Form, setPart1Form] = useState({
-    firstName: "", lastName: "", dob: "", email: "", phone: "", country: "in", residentialAddress: "", city: "", state: "", pincode: ""
+    firstName: "", lastName: "", dob: "", gender: "", email: "", phone: "", country: "in", residentialAddress: "", city: "", state: "", pincode: ""
   });
 
   // Step 2: Part 2 Form
@@ -97,6 +97,7 @@ export function RegistrationFlow({ onAuthSuccess }) {
         ...part1Form,
         firstName: part1Form.firstName || data.firstName || "",
         lastName: part1Form.lastName || data.lastName || "",
+        gender: part1Form.gender || data.gender || "",
         email: part1Form.email || data.email || "",
         phone: part1Form.phone || data.phone || "",
         city: data.city || "",
@@ -141,8 +142,8 @@ export function RegistrationFlow({ onAuthSuccess }) {
       setError("Please upload your resume first.");
       return;
     }
-    const { firstName, lastName, dob, email, phone, country, residentialAddress, city, state, pincode } = part1Form;
-    if (!firstName || !lastName || !dob || !email || !phone || !country || !residentialAddress || !city || !state || !pincode) {
+    const { firstName, lastName, dob, gender, email, phone, country, residentialAddress, city, state, pincode } = part1Form;
+    if (!firstName || !lastName || !dob || !gender || !email || !phone || !country || !residentialAddress || !city || !state || !pincode) {
       setError("Please fill all mandatory fields.");
       return;
     }
@@ -324,6 +325,15 @@ export function RegistrationFlow({ onAuthSuccess }) {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-6">
                     <div><label className="form-label">First Name<span className="required">*</span></label><input className={`form-input ${error && !part1Form.firstName ? 'border-red-500' : ''}`} placeholder="e.g. Aarav" required type="text" value={part1Form.firstName} onChange={e => setPart1Form({ ...part1Form, firstName: e.target.value })} disabled={!resumeUploaded} /></div>
                     <div><label className="form-label">Last Name<span className="required">*</span></label><input className={`form-input ${error && !part1Form.lastName ? 'border-red-500' : ''}`} placeholder="e.g. Sharma" required type="text" value={part1Form.lastName} onChange={e => setPart1Form({ ...part1Form, lastName: e.target.value })} disabled={!resumeUploaded} /></div>
+                    <div>
+                      <label className="form-label">Gender<span className="required">*</span></label>
+                      <select className={`form-input ${error && !part1Form.gender ? 'border-red-500' : ''}`} required value={part1Form.gender} onChange={e => setPart1Form({ ...part1Form, gender: e.target.value })} disabled={!resumeUploaded}>
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
                     <div><label className="form-label">Date of Birth<span className="required">*</span></label><input className={`form-input ${error && !part1Form.dob ? 'border-red-500' : ''}`} required type="date" value={part1Form.dob} onChange={e => setPart1Form({ ...part1Form, dob: e.target.value })} disabled={!resumeUploaded} /></div>
                     <div><label className="form-label">Email Address<span className="required">*</span></label><input className={`form-input ${error && !part1Form.email ? 'border-red-500' : ''}`} placeholder="aarav.s@skillbridge.edu" required type="email" value={part1Form.email} onChange={e => setPart1Form({ ...part1Form, email: e.target.value })} disabled={!resumeUploaded} /></div>
                     <div><label className="form-label">Phone Number<span className="required">*</span></label><input className={`form-input ${error && !part1Form.phone ? 'border-red-500' : ''}`} placeholder="XXXXXXXXXX" required type="tel" value={part1Form.phone} onChange={e => setPart1Form({ ...part1Form, phone: e.target.value })} disabled={!resumeUploaded} /></div>
