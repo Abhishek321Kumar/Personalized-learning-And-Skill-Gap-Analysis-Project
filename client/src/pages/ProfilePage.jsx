@@ -1,6 +1,18 @@
 import { useState, useEffect } from "react";
 import { api } from "../api/client";
 import { useNavigate } from "react-router-dom";
+const sortEducation = (eduArray) => {
+  return [...(eduArray || [])].sort((a, b) => {
+    const getRank = (level) => {
+      const l = level?.toLowerCase() || "";
+      if (l.includes("postgrad") || l.includes("phd") || l.includes("master") || l.includes("mca") || l.includes("mtech") || l.includes("msc") || l.includes("mba")) return 3;
+      if (l.includes("undergrad") || l.includes("bachelor") || l.includes("degree") || l.includes("bca") || l.includes("btech") || l.includes("bsc") || l.includes("ba")) return 2;
+      if (l.includes("high school") || l.includes("12") || l.includes("10") || l.includes("pu") || l.includes("secondary")) return 1;
+      return 0;
+    };
+    return getRank(b.level) - getRank(a.level);
+  });
+};
 
 export function ProfilePage({ user, onUserUpdate }) {
   const navigate = useNavigate();
@@ -304,7 +316,7 @@ export function ProfilePage({ user, onUserUpdate }) {
               )}
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-8">
               <div>
                 <span className={labelClass}>Residential address</span>
                 {!isEditingAddress ? (
@@ -313,7 +325,7 @@ export function ProfilePage({ user, onUserUpdate }) {
                   <textarea rows="2" className={`${inputClass} resize-none`} value={address.residentialAddress} onChange={e => setAddress({...address, residentialAddress: e.target.value})} />
                 )}
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-8">
                 <div>
                   <span className={labelClass}>City</span>
                   {!isEditingAddress ? (
@@ -363,7 +375,7 @@ export function ProfilePage({ user, onUserUpdate }) {
             <div className="space-y-6 relative before:absolute before:inset-0 before:ml-2 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-gray-200 before:to-transparent">
               {education.length === 0 && <p className="text-sm text-gray-500">No education details added.</p>}
               
-              {education.map((edu, idx) => (
+              {(isEditingEdu ? education : sortEducation(education)).map((edu, idx) => (
                 <div key={idx} className="relative flex items-start gap-4">
                   <div className="absolute left-0 mt-1.5 w-4 h-4 rounded-full bg-gray-200 border-4 border-white shrink-0 z-10" />
                   <div className="ml-8 w-full">
