@@ -185,12 +185,12 @@ export const ROLE_INTERVIEW_GUIDES = [
     interviewGuides: [
       {
         title: "Product Manager Interview Prep",
-        url: "https://igotanoffer.com/blogs/product-manager/product-manager-interview",
+        url: "https://igotanoffer.com/blogs/product-manager/product-manager-interview-questions",
         description: "Product design, strategy, and execution questions."
       },
       {
         title: "Product Sense & Case Studies",
-        url: "https://www.pramp.com/roles/pm",
+        url: "https://www.tryexponent.com/courses/pm",
         description: "Practice answering product strategy and metric-based questions."
       }
     ]

@@ -656,6 +656,39 @@ export function SkillGapFlow() {
             ],
             verifiedSkills: ["REST API Development", "Node.js Fundamentals"],
             description: "Requires mastering both client-side and server-side architecture, managing state, optimizing databases, and scaling systems.",
+          },
+          {
+            role: "Product Manager",
+            category: "Product Management",
+            status: "pending_actions",
+            skills: [
+              { name: "Data-Driven Prioritization", current: 50, target: 85 },
+              { name: "Go-To-Market Strategy", current: 40, target: 80 },
+              { name: "Business Communication", current: 75, target: 90 }
+            ],
+            missingSkills: [
+              { name: "Go-To-Market Strategy", effortTag: "Deep skill", current: 40 },
+              { name: "Data-Driven Prioritization", effortTag: "Moderate", current: 50 },
+              { name: "Business Communication", effortTag: "Quick win", current: 75 }
+            ],
+            verifiedSkills: ["Agile Fundamentals", "User Story Mapping"],
+            description: "Focuses on strategic prioritization, product positioning, market analysis, and cross-functional leadership.",
+          },
+          {
+            role: "UI/UX Designer",
+            category: "Design",
+            status: "pending_actions",
+            skills: [
+              { name: "Interaction Design", current: 45, target: 85 },
+              { name: "User Research Methods", current: 70, target: 90 },
+              { name: "Prototyping & Wireframing", current: 80, target: 85 }
+            ],
+            missingSkills: [
+              { name: "Interaction Design", effortTag: "Deep skill", current: 45 },
+              { name: "User Research Methods", effortTag: "Moderate", current: 70 }
+            ],
+            verifiedSkills: ["Prototyping & Wireframing", "Figma Fundamentals"],
+            description: "Focuses on user-centered design, interaction modeling, and translating requirements into intuitive interfaces.",
           }
         ];
 
