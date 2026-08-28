@@ -226,7 +226,19 @@ export function QuizPage() {
   };
 
   const handleExitConfirm = () => {
+    // 1. Clear session storage
     sessionStorage.removeItem(storageKey);
+    sessionStorage.removeItem("current_quiz_role");
+    
+    // 2. Clear React state so that if the user navigates back via BFCache, 
+    // the quiz doesn't resume from its frozen in-memory state.
+    setShowRules(true);
+    setQuestions([]);
+    setTimeLeft(0);
+    setCurrentQuestionIndex(0);
+    setSelectedAnswers({});
+    
+    // 3. Navigate away
     setShowExitPrompt(false);
     setIsExiting(true);
     setTimeout(() => {
