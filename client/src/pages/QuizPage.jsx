@@ -25,7 +25,15 @@ export function QuizPage() {
   const navigate = useNavigate();
   const location = useLocation();
   
-  const targetRole = location.state?.targetRole || "DATA ANALYSIS";
+  // Persist targetRole in sessionStorage to survive page reloads
+  let initialRole = location.state?.targetRole;
+  if (!initialRole) {
+    initialRole = sessionStorage.getItem("current_quiz_role") || "DATA ANALYSIS";
+  } else {
+    sessionStorage.setItem("current_quiz_role", initialRole);
+  }
+
+  const targetRole = initialRole;
   const storageKey = `quizState_${targetRole.replace(/\s+/g, '_')}`;
 
   const loadSavedState = () => {
