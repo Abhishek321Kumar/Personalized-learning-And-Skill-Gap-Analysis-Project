@@ -51,9 +51,11 @@ function PrintReportTemplate({ report, user }) {
        <style dangerouslySetInnerHTML={{__html: `
          @media print {
            @page { margin: 15mm; size: auto; }
-           body { -webkit-print-color-adjust: exact; print-color-adjust: exact; background: white; margin: 0; }
-           .page-break-before { page-break-before: always; }
-           .break-inside-avoid { page-break-inside: avoid; }
+           html, body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; background: white !important; margin: 0 !important; height: auto !important; min-height: auto !important; overflow: visible !important; }
+           #root, .site-shell, main { display: block !important; height: auto !important; min-height: auto !important; overflow: visible !important; margin-top: 0 !important; padding-top: 0 !important; }
+           header, footer, nav { display: none !important; }
+           .page-break-before { break-before: page; page-break-before: always; }
+           .break-inside-avoid { break-inside: avoid; page-break-inside: avoid; }
          }
        `}} />
        
