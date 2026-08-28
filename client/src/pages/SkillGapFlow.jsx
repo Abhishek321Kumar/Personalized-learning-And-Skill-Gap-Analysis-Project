@@ -188,8 +188,7 @@ function ReportDetails({ report, user, onBack }) {
   
   const [expandedSkill, setExpandedSkill] = useState(topSkill.name);
 
-  // Use the exact role to find guides, or fallback to first if absolutely not found
-  const roleGuides = ROLE_INTERVIEW_GUIDES.find(r => r.role.toLowerCase() === report.role.toLowerCase())?.interviewGuides || ROLE_INTERVIEW_GUIDES[0].interviewGuides;
+  const roleGuides = ROLE_INTERVIEW_GUIDES.find(r => r.role.toLowerCase() === (report?.role || "").toLowerCase())?.interviewGuides || ROLE_INTERVIEW_GUIDES[0].interviewGuides;
 
   const handleScrollToSkill = (skillName) => {
     setExpandedSkill(skillName);
