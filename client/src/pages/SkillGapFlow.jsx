@@ -18,163 +18,6 @@ const staggerContainer = {
   }
 };
 
-const DonutChart = ({ percentage, color = "#4f46e5", size = 100, strokeWidth = 10, label }) => {
-  const radius = (size - strokeWidth) / 2;
-  const circumference = radius * 2 * Math.PI;
-  const offset = circumference - (percentage / 100) * circumference;
-  
-  return (
-    <div className="flex flex-col items-center">
-      <div className="relative" style={{ width: size, height: size }}>
-        <svg className="w-full h-full transform -rotate-90">
-          <circle cx={size/2} cy={size/2} r={radius} stroke="#f3f4f6" strokeWidth={strokeWidth} fill="transparent" />
-          <circle cx={size/2} cy={size/2} r={radius} stroke={color} strokeWidth={strokeWidth} fill="transparent" strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" />
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-xl font-black text-gray-900">{Math.round(percentage)}%</span>
-        </div>
-      </div>
-      {label && <span className="mt-3 text-[10px] font-bold text-gray-500 uppercase tracking-widest text-center">{label}</span>}
-    </div>
-  );
-};
-
-function PrintReportTemplate({ report, user }) {
-  const { phases } = generateRoadmapPhases(report.missingSkills || []);
-  const userName = user?.name || "Candidate";
-  const userEmail = user?.email || "";
-  
-  const roleGuides = ROLE_INTERVIEW_GUIDES.find(r => r.role.toLowerCase() === (report.role || "").toLowerCase())?.interviewGuides || ROLE_INTERVIEW_GUIDES[0].interviewGuides;
-
-  return (
-    <div className="hidden print:block font-sans text-black bg-white w-full">
-       <style dangerouslySetInnerHTML={{__html: `
-         @media print {
-           @page { margin: 15mm; size: auto; }
-           html, body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; background: white !important; margin: 0 !important; height: auto !important; min-height: auto !important; overflow: visible !important; }
-           #root, .site-shell, main { display: block !important; height: auto !important; min-height: auto !important; overflow: visible !important; margin-top: 0 !important; padding-top: 0 !important; }
-           header, footer, nav { display: none !important; }
-           .page-break-before { break-before: page; page-break-before: always; }
-           .break-inside-avoid { break-inside: avoid; page-break-inside: avoid; }
-         }
-       `}} />
-       
-       <div className="pb-8">
-         {/* 1. HEADER / MEMBER PROFILE */}
-         <div className="flex items-center gap-6 mb-12 border-b-2 border-gray-100 pb-8 break-inside-avoid">
-           <div className="w-24 h-24 rounded-full bg-blue-600 text-white flex items-center justify-center text-4xl font-black border-4 border-blue-100 shrink-0">
-             {userName.charAt(0).toUpperCase()}
-           </div>
-           <div className="flex-grow">
-             <div className="uppercase tracking-widest text-xs font-bold text-blue-600 mb-1">Member Profile</div>
-             <h1 className="text-4xl font-black tracking-tight text-gray-900">{userName}</h1>
-             <p className="text-lg font-bold text-gray-500 mt-1">{report.role}</p>
-           </div>
-           <div className="text-right">
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Generated</p>
-              <p className="text-sm font-bold text-gray-800">{report.date || new Date().toLocaleDateString()}</p>
-           </div>
-         </div>
-
-         {/* 2. PERFORMANCE SUMMARY (DONUT CHARTS) */}
-         <div className="mb-12 break-inside-avoid">
-           <h2 className="text-xl font-black text-gray-900 uppercase tracking-widest mb-6">Performance & Skills</h2>
-           <div className="flex items-center gap-12 bg-gray-50 rounded-2xl p-8 border border-gray-100">
-             <div className="shrink-0 border-r-2 border-gray-200 pr-12">
-               <DonutChart percentage={report.score || 0} size={160} strokeWidth={16} color="#2563eb" label="Overall Match" />
-             </div>
-             <div className="flex-grow grid grid-cols-3 gap-6">
-               {(report.skills || []).slice(0, 3).map((skill, idx) => (
-                 <DonutChart key={idx} percentage={skill.current} size={90} strokeWidth={8} color={idx === 0 ? "#10b981" : idx === 1 ? "#f59e0b" : "#6366f1"} label={skill.name} />
-               ))}
-             </div>
-           </div>
-         </div>
-
-         {/* 3. GAPS & IMPROVEMENTS */}
-         <div className="mb-12 grid grid-cols-2 gap-8 break-inside-avoid">
-           <div>
-             <h2 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-4 border-b-2 border-gray-100 pb-2">Verified Strengths</h2>
-             <ul className="flex flex-col gap-3">
-                {report.verifiedSkills && report.verifiedSkills.length > 0 
-                  ? report.verifiedSkills.map((s,i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <span className="text-green-500 mt-0.5">●</span>
-                        <span className="text-sm font-bold text-gray-700">{s}</span>
-                      </li>
-                    ))
-                  : <li className="text-sm text-gray-400 italic">No strengths documented yet.</li>}
-             </ul>
-           </div>
-           <div>
-             <h2 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-4 border-b-2 border-gray-100 pb-2">Areas of Lack</h2>
-             <ul className="flex flex-col gap-3">
-               {report.missingSkills && report.missingSkills.length > 0 
-                 ? report.missingSkills.map((s,i) => (
-                     <li key={i} className="flex items-start gap-2">
-                       <span className="text-orange-500 mt-0.5">●</span>
-                       <span className="text-sm font-bold text-gray-700">{s.name} <span className="text-gray-400 ml-1">({s.effortTag})</span></span>
-                     </li>
-                   ))
-                 : <li className="text-sm text-gray-400 italic">No critical gaps identified.</li>}
-             </ul>
-           </div>
-         </div>
-       </div>
-
-       {/* PAGE 2: ROADMAP */}
-       <div className="page-break-before pb-8">
-         <h2 className="text-2xl font-black text-gray-900 uppercase tracking-widest mb-8 text-center border-b-2 border-gray-100 pb-4">Learning Roadmap</h2>
-         <div className="flex flex-col gap-6 relative before:absolute before:inset-0 before:ml-6 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-1 before:bg-gray-100">
-           {phases.map((phase, idx) => (
-             <div key={idx} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active break-inside-avoid">
-               <div className="flex items-center justify-center w-12 h-12 rounded-full border-4 border-white bg-blue-600 text-white font-bold shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-sm z-10">
-                 {idx + 1}
-               </div>
-               <div className="w-[calc(100%-4rem)] md:w-[calc(50%-3rem)] bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm">
-                 <div className="flex justify-between items-center mb-2">
-                   <h3 className="font-black text-lg text-gray-900">{phase.label}</h3>
-                   <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-1 rounded">{phase.estimatedDuration}</span>
-                 </div>
-                 <ul className="mt-3 flex flex-col gap-2">
-                   {phase.skills.length > 0 ? (
-                     phase.skills.map((s, i) => <li key={i} className="text-sm font-medium text-gray-700">• {s.name}</li>)
-                   ) : (
-                     <li className="text-xs italic text-gray-400">No specific topics in this phase.</li>
-                   )}
-                 </ul>
-               </div>
-             </div>
-           ))}
-         </div>
-       </div>
-
-       {/* PAGE 3: INTERVIEW PREP GUIDE */}
-       <div className="page-break-before pb-8">
-         <h2 className="text-2xl font-black text-gray-900 uppercase tracking-widest mb-8 text-center border-b-2 border-gray-100 pb-4">Interview Prep Guide</h2>
-         <p className="text-sm text-gray-600 mb-8 text-center max-w-2xl mx-auto">
-           Based on the {report.role} role, here are the core competencies and example interview questions you should prepare for.
-         </p>
-         
-         <div className="grid grid-cols-1 gap-6">
-           {roleGuides.map((guide, idx) => (
-             <div key={idx} className="break-inside-avoid border-2 border-gray-100 rounded-xl overflow-hidden mb-6">
-               <div className="bg-gray-50 px-6 py-4 border-b border-gray-100">
-                 <h3 className="font-black text-lg text-gray-900">{guide.title}</h3>
-               </div>
-               <div className="p-6 bg-white">
-                 <p className="font-medium text-sm text-gray-800 mb-3">{guide.description}</p>
-                 <a href={guide.url} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-blue-600 underline truncate block hover:text-blue-800">{guide.url}</a>
-               </div>
-             </div>
-           ))}
-         </div>
-       </div>
-
-    </div>
-  )
-}
-
 function ReportDetails({ report, user, onBack }) {
   const { phases } = generateRoadmapPhases(report.missingSkills || []);
   const topSkill = phases.flatMap(p => p.skills)[0] || { name: "General Skill Review" }; 
@@ -196,33 +39,21 @@ function ReportDetails({ report, user, onBack }) {
 
   return (
     <>
-      {/* Print template (only visible when printing) */}
-      <PrintReportTemplate report={report} user={user} />
-      
-      {/* Screen Template (hidden when printing) */}
       <motion.main 
         key="details"
         initial={{ opacity: 0, x: 40 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="flex-grow w-full max-w-[1280px] mx-auto px-4 md:px-10 py-10 print:hidden"
+        className="flex-grow w-full max-w-[1280px] mx-auto px-4 md:px-10 py-10"
       >
-        <header className="mb-10 flex justify-between items-center">
+        <header className="mb-10 flex justify-start items-center">
           <button 
             onClick={onBack}
             className="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors font-semibold text-sm group bg-white px-4 py-2 rounded-full shadow-sm border border-gray-200"
           >
             <svg className="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Back to Overview
-          </button>
-          
-          <button 
-            onClick={() => window.print()}
-            className="flex items-center gap-2 text-white bg-gray-900 hover:bg-black transition-colors font-semibold text-sm px-5 py-2 rounded-full shadow-md"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-            Download PDF
           </button>
         </header>
 
