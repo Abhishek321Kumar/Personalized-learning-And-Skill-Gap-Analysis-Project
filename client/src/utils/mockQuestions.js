@@ -1,17 +1,44 @@
+// Helper to shuffle an array
+const shuffleArray = (array) => {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+};
+
+// Helper to shuffle options and keep track of correct answer string
+const randomizeOptions = (question) => {
+  return {
+    ...question,
+    options: shuffleArray(question.options)
+  };
+};
+
 // Shared Banks
 const aptitudeBank = [
   { text: "What is the next number in the series: 2, 6, 12, 20, 30, ...?", options: ["40", "42", "44", "48"], correctAnswer: "42", section: "aptitude" },
   { text: "If all Bloops are Razzies and all Razzies are Lazzies, which of the following is necessarily true?", options: ["All Lazzies are Bloops", "Some Lazzies are definitely not Bloops", "All Bloops are Lazzies", "No Razzies are Bloops"], correctAnswer: "All Bloops are Lazzies", section: "aptitude" },
   { text: "A train running at the speed of 60 km/hr crosses a pole in 9 seconds. What is the length of the train?", options: ["120 metres", "180 metres", "324 metres", "150 metres"], correctAnswer: "150 metres", section: "aptitude" },
   { text: "Which word does not belong with the others?", options: ["Parsley", "Basil", "Dill", "Mayonnaise"], correctAnswer: "Mayonnaise", section: "aptitude" },
-  { text: "If 5 machines take 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?", options: ["1 minute", "5 minutes", "100 minutes", "500 minutes"], correctAnswer: "5 minutes", section: "aptitude" }
+  { text: "If 5 machines take 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?", options: ["1 minute", "5 minutes", "100 minutes", "500 minutes"], correctAnswer: "5 minutes", section: "aptitude" },
+  { text: "Look at this series: 36, 34, 30, 28, 24, ... What number should come next?", options: ["20", "22", "23", "26"], correctAnswer: "22", section: "aptitude" },
+  { text: "SCD, TEF, UGH, ____, WKL. What comes in the blank?", options: ["CMN", "UJI", "VIJ", "IJT"], correctAnswer: "VIJ", section: "aptitude" },
+  { text: "A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How much does the ball cost?", options: ["$0.05", "$0.10", "$1.00", "$0.50"], correctAnswer: "$0.05", section: "aptitude" },
+  { text: "If you rearrange the letters 'CIFAIPC', you would have the name of a(n):", options: ["City", "Animal", "Ocean", "River"], correctAnswer: "Ocean", section: "aptitude" },
+  { text: "Which of the following numbers is completely divisible by 9?", options: ["4213533", "5213634", "6324645", "7325756"], correctAnswer: "5213634", section: "aptitude" }
 ];
 
 const verbalBank = [
   { text: "Choose the word most similar in meaning to 'ABUNDANT'.", options: ["Scarce", "Plentiful", "Minimal", "Rare"], correctAnswer: "Plentiful", section: "verbal" },
   { text: "Identify the grammatically correct sentence.", options: ["She don't like apples.", "She doesn't likes apples.", "She doesn't like apples.", "She do not likes apples."], correctAnswer: "She doesn't like apples.", section: "verbal" },
   { text: "Fill in the blank: The company decided to _____ its operations due to heavy losses.", options: ["expand", "curtail", "promote", "invest"], correctAnswer: "curtail", section: "verbal" },
-  { text: "What is the antonym of 'OBSOLETE'?", options: ["Ancient", "Current", "Outdated", "Antique"], correctAnswer: "Current", section: "verbal" }
+  { text: "What is the antonym of 'OBSOLETE'?", options: ["Ancient", "Current", "Outdated", "Antique"], correctAnswer: "Current", section: "verbal" },
+  { text: "Which word is spelled correctly?", options: ["Accomodate", "Acommodate", "Accommodate", "Acomodate"], correctAnswer: "Accommodate", section: "verbal" },
+  { text: "Choose the correct preposition: He is extremely good _____ mathematics.", options: ["in", "at", "with", "on"], correctAnswer: "at", section: "verbal" },
+  { text: "What is the meaning of the idiom 'Bite the bullet'?", options: ["To get angry", "To face a difficult situation with courage", "To eat something hard", "To make a mistake"], correctAnswer: "To face a difficult situation with courage", section: "verbal" },
+  { text: "Select the pair that expresses a similar relationship to 'Doctor : Hospital'.", options: ["Teacher : School", "Farmer : Crop", "Chef : Food", "Mechanic : Car"], correctAnswer: "Teacher : School", section: "verbal" }
 ];
 
 const codeReasoningBank = [
@@ -42,6 +69,20 @@ const codeReasoningBank = [
     correctAnswer: "num % 2 == 0", 
     section: "code_reasoning", 
     codeSubtype: "fill_blank" 
+  },
+  { 
+    text: "What is the output of the following code?\n\n```javascript\nconsole.log(typeof null);\n```", 
+    options: ["'null'", "'undefined'", "'object'", "'number'"], 
+    correctAnswer: "'object'", 
+    section: "code_reasoning", 
+    codeSubtype: "output_prediction" 
+  },
+  { 
+    text: "How do you correctly clone a JavaScript object `obj` without mutating it?", 
+    options: ["const newObj = obj;", "const newObj = Object.assign(obj);", "const newObj = { ...obj };", "const newObj = Object.create(obj);"], 
+    correctAnswer: "const newObj = { ...obj };", 
+    section: "code_reasoning", 
+    codeSubtype: "bug_spotting" 
   }
 ];
 
@@ -56,7 +97,9 @@ const dataQuestions = [
   { text: "What is the curse of dimensionality?", options: ["Algorithms get faster with more dimensions", "Data becomes sparse as dimensions increase, degrading model performance", "Visualizing 3D data is difficult", "None of the above"], correctAnswer: "Data becomes sparse as dimensions increase, degrading model performance", section: "technical", skill: "Data Cleaning" },
   { text: "Which chart is most appropriate for visualizing the distribution of a single continuous variable?", options: ["Scatter plot", "Pie chart", "Histogram", "Line graph"], correctAnswer: "Histogram", section: "technical", skill: "Data Visualization" },
   { text: "What SQL clause is used to sort the result-set?", options: ["SORT BY", "ORDER BY", "GROUP BY", "ALIGN BY"], correctAnswer: "ORDER BY", section: "technical", skill: "SQL" },
-  { text: "What does a correlation coefficient of -1 indicate?", options: ["No correlation", "A perfect positive correlation", "A perfect negative correlation", "An error in calculation"], correctAnswer: "A perfect negative correlation", section: "technical", skill: "Data Visualization" }
+  { text: "What does a correlation coefficient of -1 indicate?", options: ["No correlation", "A perfect positive correlation", "A perfect negative correlation", "An error in calculation"], correctAnswer: "A perfect negative correlation", section: "technical", skill: "Data Visualization" },
+  { text: "Which of the following represents a Left Join in SQL?", options: ["Returns all records from the left table, and matched records from the right table", "Returns all records when there is a match in either left or right table", "Returns records that have matching values in both tables", "Returns all records from the right table"], correctAnswer: "Returns all records from the left table, and matched records from the right table", section: "technical", skill: "SQL" },
+  { text: "What is overfitting in machine learning?", options: ["Model performs well on training data but poorly on unseen data", "Model performs poorly on training data", "Model requires too much computing power", "Model under-represents the data variance"], correctAnswer: "Model performs well on training data but poorly on unseen data", section: "technical", skill: "Machine Learning" }
 ];
 
 const devQuestions = [
@@ -69,7 +112,9 @@ const devQuestions = [
   { text: "In Node.js, what is the Event Loop responsible for?", options: ["Rendering HTML", "Handling asynchronous operations", "Compiling TypeScript", "Managing the DOM"], correctAnswer: "Handling asynchronous operations", section: "technical", skill: "Backend" },
   { text: "What does ACID stand for in the context of databases?", options: ["Atomicity, Consistency, Isolation, Durability", "Asynchronous, Concurrent, Isolated, Distributed", "Authentication, Control, Identification, Data", "Automated, Computed, Iterative, Dynamic"], correctAnswer: "Atomicity, Consistency, Isolation, Durability", section: "technical", skill: "Database" },
   { text: "What is the main advantage of a microservices architecture over a monolithic one?", options: ["It is always faster", "It allows independent deployment and scaling of services", "It uses less memory", "It requires no networking"], correctAnswer: "It allows independent deployment and scaling of services", section: "technical", skill: "Architecture" },
-  { text: "Which of the following is an example of CI/CD?", options: ["Manually uploading FTP files", "Automated testing and deployment on git push", "Writing unit tests", "Using a CDN for images"], correctAnswer: "Automated testing and deployment on git push", section: "technical", skill: "DevOps" }
+  { text: "Which of the following is an example of CI/CD?", options: ["Manually uploading FTP files", "Automated testing and deployment on git push", "Writing unit tests", "Using a CDN for images"], correctAnswer: "Automated testing and deployment on git push", section: "technical", skill: "DevOps" },
+  { text: "What is the Virtual DOM in React?", options: ["A lightweight copy of the actual DOM", "A CSS framework", "A browser extension for debugging", "A separate hardware component"], correctAnswer: "A lightweight copy of the actual DOM", section: "technical", skill: "Frontend" },
+  { text: "What does a reverse proxy do?", options: ["Directs client requests to the appropriate backend server", "Encrypts local databases", "Serves as a frontend client", "Stores caching keys only"], correctAnswer: "Directs client requests to the appropriate backend server", section: "technical", skill: "Architecture" }
 ];
 
 const productQuestions = [
@@ -83,7 +128,6 @@ const productQuestions = [
   { text: "What is A/B testing?", options: ["Testing two versions of a product to see which performs better", "Testing software for bugs", "A method for backend load balancing", "Interviewing two customers simultaneously"], correctAnswer: "Testing two versions of a product to see which performs better", section: "technical", skill: "Analytics" },
   { text: "When evaluating a new feature request from a large customer, what is the best approach?", options: ["Build it immediately to keep them happy", "Assess how it aligns with the overall product vision and benefits the broader user base", "Ignore it unless multiple customers ask", "Let engineering decide"], correctAnswer: "Assess how it aligns with the overall product vision and benefits the broader user base", section: "technical", skill: "Prioritization" },
   { text: "Which part of a User Story defines when the story is complete?", options: ["The Title", "Acceptance Criteria", "The Description", "The Story Points"], correctAnswer: "Acceptance Criteria", section: "technical", skill: "User Stories" },
-  // Extra technical questions since they skip Code Reasoning
   { text: "What does CAC stand for in product analytics?", options: ["Customer Average Cost", "Customer Acquisition Cost", "Company Annual Capital", "Centralized Analytics Center"], correctAnswer: "Customer Acquisition Cost", section: "technical", skill: "Analytics" },
   { text: "What does NPS measure?", options: ["Network Protocol Security", "Net Promoter Score (customer loyalty)", "New Product Sales", "None of the above"], correctAnswer: "Net Promoter Score (customer loyalty)", section: "technical", skill: "Analytics" },
   { text: "Which of the following best describes the RICE scoring model?", options: ["Reach, Impact, Confidence, Effort", "Reliability, Integrity, Consistency, Efficiency", "Revenue, Investment, Cost, Earnings", "Research, Ideation, Creation, Evaluation"], correctAnswer: "Reach, Impact, Confidence, Effort", section: "technical", skill: "Prioritization" },
@@ -101,7 +145,6 @@ const uxQuestions = [
   { text: "What does 'accessibility' (a11y) ensure in digital design?", options: ["The app is free to download", "The app can be used by people with a wide range of abilities and disabilities", "The app works offline", "The app is responsive on mobile devices"], correctAnswer: "The app can be used by people with a wide range of abilities and disabilities", section: "technical", skill: "UI/UX" },
   { text: "What is a user persona?", options: ["A real customer who uses the product", "A fictional character created to represent a user type that might use a site or product", "A login credential", "A customer support agent"], correctAnswer: "A fictional character created to represent a user type that might use a site or product", section: "technical", skill: "User Research" },
   { text: "What is white space in design?", options: ["Empty areas between design elements", "A specific color code (#FFFFFF)", "A blank HTML document", "A cloud storage area"], correctAnswer: "Empty areas between design elements", section: "technical", skill: "Wireframing" },
-  // Extra technical questions since they skip Code Reasoning
   { text: "What is the primary difference between a wireframe and a prototype?", options: ["A wireframe is interactive, a prototype is static", "A wireframe is static and low-fidelity, a prototype is interactive", "They are exactly the same thing", "A wireframe is used for code, a prototype is for design"], correctAnswer: "A wireframe is static and low-fidelity, a prototype is interactive", section: "technical", skill: "Prototyping" },
   { text: "Which research method is best for understanding WHY a user behaves in a certain way?", options: ["A/B Testing", "Analytics tracking", "Qualitative User Interviews", "Heatmaps"], correctAnswer: "Qualitative User Interviews", section: "technical", skill: "User Research" },
   { text: "What is a microinteraction?", options: ["A tiny piece of code", "A small, functional animation or design element that provides feedback", "A brief meeting with a stakeholder", "A small font size"], correctAnswer: "A small, functional animation or design element that provides feedback", section: "technical", skill: "Interaction Design" },
@@ -128,23 +171,23 @@ export const generateRoleQuestions = (role) => {
 
   const finalQuestions = [];
 
-  // 1. Aptitude (5 questions)
-  finalQuestions.push(...aptitudeBank);
+  // 1. Aptitude (Random 5 questions)
+  finalQuestions.push(...shuffleArray(aptitudeBank).slice(0, 5));
 
-  // 2. Verbal (4 questions)
-  finalQuestions.push(...verbalBank);
+  // 2. Verbal (Random 4 questions)
+  finalQuestions.push(...shuffleArray(verbalBank).slice(0, 4));
 
-  // 3. Code Reasoning (only if technical role)
+  // 3. Code Reasoning (Random 4 questions if technical role)
   if (isTechnicalRole) {
-    finalQuestions.push(...codeReasoningBank);
+    finalQuestions.push(...shuffleArray(codeReasoningBank).slice(0, 4));
   }
 
-  // 4. Technical
-  finalQuestions.push(...technicalQuestions);
+  // 4. Technical (Random 10 questions)
+  finalQuestions.push(...shuffleArray(technicalQuestions).slice(0, 10));
 
-  // Assign sequential IDs while keeping metadata intact
+  // Assign sequential IDs while keeping metadata intact, and randomize the options within each question
   return finalQuestions.map((q, index) => ({
-    ...q,
+    ...randomizeOptions(q),
     id: `q_${index}`
   }));
 };
