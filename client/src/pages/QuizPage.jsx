@@ -89,7 +89,7 @@ export function QuizPage() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [timeLeft, showRules, questions.length]);
+  }, [timeLeft, showRules, questions.length, showExitPrompt, isExiting]);
 
   // Intercept back button and page refresh
   useEffect(() => {
