@@ -18,13 +18,94 @@ const staggerContainer = {
   }
 };
 
+function PrintReportTemplate({ report }) {
+  return (
+    <div className="hidden print:block font-sans text-black p-8 bg-white min-h-screen w-full">
+       <div className="border-b-4 border-gray-900 pb-6 mb-8 flex justify-between items-end">
+          <div>
+            <h1 className="text-4xl font-black mb-2 tracking-tight">Skill Gap Analysis Report</h1>
+            <p className="text-xl font-bold text-gray-600">Target Role: {report.role}</p>
+          </div>
+          <div className="text-right">
+             <p className="font-bold text-2xl">Match Score: {report.score}%</p>
+             <p className="text-sm font-medium text-gray-500 uppercase tracking-widest mt-1">Generated: {report.date}</p>
+          </div>
+       </div>
+
+       <div className="mb-10 grid grid-cols-2 gap-8">
+         <div>
+           <h2 className="text-2xl font-black border-b-2 border-gray-200 pb-2 mb-4">Performance Summary</h2>
+           <p className="text-gray-700 leading-relaxed mb-4">
+             This report outlines your technical readiness for the {report.role} role. Based on your assessment, your overall match is {report.score}%. To reach the target proficiency, focus on the actionable learning paths outlined below.
+           </p>
+           <h3 className="font-bold text-gray-900 mb-2">Verified Strengths:</h3>
+           <ul className="list-disc pl-5 text-gray-700">
+              {report.verifiedSkills && report.verifiedSkills.map((s,i)=><li key={i}>{s}</li>)}
+           </ul>
+         </div>
+         <div>
+           <h2 className="text-2xl font-black border-b-2 border-gray-200 pb-2 mb-4">Identified Skill Gaps</h2>
+           <div className="flex flex-col gap-3">
+             {report.missingSkills && report.missingSkills.map((s,i)=>(
+               <div key={i} className="flex justify-between items-center bg-gray-50 p-3 rounded-lg border border-gray-200">
+                 <span className="font-bold text-gray-900">{s.name}</span>
+                 <span className="text-xs font-bold uppercase px-2 py-1 bg-gray-200 rounded">{s.effortTag || "Moderate"}</span>
+               </div>
+             ))}
+           </div>
+         </div>
+       </div>
+
+       <div className="mb-10">
+          <h2 className="text-2xl font-black border-b-2 border-gray-200 pb-2 mb-6">Actionable Learning Roadmap</h2>
+          {report.missingSkills && report.missingSkills.map((skill, idx) => {
+             const staticResource = SKILL_RESOURCES.find(r => r.skill === skill.name) || {};
+             return (
+               <div key={idx} className="mb-8 break-inside-avoid bg-white border-2 border-gray-100 rounded-xl p-6">
+                 <div className="flex justify-between items-center mb-4">
+                   <h3 className="text-xl font-black text-gray-900">{skill.name}</h3>
+                   <span className="font-bold text-gray-500">Current: {skill.current}%</span>
+                 </div>
+                 
+                 {staticResource.coreConcepts && (
+                   <div className="mb-4">
+                     <strong className="block text-sm font-bold text-gray-900 uppercase tracking-wider mb-2">Core Concepts:</strong>
+                     <div className="flex flex-wrap gap-2">
+                       {staticResource.coreConcepts.map((c, i) => (
+                         <span key={i} className="bg-gray-100 px-2 py-1 rounded text-sm text-gray-700">{c}</span>
+                       ))}
+                     </div>
+                   </div>
+                 )}
+                 {staticResource.courses && (
+                   <div>
+                     <strong className="block text-sm font-bold text-gray-900 uppercase tracking-wider mb-2">Recommended Courses:</strong>
+                     <ul className="list-disc pl-5 text-gray-700">
+                       {staticResource.courses.map((c, i) => (
+                         <li key={i}><span className="font-bold">{c.platform}:</span> {c.title}</li>
+                       ))}
+                     </ul>
+                   </div>
+                 )}
+               </div>
+             )
+          })}
+       </div>
+       
+       <div className="text-center text-sm font-bold text-gray-400 pt-8 border-t-2 border-gray-100">
+         Powered by SkillBridge Analytics
+       </div>
+    </div>
+  )
+}
+
 function ReportDetails({ report, onBack }) {
   const { phases } = generateRoadmapPhases(report.missingSkills || []);
   const topSkill = phases.flatMap(p => p.skills)[0] || { name: "General Skill Review" }; 
   
   const [expandedSkill, setExpandedSkill] = useState(topSkill.name);
 
-  // Fallback to the first guide if the role isn't explicitly configured, so the UI is always populated for demos.
+  // Use the exact role to find guides, or fallback to first if absolutely not found
   const roleGuides = ROLE_INTERVIEW_GUIDES.find(r => r.role.toLowerCase() === report.role.toLowerCase())?.interviewGuides || ROLE_INTERVIEW_GUIDES[0].interviewGuides;
 
   const handleScrollToSkill = (skillName) => {
@@ -39,321 +120,361 @@ function ReportDetails({ report, onBack }) {
   };
 
   return (
-    <motion.main 
-      key="details"
-      initial={{ opacity: 0, x: 40 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="flex-grow w-full max-w-[1280px] mx-auto px-4 md:px-10 py-10"
-    >
-      <header className="mb-10 flex justify-between items-center print:hidden">
-        <button 
-          onClick={onBack}
-          className="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors font-semibold text-sm group bg-white px-4 py-2 rounded-full shadow-sm border border-gray-200"
-        >
-          <svg className="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-          Back to Overview
-        </button>
-        
-        <button 
-          onClick={() => window.print()}
-          className="flex items-center gap-2 text-white bg-gray-900 hover:bg-black transition-colors font-semibold text-sm px-5 py-2 rounded-full shadow-md"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-          Download PDF
-        </button>
-      </header>
-
-      <motion.div 
-        variants={staggerContainer}
-        initial="hidden"
-        animate="visible"
-        className="w-full flex flex-col gap-12"
+    <>
+      {/* Print template (only visible when printing) */}
+      <PrintReportTemplate report={report} />
+      
+      {/* Screen Template (hidden when printing) */}
+      <motion.main 
+        key="details"
+        initial={{ opacity: 0, x: 40 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        className="flex-grow w-full max-w-[1280px] mx-auto px-4 md:px-10 py-10 print:hidden"
       >
-        {/* 1. HERO / START HERE */}
-        <motion.div variants={fadeUp} className="relative bg-[#0a0a0a] text-white p-10 md:p-16 rounded-[2rem] shadow-2xl overflow-hidden border border-gray-800">
-          {/* Subtle gradient glowing background */}
-          <div className="absolute top-[-50%] right-[-10%] w-[80%] h-[150%] bg-gradient-to-b from-blue-600/30 via-purple-600/10 to-transparent rounded-[100%] blur-3xl transform rotate-12 pointer-events-none"></div>
+        <header className="mb-10 flex justify-between items-center">
+          <button 
+            onClick={onBack}
+            className="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors font-semibold text-sm group bg-white px-4 py-2 rounded-full shadow-sm border border-gray-200"
+          >
+            <svg className="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Back to Overview
+          </button>
           
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
-            <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-xs font-bold tracking-widest uppercase mb-8 border border-white/10 text-blue-300">
-                <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
-                Top Priority Action
-              </div>
-              <h1 className="text-4xl md:text-6xl font-black mb-6 leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
-                {topSkill.name}
-              </h1>
-              <p className="text-gray-400 text-lg md:text-xl mb-10 font-medium leading-relaxed max-w-xl">
-                This is your highest-impact quick win. Focusing here will yield the most immediate improvement for the <strong className="text-white">{report.role}</strong> role.
-              </p>
-              <button 
-                onClick={() => handleScrollToSkill(topSkill.name)}
-                className="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-black bg-white rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.2)]"
-              >
-                <span className="relative flex items-center gap-3">
-                  Start Learning Now
-                  <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                </span>
-              </button>
-            </div>
-            
-            <div className="hidden md:flex items-center justify-center w-56 h-56 bg-gradient-to-tr from-blue-900/40 to-purple-900/40 backdrop-blur-3xl rounded-full border border-white/5 shadow-2xl relative">
-               <div className="absolute inset-0 rounded-full border border-white/10 animate-[spin_10s_linear_infinite]"></div>
-               <svg className="w-24 h-24 text-blue-400 drop-shadow-[0_0_15px_rgba(96,165,250,0.5)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-            </div>
-          </div>
-        </motion.div>
+          <button 
+            onClick={() => window.print()}
+            className="flex items-center gap-2 text-white bg-gray-900 hover:bg-black transition-colors font-semibold text-sm px-5 py-2 rounded-full shadow-md"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            Download PDF
+          </button>
+        </header>
 
-        {/* 2. ROADMAP TIMELINE */}
-        <motion.div variants={fadeUp} className="flex flex-col gap-6">
-          <div className="flex flex-col gap-1">
-            <h2 className="text-3xl font-black text-gray-900 tracking-tight">Learning Roadmap</h2>
-            <p className="text-gray-500 font-medium">A sequenced progression based on effort to mastery.</p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative mt-4">
-            {/* Desktop connecting line */}
-            <div className="hidden md:block absolute top-12 left-6 right-6 h-1 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 -z-10 rounded-full"></div>
+        <motion.div 
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+          className="w-full flex flex-col gap-12"
+        >
+          {/* 1. HERO / START HERE */}
+          <motion.div variants={fadeUp} className="relative bg-[#0a0a0a] text-white p-10 md:p-16 rounded-[2rem] shadow-2xl overflow-hidden border border-gray-800">
+            {/* Subtle gradient glowing background */}
+            <div className="absolute top-[-50%] right-[-10%] w-[80%] h-[150%] bg-gradient-to-b from-blue-600/30 via-purple-600/10 to-transparent rounded-[100%] blur-3xl transform rotate-12 pointer-events-none"></div>
             
-            {phases.map((phase, idx) => (
-              <div key={idx} className="flex-1 relative">
-                <div className="bg-white p-8 rounded-[1.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 flex flex-col h-full transform transition-all hover:-translate-y-2 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] duration-300 group">
-                   
-                   <div className="flex items-center justify-between mb-6">
-                      <span className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider ${
-                        idx === 0 ? 'bg-green-100 text-green-700' : 
-                        idx === 1 ? 'bg-orange-100 text-orange-700' : 
-                        'bg-red-100 text-red-700'
-                      }`}>
-                        {phase.estimatedDuration}
-                      </span>
-                      <span className="text-gray-300 font-black text-2xl group-hover:text-gray-900 transition-colors">0{idx+1}</span>
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
+              <div className="max-w-2xl">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-xs font-bold tracking-widest uppercase mb-8 border border-white/10 text-blue-300">
+                  <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+                  Top Priority Action
+                </div>
+                <h1 className="text-4xl md:text-6xl font-black mb-6 leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
+                  {topSkill.name}
+                </h1>
+                <p className="text-gray-400 text-lg md:text-xl mb-10 font-medium leading-relaxed max-w-xl">
+                  This is your highest-impact quick win. Focusing here will yield the most immediate improvement for the <strong className="text-white">{report.role}</strong> role.
+                </p>
+                <button 
+                  onClick={() => handleScrollToSkill(topSkill.name)}
+                  className="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-black bg-white rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.2)]"
+                >
+                  <span className="relative flex items-center gap-3">
+                    Start Learning Now
+                    <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                  </span>
+                </button>
+              </div>
+              
+              <div className="hidden md:flex items-center justify-center w-56 h-56 bg-gradient-to-tr from-blue-900/40 to-purple-900/40 backdrop-blur-3xl rounded-full border border-white/5 shadow-2xl relative">
+                 <div className="absolute inset-0 rounded-full border border-white/10 animate-[spin_10s_linear_infinite]"></div>
+                 <svg className="w-24 h-24 text-blue-400 drop-shadow-[0_0_15px_rgba(96,165,250,0.5)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* 1.5 PERFORMANCE BREAKDOWN (NEW) */}
+          <motion.div variants={fadeUp} className="flex flex-col gap-6 mt-2">
+            <div className="flex flex-col gap-1">
+              <h2 className="text-3xl font-black text-gray-900 tracking-tight">Performance Breakdown</h2>
+              <p className="text-gray-500 font-medium">Your current proficiency vs target requirements.</p>
+            </div>
+            
+            <div className="bg-white p-8 md:p-10 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-10">
+              {report.skills && report.skills.map((skill, idx) => (
+                <div key={idx} className="flex flex-col gap-3">
+                   <div className="flex justify-between items-end">
+                     <span className="font-bold text-gray-900 text-lg">{skill.name}</span>
+                     <span className="text-sm font-bold text-gray-400">Current: {skill.current}% / Target: {skill.target}%</span>
                    </div>
-                   
-                   <h3 className="text-2xl font-black text-gray-900 mb-6">{phase.label}</h3>
-                   
-                   <div className="flex flex-col gap-3 mt-auto">
-                     {phase.skills.length > 0 ? (
-                       phase.skills.map((s, i) => (
-                         <button 
-                           key={i} 
-                           onClick={() => handleScrollToSkill(s.name)}
-                           className="text-left w-full bg-gray-50 p-4 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-colors flex items-center justify-between group/btn border border-transparent hover:border-blue-100"
-                         >
-                           <span className="font-bold text-sm text-gray-700 group-hover/btn:text-blue-700">{s.name}</span>
-                           <svg className="w-4 h-4 text-gray-400 group-hover/btn:text-blue-600 group-hover/btn:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7"></path></svg>
-                         </button>
-                       ))
-                     ) : (
-                       <div className="text-sm font-medium text-gray-400 italic text-center py-6 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                         No skills mapped to this phase.
-                       </div>
-                     )}
+                   <div className="relative w-full h-3 bg-gray-100 rounded-full overflow-hidden">
+                     <motion.div 
+                       initial={{ width: 0 }}
+                       whileInView={{ width: `${skill.current}%` }}
+                       viewport={{ once: true }}
+                       transition={{ duration: 1, ease: "easeOut" }}
+                       className="absolute top-0 left-0 h-full bg-blue-500 rounded-full" 
+                     ></motion.div>
+                     <div 
+                       className="absolute top-0 w-1 h-full bg-red-500 z-10" style={{ left: `${skill.target}%` }} title="Target Level"
+                     ></div>
                    </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* 3. PER-SKILL DETAIL SECTIONS */}
-        <motion.div variants={fadeUp} className="flex flex-col gap-6 mt-8">
-          <div className="flex flex-col gap-1 mb-2">
-            <h2 className="text-3xl font-black text-gray-900 tracking-tight">Skill Breakdowns</h2>
-            <p className="text-gray-500 font-medium">Detailed resources and concepts for each identified gap.</p>
-          </div>
-          
-          {report.missingSkills && report.missingSkills.length > 0 ? (
-            <div className="flex flex-col gap-4">
-              {report.missingSkills.map((skill, idx) => {
-                // Find static resource, or mock a default if not found (so it never looks empty)
-                let staticResource = SKILL_RESOURCES.find(r => r.skill === skill.name);
-                if (!staticResource) {
-                  staticResource = {
-                    coreConcepts: ["Foundational principles", "Industry best practices", "Advanced application"],
-                    courses: [{ platform: "Coursera", title: `${skill.name} Masterclass`, url: "#" }]
-                  };
-                }
-                
-                const isExpanded = expandedSkill === skill.name;
-                const effortBadgeColor = 
-                  skill.effortTag === 'Quick win' ? 'bg-green-100 text-green-700' : 
-                  skill.effortTag === 'Moderate' ? 'bg-orange-100 text-orange-700' : 
-                  'bg-red-100 text-red-700';
-
-                return (
-                  <div key={idx} id={`skill-section-${skill.name}`} className={`bg-white rounded-2xl shadow-sm border transition-all duration-300 ${isExpanded ? 'border-blue-300 shadow-[0_8px_30px_rgb(0,0,0,0.06)]' : 'border-gray-200 hover:border-gray-300'}`}>
-                    <button 
-                      onClick={() => setExpandedSkill(isExpanded ? null : skill.name)}
-                      className="w-full px-6 py-6 md:px-8 flex items-center justify-between group"
-                    >
-                      <div className="flex flex-wrap items-center gap-4">
-                        <h3 className="text-xl font-black text-gray-900 group-hover:text-blue-600 transition-colors">{skill.name}</h3>
-                        <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider ${effortBadgeColor}`}>
-                          {skill.effortTag || "Moderate"}
-                        </span>
-                        {skill.current !== undefined && (
-                           <span className="text-sm font-bold text-gray-400 bg-gray-50 px-3 py-1 rounded-full border border-gray-100">Current: {skill.current}%</span>
-                        )}
-                      </div>
-                      <div className={`p-2 rounded-full transition-colors ${isExpanded ? 'bg-blue-50' : 'bg-gray-50 group-hover:bg-gray-100'}`}>
-                        <svg className={`w-5 h-5 transition-transform duration-300 ${isExpanded ? 'rotate-180 text-blue-600' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7"></path></svg>
-                      </div>
-                    </button>
-                    
-                    <AnimatePresence>
-                      {isExpanded && (
-                        <motion.div 
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          className="overflow-hidden"
-                        >
-                          <div className="px-6 md:px-8 pb-8 pt-2">
-                            <div className="w-full h-px bg-gray-100 mb-8"></div>
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                              
-                              <div className="flex flex-col gap-8">
-                                {/* b. Core Concepts */}
-                                {staticResource.coreConcepts && staticResource.coreConcepts.length > 0 && (
-                                  <div>
-                                    <h4 className="flex items-center gap-2 font-black text-gray-900 mb-4 uppercase text-xs tracking-widest text-blue-600">
-                                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                      Core Concepts to Focus On
-                                    </h4>
-                                    <ul className="flex flex-col gap-3">
-                                      {staticResource.coreConcepts.map((concept, cidx) => (
-                                        <li key={cidx} className="flex items-start gap-3 text-gray-600 font-medium bg-gray-50 p-3 rounded-lg border border-gray-100">
-                                          <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 flex-shrink-0"></div>
-                                          {concept}
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  </div>
-                                )}
-                              </div>
-
-                              <div className="flex flex-col gap-8">
-                                {/* c. Practice */}
-                                {staticResource.practiceLinks && staticResource.practiceLinks.length > 0 && (
-                                  <div>
-                                    <h4 className="flex items-center gap-2 font-black text-gray-900 mb-4 uppercase text-xs tracking-widest text-purple-600">
-                                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-                                      Hands-on Practice
-                                    </h4>
-                                    <div className="flex flex-col gap-3">
-                                      {staticResource.practiceLinks.map((link, lidx) => (
-                                        <a key={lidx} href={link.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between bg-white border-2 border-gray-100 p-4 rounded-xl hover:border-purple-300 hover:shadow-md transition-all group">
-                                          <div>
-                                            <span className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-1">{link.platform}</span>
-                                            <span className="font-bold text-gray-800 group-hover:text-purple-700">{link.label}</span>
-                                          </div>
-                                          <div className="bg-purple-50 p-2 rounded-full text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-colors">
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                                          </div>
-                                        </a>
-                                      ))}
-                                    </div>
-                                  </div>
-                                )}
-
-                                {/* d. Recommended Courses */}
-                                {staticResource.courses && staticResource.courses.length > 0 && (
-                                  <div>
-                                    <h4 className="flex items-center gap-2 font-black text-gray-900 mb-4 uppercase text-xs tracking-widest text-orange-600">
-                                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                                      Curated Courses
-                                    </h4>
-                                    <div className="flex flex-col gap-3">
-                                      {staticResource.courses.map((course, cidx) => (
-                                        <a key={cidx} href={course.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between bg-white border-2 border-gray-100 p-4 rounded-xl hover:border-orange-300 hover:shadow-md transition-all group">
-                                          <div>
-                                            <span className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-1">{course.platform}</span>
-                                            <span className="font-bold text-gray-800 group-hover:text-orange-700">{course.title}</span>
-                                          </div>
-                                          <div className="bg-orange-50 p-2 rounded-full text-orange-600 group-hover:bg-orange-600 group-hover:text-white transition-colors">
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                                          </div>
-                                        </a>
-                                      ))}
-                                    </div>
-                                  </div>
-                                )}
-                                
-                                {/* e. Certifications */}
-                                {staticResource.certifications && staticResource.certifications.length > 0 && (
-                                  <div>
-                                    <h4 className="flex items-center gap-2 font-black text-gray-900 mb-4 uppercase text-xs tracking-widest text-emerald-600">
-                                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                      Certifications
-                                    </h4>
-                                    <div className="flex flex-col gap-3">
-                                      {staticResource.certifications.map((cert, cidx) => (
-                                        <a key={cidx} href={cert.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between bg-white border-2 border-emerald-100 p-4 rounded-xl hover:border-emerald-400 hover:shadow-md transition-all group">
-                                          <div>
-                                            <span className="block text-xs font-bold text-emerald-600 uppercase tracking-wide mb-1">{cert.issuer}</span>
-                                            <span className="font-bold text-gray-800 group-hover:text-emerald-700">{cert.name}</span>
-                                          </div>
-                                        </a>
-                                      ))}
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                              
-                            </div>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                )
-              })}
+              ))}
+              {(!report.skills || report.skills.length === 0) && (
+                <div className="col-span-full text-center text-gray-400 py-4">No specific skill performance data available.</div>
+              )}
             </div>
-          ) : (
-            <div className="text-center py-12 border-2 border-dashed border-gray-200 rounded-3xl bg-white shadow-sm">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 text-green-600 mb-4">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-              </div>
-              <h3 className="text-xl font-black text-gray-900 mb-2">No skill gaps identified!</h3>
-              <p className="text-gray-500 font-medium">You're fully ready for the {report.role} role.</p>
-            </div>
-          )}
-        </motion.div>
+          </motion.div>
 
-        {/* 4. INTERVIEW PREPARATION */}
-        {roleGuides && roleGuides.length > 0 && (
-          <motion.div variants={fadeUp} className="bg-gradient-to-br from-indigo-950 to-blue-900 text-white p-10 md:p-12 rounded-[2rem] shadow-[0_15px_40px_-10px_rgba(30,58,138,0.5)] mt-8 flex flex-col lg:flex-row gap-12 items-center justify-between border border-blue-800">
-            <div className="flex flex-col gap-4 flex-1">
-              <div className="inline-block px-3 py-1 bg-blue-900 rounded-full text-xs font-bold tracking-widest uppercase border border-blue-700 text-blue-300 self-start">
-                Final Step
-              </div>
-              <h2 className="text-3xl md:text-5xl font-black tracking-tight">Ready for the Interview?</h2>
-              <p className="text-blue-200 text-lg font-medium leading-relaxed max-w-md mt-2">
-                Review these curated guides specifically for the <strong className="text-white">{report.role}</strong> role before you apply.
-              </p>
+          {/* 2. ROADMAP TIMELINE */}
+          <motion.div variants={fadeUp} className="flex flex-col gap-6">
+            <div className="flex flex-col gap-1">
+              <h2 className="text-3xl font-black text-gray-900 tracking-tight">Learning Roadmap</h2>
+              <p className="text-gray-500 font-medium">A sequenced progression based on effort to mastery.</p>
             </div>
             
-            <div className="flex flex-col gap-4 w-full lg:w-[50%]">
-              {roleGuides.map((guide, idx) => (
-                <a key={idx} href={guide.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-5 bg-white/5 hover:bg-white/10 p-5 rounded-2xl border border-white/10 hover:border-white/30 transition-all group backdrop-blur-sm">
-                  <div className="bg-blue-500/20 p-3 rounded-full text-blue-300 group-hover:bg-blue-500 group-hover:text-white transition-colors">
-                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative mt-4">
+              {/* Desktop connecting line */}
+              <div className="hidden md:block absolute top-12 left-6 right-6 h-1 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 -z-10 rounded-full"></div>
+              
+              {phases.map((phase, idx) => (
+                <div key={idx} className="flex-1 relative">
+                  <div className="bg-white p-8 rounded-[1.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 flex flex-col h-full transform transition-all hover:-translate-y-2 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] duration-300 group">
+                     
+                     <div className="flex items-center justify-between mb-6">
+                        <span className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider ${
+                          idx === 0 ? 'bg-green-100 text-green-700' : 
+                          idx === 1 ? 'bg-orange-100 text-orange-700' : 
+                          'bg-red-100 text-red-700'
+                        }`}>
+                          {phase.estimatedDuration}
+                        </span>
+                        <span className="text-gray-300 font-black text-2xl group-hover:text-gray-900 transition-colors">0{idx+1}</span>
+                     </div>
+                     
+                     <h3 className="text-2xl font-black text-gray-900 mb-6">{phase.label}</h3>
+                     
+                     <div className="flex flex-col gap-3 mt-auto">
+                       {phase.skills.length > 0 ? (
+                         phase.skills.map((s, i) => (
+                           <button 
+                             key={i} 
+                             onClick={() => handleScrollToSkill(s.name)}
+                             className="text-left w-full bg-gray-50 p-4 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-colors flex items-center justify-between group/btn border border-transparent hover:border-blue-100"
+                           >
+                             <span className="font-bold text-sm text-gray-700 group-hover/btn:text-blue-700">{s.name}</span>
+                             <svg className="w-4 h-4 text-gray-400 group-hover/btn:text-blue-600 group-hover/btn:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7"></path></svg>
+                           </button>
+                         ))
+                       ) : (
+                         <div className="text-sm font-medium text-gray-400 italic text-center py-6 bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                           No skills mapped to this phase.
+                         </div>
+                       )}
+                     </div>
                   </div>
-                  <div className="flex flex-col gap-1 flex-1">
-                    <span className="font-bold text-white group-hover:text-blue-200 transition-colors text-lg">{guide.title}</span>
-                    <span className="text-sm text-blue-200/70 font-medium leading-snug">{guide.description}</span>
-                  </div>
-                  <svg className="w-5 h-5 text-gray-500 group-hover:text-white group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
-                </a>
+                </div>
               ))}
             </div>
           </motion.div>
-        )}
-      </motion.div>
-    </motion.main>
+
+          {/* 3. PER-SKILL DETAIL SECTIONS */}
+          <motion.div variants={fadeUp} className="flex flex-col gap-6 mt-8">
+            <div className="flex flex-col gap-1 mb-2">
+              <h2 className="text-3xl font-black text-gray-900 tracking-tight">Skill Breakdowns</h2>
+              <p className="text-gray-500 font-medium">Detailed resources and concepts for each identified gap.</p>
+            </div>
+            
+            {report.missingSkills && report.missingSkills.length > 0 ? (
+              <div className="flex flex-col gap-4">
+                {report.missingSkills.map((skill, idx) => {
+                  // Find static resource, or mock a default if not found (so it never looks empty)
+                  let staticResource = SKILL_RESOURCES.find(r => r.skill === skill.name);
+                  if (!staticResource) {
+                    staticResource = {
+                      coreConcepts: ["Foundational principles", "Industry best practices", "Advanced application"],
+                      courses: [{ platform: "Coursera", title: `${skill.name} Masterclass`, url: "#" }]
+                    };
+                  }
+                  
+                  const isExpanded = expandedSkill === skill.name;
+                  const effortBadgeColor = 
+                    skill.effortTag === 'Quick win' ? 'bg-green-100 text-green-700' : 
+                    skill.effortTag === 'Moderate' ? 'bg-orange-100 text-orange-700' : 
+                    'bg-red-100 text-red-700';
+  
+                  return (
+                    <div key={idx} id={`skill-section-${skill.name}`} className={`bg-white rounded-2xl shadow-sm border transition-all duration-300 ${isExpanded ? 'border-blue-300 shadow-[0_8px_30px_rgb(0,0,0,0.06)]' : 'border-gray-200 hover:border-gray-300'}`}>
+                      <button 
+                        onClick={() => setExpandedSkill(isExpanded ? null : skill.name)}
+                        className="w-full px-6 py-6 md:px-8 flex items-center justify-between group"
+                      >
+                        <div className="flex flex-wrap items-center gap-4">
+                          <h3 className="text-xl font-black text-gray-900 group-hover:text-blue-600 transition-colors">{skill.name}</h3>
+                          <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider ${effortBadgeColor}`}>
+                            {skill.effortTag || "Moderate"}
+                          </span>
+                          {skill.current !== undefined && (
+                             <span className="text-sm font-bold text-gray-400 bg-gray-50 px-3 py-1 rounded-full border border-gray-100">Current: {skill.current}%</span>
+                          )}
+                        </div>
+                        <div className={`p-2 rounded-full transition-colors ${isExpanded ? 'bg-blue-50' : 'bg-gray-50 group-hover:bg-gray-100'}`}>
+                          <svg className={`w-5 h-5 transition-transform duration-300 ${isExpanded ? 'rotate-180 text-blue-600' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                      </button>
+                      
+                      <AnimatePresence>
+                        {isExpanded && (
+                          <motion.div 
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="px-6 md:px-8 pb-8 pt-2">
+                              <div className="w-full h-px bg-gray-100 mb-8"></div>
+                              <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                                
+                                <div className="flex flex-col gap-8">
+                                  {/* b. Core Concepts */}
+                                  {staticResource.coreConcepts && staticResource.coreConcepts.length > 0 && (
+                                    <div>
+                                      <h4 className="flex items-center gap-2 font-black text-gray-900 mb-4 uppercase text-xs tracking-widest text-blue-600">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        Core Concepts to Focus On
+                                      </h4>
+                                      <ul className="flex flex-col gap-3">
+                                        {staticResource.coreConcepts.map((concept, cidx) => (
+                                          <li key={cidx} className="flex items-start gap-3 text-gray-600 font-medium bg-gray-50 p-3 rounded-lg border border-gray-100">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 flex-shrink-0"></div>
+                                            {concept}
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </div>
+  
+                                <div className="flex flex-col gap-8">
+                                  {/* c. Practice */}
+                                  {staticResource.practiceLinks && staticResource.practiceLinks.length > 0 && (
+                                    <div>
+                                      <h4 className="flex items-center gap-2 font-black text-gray-900 mb-4 uppercase text-xs tracking-widest text-purple-600">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                                        Hands-on Practice
+                                      </h4>
+                                      <div className="flex flex-col gap-3">
+                                        {staticResource.practiceLinks.map((link, lidx) => (
+                                          <a key={lidx} href={link.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between bg-white border-2 border-gray-100 p-4 rounded-xl hover:border-purple-300 hover:shadow-md transition-all group">
+                                            <div>
+                                              <span className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-1">{link.platform}</span>
+                                              <span className="font-bold text-gray-800 group-hover:text-purple-700">{link.label}</span>
+                                            </div>
+                                            <div className="bg-purple-50 p-2 rounded-full text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                            </div>
+                                          </a>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+  
+                                  {/* d. Recommended Courses */}
+                                  {staticResource.courses && staticResource.courses.length > 0 && (
+                                    <div>
+                                      <h4 className="flex items-center gap-2 font-black text-gray-900 mb-4 uppercase text-xs tracking-widest text-orange-600">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                                        Curated Courses
+                                      </h4>
+                                      <div className="flex flex-col gap-3">
+                                        {staticResource.courses.map((course, cidx) => (
+                                          <a key={cidx} href={course.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between bg-white border-2 border-gray-100 p-4 rounded-xl hover:border-orange-300 hover:shadow-md transition-all group">
+                                            <div>
+                                              <span className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-1">{course.platform}</span>
+                                              <span className="font-bold text-gray-800 group-hover:text-orange-700">{course.title}</span>
+                                            </div>
+                                            <div className="bg-orange-50 p-2 rounded-full text-orange-600 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                            </div>
+                                          </a>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+                                  
+                                  {/* e. Certifications */}
+                                  {staticResource.certifications && staticResource.certifications.length > 0 && (
+                                    <div>
+                                      <h4 className="flex items-center gap-2 font-black text-gray-900 mb-4 uppercase text-xs tracking-widest text-emerald-600">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        Certifications
+                                      </h4>
+                                      <div className="flex flex-col gap-3">
+                                        {staticResource.certifications.map((cert, cidx) => (
+                                          <a key={cidx} href={cert.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between bg-white border-2 border-emerald-100 p-4 rounded-xl hover:border-emerald-400 hover:shadow-md transition-all group">
+                                            <div>
+                                              <span className="block text-xs font-bold text-emerald-600 uppercase tracking-wide mb-1">{cert.issuer}</span>
+                                              <span className="font-bold text-gray-800 group-hover:text-emerald-700">{cert.name}</span>
+                                            </div>
+                                          </a>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                                
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  )
+                })}
+              </div>
+            ) : (
+              <div className="text-center py-12 border-2 border-dashed border-gray-200 rounded-3xl bg-white shadow-sm">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 text-green-600 mb-4">
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h3 className="text-xl font-black text-gray-900 mb-2">No skill gaps identified!</h3>
+                <p className="text-gray-500 font-medium">You're fully ready for the {report.role} role.</p>
+              </div>
+            )}
+          </motion.div>
+  
+          {/* 4. INTERVIEW PREPARATION */}
+          {roleGuides && roleGuides.length > 0 && (
+            <motion.div variants={fadeUp} className="bg-gradient-to-br from-indigo-950 to-blue-900 text-white p-10 md:p-12 rounded-[2rem] shadow-[0_15px_40px_-10px_rgba(30,58,138,0.5)] mt-8 flex flex-col lg:flex-row gap-12 items-center justify-between border border-blue-800">
+              <div className="flex flex-col gap-4 flex-1">
+                <div className="inline-block px-3 py-1 bg-blue-900 rounded-full text-xs font-bold tracking-widest uppercase border border-blue-700 text-blue-300 self-start">
+                  Final Step
+                </div>
+                <h2 className="text-3xl md:text-5xl font-black tracking-tight">Ready for the Interview?</h2>
+                <p className="text-blue-200 text-lg font-medium leading-relaxed max-w-md mt-2">
+                  Review these curated guides specifically for the <strong className="text-white">{report.role}</strong> role before you apply.
+                </p>
+              </div>
+              
+              <div className="flex flex-col gap-4 w-full lg:w-[50%]">
+                {roleGuides.map((guide, idx) => (
+                  <a key={idx} href={guide.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-5 bg-white/5 hover:bg-white/10 p-5 rounded-2xl border border-white/10 hover:border-white/30 transition-all group backdrop-blur-sm">
+                    <div className="bg-blue-500/20 p-3 rounded-full text-blue-300 group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    </div>
+                    <div className="flex flex-col gap-1 flex-1">
+                      <span className="font-bold text-white group-hover:text-blue-200 transition-colors text-lg">{guide.title}</span>
+                      <span className="text-sm text-blue-200/70 font-medium leading-snug">{guide.description}</span>
+                    </div>
+                    <svg className="w-5 h-5 text-gray-500 group-hover:text-white group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+                  </a>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </motion.div>
+      </motion.main>
+    </>
   );
 }
 
@@ -395,7 +516,7 @@ export function SkillGapFlow() {
               { name: "Machine Learning Fundamentals", effortTag: "Deep skill", current: 15 },
               { name: "Business Communication", effortTag: "Moderate", current: 60 }
             ],
-            verifiedSkills: ["Data Visualization"],
+            verifiedSkills: ["Data Visualization", "Python (Data Science Stack)"],
             description: "Requires advanced analytical capabilities, cross-functional communication, strategic planning, and the ability to turn complex datasets into actionable business insights.",
           },
           {
@@ -405,32 +526,34 @@ export function SkillGapFlow() {
             skills: [
               { name: "React & Next.js", current: 85, target: 90 },
               { name: "CSS/Tailwind Architecture", current: 90, target: 80 },
-              { name: "Performance Optimization", current: 60, target: 85 },
+              { name: "React & Next.js Performance", current: 60, target: 85 },
               { name: "Advanced State Management", current: 70, target: 85 }
             ],
             missingSkills: [
-              { name: "Performance Optimization", effortTag: "Quick win", current: 60 },
+              { name: "React & Next.js Performance", effortTag: "Quick win", current: 60 },
               { name: "Advanced State Management", effortTag: "Moderate", current: 70 }
             ],
             verifiedSkills: ["React & Next.js", "CSS/Tailwind Architecture"],
             description: "Focuses on building robust user interfaces, complex state management, and delivering high-performance web experiences.",
           },
           {
-            role: "Product Manager",
-            category: "Product / Strategy",
+            role: "Full-stack Engineer",
+            category: "Technology / Development",
             status: "pending_actions",
             skills: [
-              { name: "Agile & Scrum", current: 80, target: 90 },
-              { name: "User Research", current: 50, target: 80 },
-              { name: "Data-Driven Prioritization", current: 40, target: 85 },
-              { name: "Go-To-Market Strategy", current: 30, target: 70 }
+              { name: "React & Next.js Performance", current: 65, target: 85 },
+              { name: "System Design & Architecture", current: 40, target: 80 },
+              { name: "SQL & Database Optimization", current: 70, target: 90 },
+              { name: "Advanced State Management", current: 75, target: 85 }
             ],
             missingSkills: [
-              { name: "Data-Driven Prioritization", effortTag: "Quick win", current: 40 },
-              { name: "Go-To-Market Strategy", effortTag: "Deep skill", current: 30 }
+              { name: "SQL & Database Optimization", effortTag: "Quick win", current: 70 },
+              { name: "Advanced State Management", effortTag: "Quick win", current: 75 },
+              { name: "React & Next.js Performance", effortTag: "Moderate", current: 65 },
+              { name: "System Design & Architecture", effortTag: "Deep skill", current: 40 }
             ],
-            verifiedSkills: ["Agile & Scrum", "User Research"],
-            description: "Requires balancing business strategy, user needs, and engineering realities to drive product success from ideation to launch.",
+            verifiedSkills: ["REST API Development", "Node.js Fundamentals"],
+            description: "Requires mastering both client-side and server-side architecture, managing state, optimizing databases, and scaling systems.",
           }
         ];
 
@@ -446,7 +569,7 @@ export function SkillGapFlow() {
           if (template) {
             userReports.push({ ...template, score: bestScore, date: dateStr, id: "rep_" + role.replace(/\s+/g, '_') });
           } else {
-            // Updated fallback template to ALWAYS inject some skills that exist in SKILL_RESOURCES so the UI looks populated
+            // Default mock for an unknown role but perfectly aligned with SKILL_RESOURCES so it looks complete.
             userReports.push({
               id: "rep_" + role.replace(/\s+/g, '_'),
               role: role,
@@ -455,13 +578,14 @@ export function SkillGapFlow() {
               score: bestScore,
               status: "pending_actions",
               skills: [
-                { name: "Core Fundamentals", current: bestScore, target: 80 },
-                { name: "Advanced Concepts", current: Math.max(0, bestScore - 20), target: 70 }
+                { name: "System Design & Architecture", current: Math.max(0, bestScore - 20), target: 80 },
+                { name: "SQL & Database Optimization", current: Math.max(0, bestScore - 10), target: 90 },
+                { name: "Advanced State Management", current: Math.max(0, bestScore - 15), target: 85 }
               ],
               missingSkills: [
-                { name: "SQL & Database Optimization", effortTag: "Quick win", current: Math.max(0, bestScore - 20) },
-                { name: "Advanced State Management", effortTag: "Moderate", current: Math.max(0, bestScore - 30) },
-                { name: "Statistical Analysis", effortTag: "Deep skill", current: 20 }
+                { name: "SQL & Database Optimization", effortTag: "Quick win", current: Math.max(0, bestScore - 10) },
+                { name: "Advanced State Management", effortTag: "Moderate", current: Math.max(0, bestScore - 15) },
+                { name: "System Design & Architecture", effortTag: "Deep skill", current: Math.max(0, bestScore - 20) }
               ],
               verifiedSkills: ["Core Fundamentals"],
               description: `Personalized skill gap report and readiness analysis for ${role}.`,

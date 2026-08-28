@@ -1,7 +1,7 @@
 export const SKILL_RESOURCES = [
   {
     skill: "SQL & Database Optimization",
-    applicableRoles: ["Data Scientist", "Senior Data Analyst", "Backend Engineer"],
+    applicableRoles: ["Data Scientist", "Senior Data Analyst", "Backend Engineer", "Full-stack Engineer"],
     coreConcepts: [
       "Complex Joins & Subqueries",
       "Window Functions",
@@ -9,12 +9,12 @@ export const SKILL_RESOURCES = [
       "Data Normalization"
     ],
     practiceLinks: [
-      { platform: "LeetCode", url: "https://leetcode.com/studyplan/sql-50/", label: "SQL 50 Study Plan" },
+      { platform: "LeetCode", url: "https://leetcode.com/problemset/database/", label: "Database Problem Set" },
       { platform: "HackerRank", url: "https://www.hackerrank.com/domains/sql", label: "SQL Practice Tracks" }
     ],
     courses: [
-      { platform: "Coursera", title: "Managing Big Data with MySQL", url: "https://www.coursera.org/" },
-      { platform: "Udemy", title: "The Complete SQL Bootcamp", url: "https://www.udemy.com/" }
+      { platform: "Coursera", title: "Managing Big Data with MySQL", url: "https://www.coursera.org/learn/managing-big-data-with-mysql" },
+      { platform: "Udemy", title: "The Complete SQL Bootcamp", url: "https://www.udemy.com/course/the-complete-sql-bootcamp/" }
     ]
   },
   {
@@ -27,9 +27,8 @@ export const SKILL_RESOURCES = [
       "Statistical Significance & P-values"
     ],
     courses: [
-      { platform: "Udacity", title: "A/B Testing for Business Analysts", url: "https://www.udacity.com/" }
+      { platform: "Udacity", title: "A/B Testing for Business Analysts", url: "https://www.udacity.com/course/ab-testing--ud257" }
     ]
-    // Note: practiceLinks omitted intentionally
   },
   {
     skill: "Business Communication",
@@ -41,13 +40,12 @@ export const SKILL_RESOURCES = [
       "Effective Presentations"
     ],
     courses: [
-      { platform: "LinkedIn Learning", title: "Communication Foundations", url: "https://www.linkedin.com/learning/" }
+      { platform: "LinkedIn Learning", title: "Communication Foundations", url: "https://www.linkedin.com/learning/communication-foundations" }
     ]
-    // Note: practiceLinks and certifications omitted intentionally
   },
   {
     skill: "Advanced State Management",
-    applicableRoles: ["Front-end Developer", "Full Stack Engineer"],
+    applicableRoles: ["Front-end Developer", "Full-stack Engineer"],
     coreConcepts: [
       "Redux Toolkit & RTK Query",
       "Zustand / Jotai Patterns",
@@ -55,10 +53,40 @@ export const SKILL_RESOURCES = [
       "Server State vs Client State"
     ],
     practiceLinks: [
-      { platform: "Frontend Mentor", url: "https://www.frontendmentor.io/", label: "Build a Complex State App" }
+      { platform: "Frontend Mentor", url: "https://www.frontendmentor.io/challenges", label: "Build a Complex State App" }
     ],
     courses: [
-      { platform: "Frontend Masters", title: "State Management in React", url: "https://frontendmasters.com/" }
+      { platform: "Frontend Masters", title: "State Management in React", url: "https://frontendmasters.com/courses/pure-react-state/" }
+    ]
+  },
+  {
+    skill: "System Design & Architecture",
+    applicableRoles: ["Backend Engineer", "Full-stack Engineer"],
+    coreConcepts: [
+      "Microservices vs Monoliths",
+      "Caching Strategies (Redis/Memcached)",
+      "Load Balancing & Scaling",
+      "Message Queues (Kafka/RabbitMQ)"
+    ],
+    practiceLinks: [
+      { platform: "ByteByteGo", url: "https://bytebytego.com/", label: "System Design Framework" }
+    ],
+    courses: [
+      { platform: "Educative", title: "Grokking the System Design Interview", url: "https://www.educative.io/courses/grokking-the-system-design-interview" }
+    ]
+  },
+  {
+    skill: "React & Next.js Performance",
+    applicableRoles: ["Front-end Developer", "Full-stack Engineer"],
+    coreConcepts: [
+      "Server-Side Rendering (SSR) vs SSG",
+      "Bundle Size Optimization",
+      "Memoization (useMemo/useCallback)",
+      "Core Web Vitals"
+    ],
+    courses: [
+      { platform: "Next.js Learn", title: "Next.js Foundations", url: "https://nextjs.org/learn" },
+      { platform: "Frontend Masters", title: "Web Performance", url: "https://frontendmasters.com/courses/web-perf/" }
     ]
   }
 ];
@@ -69,12 +97,12 @@ export const ROLE_INTERVIEW_GUIDES = [
     interviewGuides: [
       { 
         title: "Top 50 Data Analyst Interview Questions", 
-        url: "https://example.com/guide1", 
+        url: "https://www.simplilearn.com/tutorials/data-analytics-tutorial/data-analyst-interview-questions", 
         description: "Comprehensive guide covering SQL, Python, and business case studies." 
       },
       { 
         title: "A/B Testing Interview Prep", 
-        url: "https://example.com/guide2", 
+        url: "https://towardsdatascience.com/a-b-testing-interview-questions-and-answers-for-data-scientists-827b40974ed2", 
         description: "Focuses on statistical foundations and real-world scenario questions." 
       }
     ]
@@ -89,8 +117,33 @@ export const ROLE_INTERVIEW_GUIDES = [
       },
       { 
         title: "React Interview Questions", 
-        url: "https://example.com/react-prep", 
+        url: "https://github.com/sudheerj/reactjs-interview-questions", 
         description: "Deep dive into React core concepts, hooks, and performance." 
+      }
+    ]
+  },
+  {
+    role: "Full-stack Engineer",
+    interviewGuides: [
+      { 
+        title: "Full Stack Developer Interview Questions", 
+        url: "https://www.interviewbit.com/full-stack-developer-interview-questions/", 
+        description: "Covers frontend, backend, databases, and system architecture." 
+      },
+      { 
+        title: "System Design Interview Guide", 
+        url: "https://github.com/donnemartin/system-design-primer", 
+        description: "Learn how to design large-scale systems for full-stack and backend interviews." 
+      }
+    ]
+  },
+  {
+    role: "Product Manager",
+    interviewGuides: [
+      {
+        title: "Product Manager Interview Prep",
+        url: "https://igotanoffer.com/blogs/product-manager/product-manager-interview",
+        description: "Product design, strategy, and execution questions."
       }
     ]
   }
