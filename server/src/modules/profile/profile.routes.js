@@ -36,7 +36,7 @@ router.put("/me", requireAuth, async (req, res, next) => {
       targetRole: req.body.targetRole,
       learningGoal: req.body.learningGoal,
       experienceLevel: req.body.experienceLevel,
-      accessibilityNeeds: req.body.accessibilityNeeds || [],
+      accessibilityNeeds: req.body.accessibilityNeeds,
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       gender: req.body.gender,
@@ -49,13 +49,13 @@ router.put("/me", requireAuth, async (req, res, next) => {
     
     Object.keys(updates).forEach(key => updates[key] === undefined && delete updates[key]);
 
-    const declaredSkills = Array.isArray(req.body.declaredSkills)
-      ? req.body.declaredSkills
-      : [];
+    if (Array.isArray(req.body.declaredSkills)) {
+      updates.declaredSkills = req.body.declaredSkills;
+    }
 
     const user = await User.findByIdAndUpdate(
       req.user._id,
-      { ...updates, declaredSkills },
+      updates,
       { new: true }
     ).select("-passwordHash");
 

@@ -54,7 +54,8 @@ export const api = {
     }),
   getProfile: () =>
     request("/profile/me", {
-      headers: getHeaders(false)
+      headers: getHeaders(false),
+      cache: "no-store"
     }),
   updateProfile: (data) =>
     request("/profile/me", {
