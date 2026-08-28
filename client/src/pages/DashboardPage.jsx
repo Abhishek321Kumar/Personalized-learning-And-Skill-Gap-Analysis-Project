@@ -240,8 +240,8 @@ export function DashboardPage({ user }) {
         if (att.score < 50) color = "text-orange-400";
         else if (att.score < 80) color = "text-blue-600";
         
-        let total = att.answers?.length > 0 ? att.answers.length : 10;
-        let correct = att.answers?.length > 0 ? att.answers.filter(ans => ans.wasCorrect).length : Math.round((att.score / 100) * 10);
+        let total = att.answers?.length > 0 ? att.answers.length : 25;
+        let correct = att.answers?.length > 0 ? att.answers.filter(ans => ans.wasCorrect).length : Math.round((att.score / 100) * total);
         
         const marksStr = `${correct * 2}/${total * 2}`;
 
