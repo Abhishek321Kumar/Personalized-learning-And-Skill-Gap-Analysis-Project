@@ -119,7 +119,7 @@ export function Layout({ children, user }) {
                     onClick={() => setIsProfileDropdownOpen(false)}
                     className="px-6 py-3 text-left bg-transparent border-none text-base text-gray-600 cursor-pointer no-underline hover:bg-gray-100 hover:text-gray-900"
                   >
-                    Settings
+                    Profile
                   </Link>
                   <button 
                     onClick={logout} 
@@ -218,7 +218,7 @@ export function Layout({ children, user }) {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="block py-2 text-base text-gray-600 no-underline hover:text-gray-900"
                 >
-                  Settings
+                  Profile
                 </Link>
                 <button 
                   onClick={() => {

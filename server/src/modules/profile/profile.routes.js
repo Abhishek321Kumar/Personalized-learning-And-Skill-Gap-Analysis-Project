@@ -36,8 +36,18 @@ router.put("/me", requireAuth, async (req, res, next) => {
       targetRole: req.body.targetRole,
       learningGoal: req.body.learningGoal,
       experienceLevel: req.body.experienceLevel,
-      accessibilityNeeds: req.body.accessibilityNeeds || []
+      accessibilityNeeds: req.body.accessibilityNeeds || [],
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      gender: req.body.gender,
+      phone: req.body.phone,
+      dob: req.body.dob,
+      address: req.body.address,
+      education: req.body.education,
+      internships: req.body.internships
     };
+    
+    Object.keys(updates).forEach(key => updates[key] === undefined && delete updates[key]);
 
     const declaredSkills = Array.isArray(req.body.declaredSkills)
       ? req.body.declaredSkills
@@ -50,6 +60,15 @@ router.put("/me", requireAuth, async (req, res, next) => {
     ).select("-passwordHash");
 
     res.json({ user });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete("/me", requireAuth, async (req, res, next) => {
+  try {
+    await User.findByIdAndDelete(req.user._id);
+    res.json({ message: "Account deleted successfully." });
   } catch (error) {
     next(error);
   }
