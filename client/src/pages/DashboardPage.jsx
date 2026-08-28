@@ -14,13 +14,11 @@ const fadeUp = {
 };
 
 const ALL_ROLES = [
-  "Frontend Developer", 
-  "Backend Developer", 
-  "Full Stack Developer", 
-  "Data Scientist", 
-  "UI/UX Designer", 
+  "Full-stack Engineer", 
   "Product Manager", 
-  "DevOps Engineer"
+  "Data Scientist", 
+  "UX Designer", 
+  "Marketing Manager"
 ];
 
 const getEffortLabel = (skillName) => {
@@ -262,11 +260,7 @@ export function DashboardPage({ user }) {
     });
   }, [targetRole, rawAttempts, rawAnalyses]);
 
-  const uniqueRoles = [...new Set(rawAttempts
-    .map(a => a.quizId?.title?.replace("Technical Readiness Assessment - ", "").trim())
-    .filter(Boolean)
-  )];
-  const availableRoles = [...new Set([...ALL_ROLES, ...uniqueRoles])];
+  const availableRoles = ALL_ROLES;
 
   if (loading) {
     return <div className="flex h-screen items-center justify-center font-sans text-gray-500">Loading your dashboard...</div>;

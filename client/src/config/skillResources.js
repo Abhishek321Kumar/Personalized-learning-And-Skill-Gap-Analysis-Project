@@ -13,7 +13,7 @@ export const SKILL_RESOURCES = [
       { platform: "HackerRank", url: "https://www.hackerrank.com/domains/sql", label: "SQL Practice Tracks" }
     ],
     courses: [
-      { platform: "Coursera", title: "Managing Big Data with MySQL", url: "https://www.coursera.org/learn/managing-big-data-with-mysql" },
+      { platform: "Coursera", title: "Managing Big Data with MySQL", url: "https://www.coursera.org/learn/sql-for-data-science" },
       { platform: "Udemy", title: "The Complete SQL Bootcamp", url: "https://www.udemy.com/course/the-complete-sql-bootcamp/" }
     ]
   },
@@ -101,7 +101,7 @@ export const SKILL_RESOURCES = [
     ],
     courses: [
       { platform: "Reforge", title: "Product Strategy", url: "https://www.reforge.com/courses/product-strategy" },
-      { platform: "Udemy", title: "Data-Driven Product Management", url: "https://www.udemy.com/course/data-driven-product-management/" }
+      { platform: "Udemy", title: "Data-Driven Product Management", url: "https://www.udemy.com/course/become-a-product-manager-learn-the-skills-get-a-job/" }
     ]
     // NO practice links (HackerRank/Leetcode)
   },

@@ -62,6 +62,11 @@ export const api = {
       headers: getHeaders(),
       body: JSON.stringify(data)
     }),
+  deleteProfile: () =>
+    request("/profile/me", {
+      method: "DELETE",
+      headers: getHeaders(false)
+    }),
   uploadResume: async (file) => {
     const formData = new FormData();
     formData.append("resume", file);
