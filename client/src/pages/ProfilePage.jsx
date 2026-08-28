@@ -68,7 +68,8 @@ export function ProfilePage({ user, onUserUpdate }) {
       }
     }
     fetchFullProfile();
-  }, [onUserUpdate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSave = async (section) => {
     setIsSaving(true);
@@ -81,11 +82,11 @@ export function ProfilePage({ user, onUserUpdate }) {
           gender: basicInfo.gender,
           phone: basicInfo.phone,
           dob: basicInfo.dob,
-          address: { ...(user?.address || {}), country: basicInfo.country }
+          address: { ...address, country: basicInfo.country }
         });
       } else if (section === 'address') {
         Object.assign(updates, {
-          address: { ...(user?.address || {}), ...address }
+          address: { country: basicInfo.country, ...address }
         });
       } else if (section === 'education') {
         Object.assign(updates, { education });
@@ -94,7 +95,27 @@ export function ProfilePage({ user, onUserUpdate }) {
       }
 
       const res = await api.updateProfile(updates);
-      onUserUpdate(res.user);
+      const fullUser = res.user;
+
+      setBasicInfo({
+        firstName: fullUser.firstName || "",
+        lastName: fullUser.lastName || "",
+        email: fullUser.email || "",
+        gender: fullUser.gender || "",
+        phone: fullUser.phone || "",
+        dob: fullUser.dob ? new Date(fullUser.dob).toISOString().split('T')[0] : "",
+        country: fullUser.address?.country || ""
+      });
+      setAddress({
+        residentialAddress: fullUser.address?.residentialAddress || "",
+        city: fullUser.address?.city || "",
+        state: fullUser.address?.state || "",
+        pincode: fullUser.address?.pincode || ""
+      });
+      setEducation(fullUser.education || []);
+      setInternships(fullUser.internships || []);
+
+      if (onUserUpdate) onUserUpdate(fullUser);
 
       if (section === 'basic') setIsEditingBasic(false);
       if (section === 'address') setIsEditingAddress(false);
