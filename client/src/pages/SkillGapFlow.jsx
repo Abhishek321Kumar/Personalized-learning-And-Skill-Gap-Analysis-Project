@@ -559,7 +559,11 @@ export function SkillGapFlow() {
 
         let userReports = [];
         uniqueRoles.forEach(role => {
-          let template = allMockReports.find(r => r.role.toLowerCase() === role.toLowerCase());
+          let template = allMockReports.find(r => 
+            r.role.toLowerCase() === role.toLowerCase() || 
+            role.toLowerCase().includes(r.role.toLowerCase()) || 
+            r.role.toLowerCase().includes(role.toLowerCase().replace("management", "manager"))
+          );
           
           const roleAttempts = attempts.filter(a => a.quizId?.title?.includes(role));
           const latestAttempt = roleAttempts[0]; // assumes ordered by date
@@ -569,23 +573,23 @@ export function SkillGapFlow() {
           if (template) {
             userReports.push({ ...template, score: bestScore, date: dateStr, id: "rep_" + role.replace(/\s+/g, '_') });
           } else {
-            // Default mock for an unknown role but perfectly aligned with SKILL_RESOURCES so it looks complete.
+            // Default mock for an unknown role. Uses generic terms so non-technical roles don't see SQL or System Design.
             userReports.push({
               id: "rep_" + role.replace(/\s+/g, '_'),
               role: role,
-              category: "Technology",
+              category: "Specialized Role",
               date: dateStr,
               score: bestScore,
               status: "pending_actions",
               skills: [
-                { name: "System Design & Architecture", current: Math.max(0, bestScore - 20), target: 80 },
-                { name: "SQL & Database Optimization", current: Math.max(0, bestScore - 10), target: 90 },
-                { name: "Advanced State Management", current: Math.max(0, bestScore - 15), target: 85 }
+                { name: "Strategic Execution", current: Math.max(0, bestScore - 20), target: 80 },
+                { name: "Advanced Domain Concepts", current: Math.max(0, bestScore - 10), target: 90 },
+                { name: "Cross-functional Collaboration", current: Math.max(0, bestScore - 15), target: 85 }
               ],
               missingSkills: [
-                { name: "SQL & Database Optimization", effortTag: "Quick win", current: Math.max(0, bestScore - 10) },
-                { name: "Advanced State Management", effortTag: "Moderate", current: Math.max(0, bestScore - 15) },
-                { name: "System Design & Architecture", effortTag: "Deep skill", current: Math.max(0, bestScore - 20) }
+                { name: "Advanced Domain Concepts", effortTag: "Quick win", current: Math.max(0, bestScore - 10) },
+                { name: "Cross-functional Collaboration", effortTag: "Moderate", current: Math.max(0, bestScore - 15) },
+                { name: "Strategic Execution", effortTag: "Deep skill", current: Math.max(0, bestScore - 20) }
               ],
               verifiedSkills: ["Core Fundamentals"],
               description: `Personalized skill gap report and readiness analysis for ${role}.`,
