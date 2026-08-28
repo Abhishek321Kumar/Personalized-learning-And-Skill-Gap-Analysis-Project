@@ -88,6 +88,49 @@ export const SKILL_RESOURCES = [
       { platform: "Next.js Learn", title: "Next.js Foundations", url: "https://nextjs.org/learn" },
       { platform: "Frontend Masters", title: "Web Performance", url: "https://frontendmasters.com/courses/web-perf/" }
     ]
+  },
+  // PM Roles
+  {
+    skill: "Data-Driven Prioritization",
+    applicableRoles: ["Product Manager"],
+    coreConcepts: [
+      "RICE & ICE Scoring Models",
+      "Opportunity Solution Trees",
+      "Validating Product Assumptions",
+      "Metrics & KPI Tracking"
+    ],
+    courses: [
+      { platform: "Reforge", title: "Product Strategy", url: "https://www.reforge.com/" },
+      { platform: "Udemy", title: "Data-Driven Product Management", url: "https://www.udemy.com/" }
+    ]
+    // NO practice links (HackerRank/Leetcode)
+  },
+  {
+    skill: "Go-To-Market Strategy",
+    applicableRoles: ["Product Manager"],
+    coreConcepts: [
+      "Market Segmentation & Personas",
+      "Pricing & Packaging",
+      "Sales Enablement",
+      "Product Positioning & Messaging"
+    ],
+    courses: [
+      { platform: "Product School", title: "Go-To-Market Mastery", url: "https://productschool.com/" }
+    ]
+  },
+  // UI/UX Roles
+  {
+    skill: "Interaction Design",
+    applicableRoles: ["UI/UX Designer"],
+    coreConcepts: [
+      "Microinteractions",
+      "Animation Principles",
+      "Figma Prototyping",
+      "State & Flow Mapping"
+    ],
+    courses: [
+      { platform: "Interaction Design Foundation", title: "UI Animation", url: "https://www.interaction-design.org/" }
+    ]
   }
 ];
 
@@ -144,6 +187,21 @@ export const ROLE_INTERVIEW_GUIDES = [
         title: "Product Manager Interview Prep",
         url: "https://igotanoffer.com/blogs/product-manager/product-manager-interview",
         description: "Product design, strategy, and execution questions."
+      },
+      {
+        title: "Product Sense & Case Studies",
+        url: "https://www.pramp.com/roles/pm",
+        description: "Practice answering product strategy and metric-based questions."
+      }
+    ]
+  },
+  {
+    role: "UI/UX Designer",
+    interviewGuides: [
+      {
+        title: "UX Portfolio Review & Interview Prep",
+        url: "https://www.interaction-design.org/literature/article/how-to-ace-your-ux-design-interview",
+        description: "Tips on presenting your design process and case studies."
       }
     ]
   }
