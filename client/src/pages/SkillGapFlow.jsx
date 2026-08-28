@@ -158,20 +158,11 @@ function PrintReportTemplate({ report, user }) {
            {roleGuides.map((guide, idx) => (
              <div key={idx} className="break-inside-avoid border-2 border-gray-100 rounded-xl overflow-hidden mb-6">
                <div className="bg-gray-50 px-6 py-4 border-b border-gray-100">
-                 <h3 className="font-black text-lg text-gray-900">{guide.topic}</h3>
+                 <h3 className="font-black text-lg text-gray-900">{guide.title}</h3>
                </div>
                <div className="p-6 bg-white">
-                 <ul className="flex flex-col gap-4">
-                   {guide.questions.map((q, i) => (
-                     <li key={i} className="flex gap-4">
-                       <span className="text-blue-600 font-black text-lg mt-0.5">Q.</span>
-                       <div>
-                         <p className="font-bold text-sm text-gray-800 mb-1">{q.q}</p>
-                         <p className="text-sm text-gray-500 leading-relaxed"><span className="font-bold text-gray-400">Focus:</span> {q.a}</p>
-                       </div>
-                     </li>
-                   ))}
-                 </ul>
+                 <p className="font-medium text-sm text-gray-800 mb-3">{guide.description}</p>
+                 <a href={guide.url} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-blue-600 underline truncate block hover:text-blue-800">{guide.url}</a>
                </div>
              </div>
            ))}
