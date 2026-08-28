@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { api } from "../api/client";
 import { useNavigate } from "react-router-dom";
 
@@ -76,6 +75,11 @@ export function ProfilePage({ user, onUserUpdate }) {
     try {
       const updates = {};
       if (section === 'basic') {
+        if (!basicInfo.firstName || !basicInfo.lastName || !basicInfo.gender || !basicInfo.dob || !basicInfo.phone || !basicInfo.country) {
+          alert("Please fill all mandatory personal details (Name, Gender, DOB, Phone, Country).");
+          setIsSaving(false);
+          return;
+        }
         Object.assign(updates, {
           firstName: basicInfo.firstName,
           lastName: basicInfo.lastName,
@@ -85,12 +89,31 @@ export function ProfilePage({ user, onUserUpdate }) {
           address: { ...address, country: basicInfo.country }
         });
       } else if (section === 'address') {
+        if (!address.residentialAddress || !address.city || !address.state || !address.pincode) {
+          alert("Please fill all mandatory address details.");
+          setIsSaving(false);
+          return;
+        }
         Object.assign(updates, {
           address: { country: basicInfo.country, ...address }
         });
       } else if (section === 'education') {
+        for (let edu of education) {
+          if (!edu.institution || !edu.gradYear || !edu.score || !edu.degree) {
+             alert("Please fill all mandatory education fields (Institution, Year, Score, Degree/Major).");
+             setIsSaving(false);
+             return;
+          }
+        }
         Object.assign(updates, { education });
       } else if (section === 'internships') {
+        for (let int of internships) {
+          if (!int.role || !int.company || !int.duration) {
+             alert("Please fill all mandatory internship fields (Role, Company, Duration).");
+             setIsSaving(false);
+             return;
+          }
+        }
         Object.assign(updates, { internships });
       }
 
@@ -146,13 +169,7 @@ export function ProfilePage({ user, onUserUpdate }) {
     }
   };
 
-  const inputClass = (isEditing) => 
-    `w-full text-sm py-1.5 px-2 rounded border transition-colors ${
-      isEditing 
-        ? "border-blue-300 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500" 
-        : "border-transparent bg-transparent text-gray-700 pointer-events-none"
-    }`;
-
+  const inputClass = "w-full text-sm py-1.5 px-2 rounded border border-blue-300 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors";
   const labelClass = "text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1 block";
 
   return (
@@ -193,31 +210,41 @@ export function ProfilePage({ user, onUserUpdate }) {
                   {basicInfo.firstName?.charAt(0) || "U"}
                 </div>
                 <div className="flex-1 space-y-3">
-                  <div className="flex gap-2">
-                    <div className="w-1/2">
-                      <input className={`text-xl font-bold text-gray-900 w-full ${isEditingBasic ? 'border border-blue-300 rounded px-2 py-1' : 'bg-transparent border-none'}`} value={basicInfo.firstName} onChange={e => setBasicInfo({...basicInfo, firstName: e.target.value})} readOnly={!isEditingBasic} placeholder="First Name"/>
-                    </div>
-                    <div className="w-1/2">
-                      <input className={`text-xl font-bold text-gray-900 w-full ${isEditingBasic ? 'border border-blue-300 rounded px-2 py-1' : 'bg-transparent border-none'}`} value={basicInfo.lastName} onChange={e => setBasicInfo({...basicInfo, lastName: e.target.value})} readOnly={!isEditingBasic} placeholder="Last Name"/>
-                    </div>
+                  <div className="flex gap-2 text-xl font-bold text-gray-900">
+                    {!isEditingBasic ? (
+                      <span>{basicInfo.firstName} {basicInfo.lastName}</span>
+                    ) : (
+                      <>
+                        <input className="border border-blue-300 rounded px-2 py-1 w-1/2" value={basicInfo.firstName} onChange={e => setBasicInfo({...basicInfo, firstName: e.target.value})} placeholder="First Name"/>
+                        <input className="border border-blue-300 rounded px-2 py-1 w-1/2" value={basicInfo.lastName} onChange={e => setBasicInfo({...basicInfo, lastName: e.target.value})} placeholder="Last Name"/>
+                      </>
+                    )}
                   </div>
                   
                   <div className="flex items-center gap-2 text-sm text-gray-500">
                     <span className="material-symbols-outlined text-sm">mail</span>
-                    <input className={inputClass(false)} value={basicInfo.email} readOnly title="Email cannot be changed"/>
+                    <span>{basicInfo.email}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-500">
                     <span className="material-symbols-outlined text-sm">phone</span>
-                    <input className={inputClass(isEditingBasic)} value={basicInfo.phone} onChange={e => setBasicInfo({...basicInfo, phone: e.target.value})} readOnly={!isEditingBasic} placeholder="+1 234 567 890"/>
+                    {!isEditingBasic ? (
+                      <span>{basicInfo.phone || "No phone added"}</span>
+                    ) : (
+                      <input className={inputClass} value={basicInfo.phone} onChange={e => setBasicInfo({...basicInfo, phone: e.target.value})} placeholder="+1 234 567 890"/>
+                    )}
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-500">
                     <span className="material-symbols-outlined text-sm">person</span>
-                    <select className={inputClass(isEditingBasic)} value={basicInfo.gender} onChange={e => setBasicInfo({...basicInfo, gender: e.target.value})} disabled={!isEditingBasic}>
-                      <option value="">Select Gender</option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                      <option value="Other">Other</option>
-                    </select>
+                    {!isEditingBasic ? (
+                      <span>{basicInfo.gender || "No gender specified"}</span>
+                    ) : (
+                      <select className={inputClass} value={basicInfo.gender} onChange={e => setBasicInfo({...basicInfo, gender: e.target.value})}>
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    )}
                   </div>
                 </div>
               </div>
@@ -227,18 +254,32 @@ export function ProfilePage({ user, onUserUpdate }) {
                 <div className="flex justify-between items-center border-b border-gray-50 pb-2">
                   <span className={labelClass}>Birth date</span>
                   <div className="w-1/2">
-                    <input type="date" className={inputClass(isEditingBasic)} value={basicInfo.dob} onChange={e => setBasicInfo({...basicInfo, dob: e.target.value})} readOnly={!isEditingBasic} />
+                    {!isEditingBasic ? (
+                      <span className="text-sm text-gray-700">{basicInfo.dob || "-"}</span>
+                    ) : (
+                      <input type="date" className={inputClass} value={basicInfo.dob} onChange={e => setBasicInfo({...basicInfo, dob: e.target.value})} />
+                    )}
                   </div>
                 </div>
                 <div className="flex justify-between items-center border-b border-gray-50 pb-2">
                   <span className={labelClass}>Country</span>
                   <div className="w-1/2">
-                    <select className={inputClass(isEditingBasic)} value={basicInfo.country} onChange={e => setBasicInfo({...basicInfo, country: e.target.value})} disabled={!isEditingBasic}>
-                      <option value="in">India</option>
-                      <option value="us">United States</option>
-                      <option value="uk">United Kingdom</option>
-                      <option value="sg">Singapore</option>
-                    </select>
+                    {!isEditingBasic ? (
+                      <span className="text-sm text-gray-700 uppercase">
+                        {basicInfo.country === "in" ? "India" : 
+                         basicInfo.country === "us" ? "United States" : 
+                         basicInfo.country === "uk" ? "United Kingdom" : 
+                         basicInfo.country === "sg" ? "Singapore" : 
+                         basicInfo.country || "-"}
+                      </span>
+                    ) : (
+                      <select className={inputClass} value={basicInfo.country} onChange={e => setBasicInfo({...basicInfo, country: e.target.value})}>
+                        <option value="in">India</option>
+                        <option value="us">United States</option>
+                        <option value="uk">United Kingdom</option>
+                        <option value="sg">Singapore</option>
+                      </select>
+                    )}
                   </div>
                 </div>
               </div>
@@ -266,21 +307,37 @@ export function ProfilePage({ user, onUserUpdate }) {
             <div className="space-y-4">
               <div>
                 <span className={labelClass}>Residential address</span>
-                <textarea rows="2" className={`${inputClass(isEditingAddress)} resize-none`} value={address.residentialAddress} onChange={e => setAddress({...address, residentialAddress: e.target.value})} readOnly={!isEditingAddress} />
+                {!isEditingAddress ? (
+                  <p className="text-sm text-gray-700">{address.residentialAddress || "-"}</p>
+                ) : (
+                  <textarea rows="2" className={`${inputClass} resize-none`} value={address.residentialAddress} onChange={e => setAddress({...address, residentialAddress: e.target.value})} />
+                )}
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <span className={labelClass}>City</span>
-                  <input className={inputClass(isEditingAddress)} value={address.city} onChange={e => setAddress({...address, city: e.target.value})} readOnly={!isEditingAddress} />
+                  {!isEditingAddress ? (
+                    <span className="text-sm text-gray-700">{address.city || "-"}</span>
+                  ) : (
+                    <input className={inputClass} value={address.city} onChange={e => setAddress({...address, city: e.target.value})} />
+                  )}
                 </div>
                 <div>
                   <span className={labelClass}>State</span>
-                  <input className={inputClass(isEditingAddress)} value={address.state} onChange={e => setAddress({...address, state: e.target.value})} readOnly={!isEditingAddress} />
+                  {!isEditingAddress ? (
+                    <span className="text-sm text-gray-700">{address.state || "-"}</span>
+                  ) : (
+                    <input className={inputClass} value={address.state} onChange={e => setAddress({...address, state: e.target.value})} />
+                  )}
                 </div>
               </div>
               <div>
                 <span className={labelClass}>Pincode</span>
-                <input className={inputClass(isEditingAddress)} value={address.pincode} onChange={e => setAddress({...address, pincode: e.target.value})} readOnly={!isEditingAddress} />
+                {!isEditingAddress ? (
+                  <span className="text-sm text-gray-700">{address.pincode || "-"}</span>
+                ) : (
+                  <input className={inputClass} value={address.pincode} onChange={e => setAddress({...address, pincode: e.target.value})} />
+                )}
               </div>
             </div>
           </div>
@@ -318,16 +375,17 @@ export function ProfilePage({ user, onUserUpdate }) {
                         <p className="text-xs text-gray-400 mt-0.5">{edu.gradYear}</p>
                       </>
                     ) : (
-                      <div className="space-y-2 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                      <div className="space-y-2 p-3 bg-gray-50 rounded-lg border border-gray-100 mb-4">
                         <div className="grid grid-cols-2 gap-2">
-                          <input className={inputClass(true)} value={edu.level} onChange={e => { const newEdu = [...education]; newEdu[idx].level = e.target.value; setEducation(newEdu); }} placeholder="Level" />
-                          <input className={inputClass(true)} value={edu.institution} onChange={e => { const newEdu = [...education]; newEdu[idx].institution = e.target.value; setEducation(newEdu); }} placeholder="Institution" />
+                          <input className={inputClass} value={edu.level} onChange={e => { const newEdu = [...education]; newEdu[idx].level = e.target.value; setEducation(newEdu); }} placeholder="Level" />
+                          <input className={inputClass} value={edu.institution} onChange={e => { const newEdu = [...education]; newEdu[idx].institution = e.target.value; setEducation(newEdu); }} placeholder="Institution" />
                         </div>
-                        <input className={inputClass(true)} value={edu.degree} onChange={e => { const newEdu = [...education]; newEdu[idx].degree = e.target.value; setEducation(newEdu); }} placeholder="Degree / Major" />
+                        <input className={inputClass} value={edu.degree} onChange={e => { const newEdu = [...education]; newEdu[idx].degree = e.target.value; setEducation(newEdu); }} placeholder="Degree / Major" />
                         <div className="grid grid-cols-2 gap-2">
-                          <input className={inputClass(true)} value={edu.score} onChange={e => { const newEdu = [...education]; newEdu[idx].score = e.target.value; setEducation(newEdu); }} placeholder="Score" />
-                          <input className={inputClass(true)} value={edu.gradYear} onChange={e => { const newEdu = [...education]; newEdu[idx].gradYear = e.target.value; setEducation(newEdu); }} placeholder="Grad Year" />
+                          <input className={inputClass} value={edu.score} onChange={e => { const newEdu = [...education]; newEdu[idx].score = e.target.value; setEducation(newEdu); }} placeholder="Score" />
+                          <input className={inputClass} value={edu.gradYear} onChange={e => { const newEdu = [...education]; newEdu[idx].gradYear = e.target.value; setEducation(newEdu); }} placeholder="Grad Year" />
                         </div>
+                        <button type="button" onClick={() => { const newEdu = [...education]; newEdu.splice(idx, 1); setEducation(newEdu); }} className="text-xs text-red-600 hover:underline">Remove</button>
                       </div>
                     )}
                   </div>
@@ -372,9 +430,12 @@ export function ProfilePage({ user, onUserUpdate }) {
                     </>
                   ) : (
                     <>
-                      <input className={inputClass(true)} value={int.role} onChange={e => { const newInt = [...internships]; newInt[idx].role = e.target.value; setInternships(newInt); }} placeholder="Role" />
-                      <input className={inputClass(true)} value={int.company} onChange={e => { const newInt = [...internships]; newInt[idx].company = e.target.value; setInternships(newInt); }} placeholder="Company" />
-                      <input className={inputClass(true)} value={int.duration} onChange={e => { const newInt = [...internships]; newInt[idx].duration = e.target.value; setInternships(newInt); }} placeholder="Duration" />
+                      <input className={inputClass} value={int.role} onChange={e => { const newInt = [...internships]; newInt[idx].role = e.target.value; setInternships(newInt); }} placeholder="Role" />
+                      <input className={inputClass} value={int.company} onChange={e => { const newInt = [...internships]; newInt[idx].company = e.target.value; setInternships(newInt); }} placeholder="Company" />
+                      <input className={inputClass} value={int.duration} onChange={e => { const newInt = [...internships]; newInt[idx].duration = e.target.value; setInternships(newInt); }} placeholder="Duration" />
+                      <div className="text-right">
+                        <button type="button" onClick={() => { const newInt = [...internships]; newInt.splice(idx, 1); setInternships(newInt); }} className="text-xs text-red-600 hover:underline">Remove</button>
+                      </div>
                     </>
                   )}
                 </div>
