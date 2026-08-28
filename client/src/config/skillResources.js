@@ -100,8 +100,8 @@ export const SKILL_RESOURCES = [
       "Metrics & KPI Tracking"
     ],
     courses: [
-      { platform: "Reforge", title: "Product Strategy", url: "https://www.reforge.com/" },
-      { platform: "Udemy", title: "Data-Driven Product Management", url: "https://www.udemy.com/" }
+      { platform: "Reforge", title: "Product Strategy", url: "https://www.reforge.com/courses/product-strategy" },
+      { platform: "Udemy", title: "Data-Driven Product Management", url: "https://www.udemy.com/course/data-driven-product-management/" }
     ]
     // NO practice links (HackerRank/Leetcode)
   },
@@ -115,7 +115,7 @@ export const SKILL_RESOURCES = [
       "Product Positioning & Messaging"
     ],
     courses: [
-      { platform: "Product School", title: "Go-To-Market Mastery", url: "https://productschool.com/" }
+      { platform: "Product School", title: "Go-To-Market Mastery", url: "https://productschool.com/blog/product-strategy/go-to-market-strategy/" }
     ]
   },
   // UI/UX Roles
@@ -129,7 +129,7 @@ export const SKILL_RESOURCES = [
       "State & Flow Mapping"
     ],
     courses: [
-      { platform: "Interaction Design Foundation", title: "UI Animation", url: "https://www.interaction-design.org/" }
+      { platform: "Interaction Design Foundation", title: "UI Animation", url: "https://www.interaction-design.org/courses/ui-animation" }
     ]
   }
 ];

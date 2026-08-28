@@ -18,88 +18,186 @@ const staggerContainer = {
   }
 };
 
-function PrintReportTemplate({ report }) {
+function PrintReportTemplate({ report, user }) {
+  const { phases } = generateRoadmapPhases(report.missingSkills || []);
+  const userName = user?.name || "Candidate";
+  const userEmail = user?.email || "";
+  
   return (
-    <div className="hidden print:block font-sans text-black p-8 bg-white min-h-screen w-full">
-       <div className="border-b-4 border-gray-900 pb-6 mb-8 flex justify-between items-end">
+    <div className="hidden print:flex print:flex-col font-sans text-black bg-white min-h-screen w-full print:p-8">
+       {/* 1. COVER PAGE / HEADER */}
+       <div className="border-b-4 border-black pb-6 mb-8 flex justify-between items-end break-inside-avoid">
           <div>
-            <h1 className="text-4xl font-black mb-2 tracking-tight">Skill Gap Analysis Report</h1>
-            <p className="text-xl font-bold text-gray-600">Target Role: {report.role}</p>
+            <div className="uppercase tracking-widest text-xs font-bold text-gray-500 mb-2">SkillBridge Analytics</div>
+            <h1 className="text-4xl font-black mb-2 tracking-tight">Technical Readiness Report</h1>
+            <p className="text-xl font-bold text-gray-700 mt-4">Candidate: {userName}</p>
+            {userEmail && <p className="text-sm text-gray-500">{userEmail}</p>}
+            <p className="text-lg font-bold text-gray-800 mt-2">Target Role: {report.role}</p>
           </div>
           <div className="text-right">
-             <p className="font-bold text-2xl">Match Score: {report.score}%</p>
-             <p className="text-sm font-medium text-gray-500 uppercase tracking-widest mt-1">Generated: {report.date}</p>
+             <div className="inline-block border-2 border-black p-4 rounded-xl mb-2">
+               <p className="text-sm font-bold uppercase tracking-wider text-gray-600 mb-1">Match Score</p>
+               <p className="text-5xl font-black">{report.score}%</p>
+             </div>
+             <p className="text-sm font-bold text-gray-500 uppercase tracking-widest">Generated: {report.date}</p>
           </div>
        </div>
 
-       <div className="mb-10 grid grid-cols-2 gap-8">
-         <div>
-           <h2 className="text-2xl font-black border-b-2 border-gray-200 pb-2 mb-4">Performance Summary</h2>
-           <p className="text-gray-700 leading-relaxed mb-4">
-             This report outlines your technical readiness for the {report.role} role. Based on your assessment, your overall match is {report.score}%. To reach the target proficiency, focus on the actionable learning paths outlined below.
-           </p>
-           <h3 className="font-bold text-gray-900 mb-2">Verified Strengths:</h3>
-           <ul className="list-disc pl-5 text-gray-700">
-              {report.verifiedSkills && report.verifiedSkills.map((s,i)=><li key={i}>{s}</li>)}
-           </ul>
-         </div>
-         <div>
-           <h2 className="text-2xl font-black border-b-2 border-gray-200 pb-2 mb-4">Identified Skill Gaps</h2>
-           <div className="flex flex-col gap-3">
-             {report.missingSkills && report.missingSkills.map((s,i)=>(
-               <div key={i} className="flex justify-between items-center bg-gray-50 p-3 rounded-lg border border-gray-200">
-                 <span className="font-bold text-gray-900">{s.name}</span>
-                 <span className="text-xs font-bold uppercase px-2 py-1 bg-gray-200 rounded">{s.effortTag || "Moderate"}</span>
-               </div>
-             ))}
+       {/* 2. PERFORMANCE SUMMARY */}
+       <div className="mb-10 break-inside-avoid">
+         <h2 className="text-2xl font-black border-b-2 border-gray-300 pb-2 mb-6">Performance Summary</h2>
+         <p className="text-gray-800 text-base leading-relaxed mb-6 max-w-4xl">
+           This report outlines your technical readiness for the <span className="font-bold">{report.role}</span> role. 
+           Based on your assessment, your overall match is <span className="font-bold">{report.score}%</span>. 
+           The analysis below breaks down your proficiency across key competencies and provides a targeted learning roadmap.
+         </p>
+         
+         <div className="grid grid-cols-2 gap-8 mb-6">
+           <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+             <h3 className="font-black text-gray-900 mb-4 uppercase text-xs tracking-widest">Verified Strengths</h3>
+             <ul className="list-disc pl-5 text-gray-800 font-medium flex flex-col gap-2">
+                {report.verifiedSkills && report.verifiedSkills.length > 0 
+                  ? report.verifiedSkills.map((s,i)=><li key={i}>{s}</li>)
+                  : <li className="text-gray-500 italic">No verified strengths documented yet.</li>}
+             </ul>
+           </div>
+           
+           <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+             <h3 className="font-black text-gray-900 mb-4 uppercase text-xs tracking-widest">Identified Gaps (Focus Areas)</h3>
+             <div className="flex flex-col gap-3">
+               {report.missingSkills && report.missingSkills.length > 0 
+                 ? report.missingSkills.map((s,i)=>(
+                 <div key={i} className="flex justify-between items-center bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
+                   <span className="font-bold text-gray-900 text-sm">{s.name}</span>
+                   <span className="text-xs font-black uppercase tracking-wider px-2 py-1 bg-gray-100 rounded border border-gray-200">{s.effortTag || "Moderate"}</span>
+                 </div>
+               ))
+               : <div className="text-gray-500 italic">No critical gaps identified.</div>}
+             </div>
            </div>
          </div>
        </div>
 
-       <div className="mb-10">
-          <h2 className="text-2xl font-black border-b-2 border-gray-200 pb-2 mb-6">Actionable Learning Roadmap</h2>
+       {/* 3. SKILL BREAKDOWN (CHART STYLE) */}
+       <div className="mb-12 break-inside-avoid">
+         <h2 className="text-2xl font-black border-b-2 border-gray-300 pb-2 mb-6">Detailed Competency Breakdown</h2>
+         <div className="grid grid-cols-1 gap-4">
+           {report.skills && report.skills.map((skill, idx) => (
+             <div key={idx} className="flex flex-col gap-2">
+                <div className="flex justify-between items-end">
+                  <span className="font-bold text-gray-900 text-sm">{skill.name}</span>
+                  <span className="text-xs font-bold text-gray-600">Score: {skill.current}% &nbsp;|&nbsp; Target: {skill.target}%</span>
+                </div>
+                <div className="relative w-full h-4 bg-gray-100 rounded-full border border-gray-200 overflow-hidden print-color-adjust">
+                  <div 
+                    className="absolute top-0 left-0 h-full bg-black rounded-full" 
+                    style={{ width: `${skill.current}%` }}
+                  ></div>
+                  <div 
+                    className="absolute top-0 w-1 h-full bg-gray-400 z-10" 
+                    style={{ left: `${skill.target}%` }}
+                  ></div>
+                </div>
+             </div>
+           ))}
+         </div>
+       </div>
+
+       {/* 4. ROADMAP TIMELINE */}
+       <div className="mb-12 break-inside-avoid">
+         <h2 className="text-2xl font-black border-b-2 border-gray-300 pb-2 mb-6">Actionable Learning Roadmap</h2>
+         <div className="grid grid-cols-3 gap-6">
+           {phases.map((phase, idx) => (
+             <div key={idx} className="bg-white border-2 border-gray-200 p-6 rounded-xl relative">
+               <div className="absolute -top-3 left-6 bg-white px-2 text-xs font-black uppercase tracking-widest text-gray-500">
+                 {phase.estimatedDuration}
+               </div>
+               <div className="text-3xl font-black text-gray-200 absolute right-4 top-4">0{idx+1}</div>
+               <h3 className="text-lg font-black text-black mt-2 mb-4">{phase.label}</h3>
+               <ul className="flex flex-col gap-2">
+                 {phase.skills.length > 0 ? (
+                   phase.skills.map((s, i) => (
+                     <li key={i} className="text-sm font-bold text-gray-700 bg-gray-50 p-2 rounded border border-gray-100">
+                       • {s.name}
+                     </li>
+                   ))
+                 ) : (
+                   <li className="text-xs italic text-gray-400">No specific topics in this phase.</li>
+                 )}
+               </ul>
+             </div>
+           ))}
+         </div>
+       </div>
+
+       {/* 5. CURATED RESOURCES */}
+       <div className="mb-10 page-break-before-always">
+          <h2 className="text-2xl font-black border-b-2 border-gray-300 pb-2 mb-6">Curated Resources & Preparation</h2>
           {report.missingSkills && report.missingSkills.map((skill, idx) => {
-             const staticResource = SKILL_RESOURCES.find(r => r.skill === skill.name) || {};
+             const staticResource = SKILL_RESOURCES.find(r => r.skill === skill.name);
+             if (!staticResource) return null;
+             
              return (
-               <div key={idx} className="mb-8 break-inside-avoid bg-white border-2 border-gray-100 rounded-xl p-6">
-                 <div className="flex justify-between items-center mb-4">
-                   <h3 className="text-xl font-black text-gray-900">{skill.name}</h3>
-                   <span className="font-bold text-gray-500">Current: {skill.current}%</span>
+               <div key={idx} className="mb-8 break-inside-avoid bg-gray-50 border border-gray-200 rounded-xl p-6">
+                 <div className="flex justify-between items-center mb-4 border-b border-gray-200 pb-3">
+                   <h3 className="text-lg font-black text-black">{skill.name}</h3>
+                   <span className="text-xs font-bold uppercase px-2 py-1 bg-white border border-gray-200 rounded">{skill.effortTag}</span>
                  </div>
                  
-                 {staticResource.coreConcepts && (
-                   <div className="mb-4">
-                     <strong className="block text-sm font-bold text-gray-900 uppercase tracking-wider mb-2">Core Concepts:</strong>
-                     <div className="flex flex-wrap gap-2">
-                       {staticResource.coreConcepts.map((c, i) => (
-                         <span key={i} className="bg-gray-100 px-2 py-1 rounded text-sm text-gray-700">{c}</span>
-                       ))}
+                 <div className="grid grid-cols-2 gap-6">
+                   {staticResource.coreConcepts && (
+                     <div>
+                       <strong className="block text-xs font-black text-gray-900 uppercase tracking-wider mb-2">Core Concepts:</strong>
+                       <ul className="list-disc pl-4 text-sm text-gray-700">
+                         {staticResource.coreConcepts.map((c, i) => (
+                           <li key={i} className="mb-1">{c}</li>
+                         ))}
+                       </ul>
                      </div>
-                   </div>
-                 )}
-                 {staticResource.courses && (
+                   )}
                    <div>
-                     <strong className="block text-sm font-bold text-gray-900 uppercase tracking-wider mb-2">Recommended Courses:</strong>
-                     <ul className="list-disc pl-5 text-gray-700">
-                       {staticResource.courses.map((c, i) => (
-                         <li key={i}><span className="font-bold">{c.platform}:</span> {c.title}</li>
+                     {(staticResource.courses || staticResource.practiceLinks) && (
+                       <strong className="block text-xs font-black text-gray-900 uppercase tracking-wider mb-2">Key Links:</strong>
+                     )}
+                     <ul className="text-sm text-gray-700 flex flex-col gap-2">
+                       {staticResource.courses?.map((c, i) => (
+                         <li key={`c-${i}`}>
+                           <span className="font-bold">{c.platform}:</span> {c.title} <br/>
+                           <span className="text-xs text-blue-600 underline">{c.url}</span>
+                         </li>
+                       ))}
+                       {staticResource.practiceLinks?.map((c, i) => (
+                         <li key={`p-${i}`}>
+                           <span className="font-bold">{c.platform}:</span> {c.label} <br/>
+                           <span className="text-xs text-blue-600 underline">{c.url}</span>
+                         </li>
                        ))}
                      </ul>
                    </div>
-                 )}
+                 </div>
                </div>
              )
           })}
        </div>
-       
-       <div className="text-center text-sm font-bold text-gray-400 pt-8 border-t-2 border-gray-100">
-         Powered by SkillBridge Analytics
+
+       {/* FOOTER */}
+       <div className="mt-auto pt-8 border-t-2 border-gray-200 text-center text-xs font-bold text-gray-500 uppercase tracking-widest break-inside-avoid">
+         Powered by SkillBridge Analytics • Confidential Report • {new Date().getFullYear()}
        </div>
+       
+       <style dangerouslySetInnerHTML={{__html: `
+         @media print {
+           @page { size: A4; margin: 15mm; }
+           body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+           .page-break-before-always { page-break-before: always; }
+           .break-inside-avoid { page-break-inside: avoid; }
+         }
+       `}} />
     </div>
   )
 }
 
-function ReportDetails({ report, onBack }) {
+function ReportDetails({ report, user, onBack }) {
   const { phases } = generateRoadmapPhases(report.missingSkills || []);
   const topSkill = phases.flatMap(p => p.skills)[0] || { name: "General Skill Review" }; 
   
@@ -122,7 +220,7 @@ function ReportDetails({ report, onBack }) {
   return (
     <>
       {/* Print template (only visible when printing) */}
-      <PrintReportTemplate report={report} />
+      <PrintReportTemplate report={report} user={user} />
       
       {/* Screen Template (hidden when printing) */}
       <motion.main 
@@ -482,12 +580,16 @@ export function SkillGapFlow() {
   const location = useLocation();
   const [selectedReport, setSelectedReport] = useState(null);
   const [reports, setReports] = useState([]);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchReports() {
       try {
         const dashboardData = await api.getDashboard();
+        if (dashboardData.user) {
+          setUser(dashboardData.user);
+        }
         const attempts = dashboardData.attempts || [];
         
         // Extract unique roles from attempts
@@ -619,7 +721,7 @@ export function SkillGapFlow() {
     <div className="bg-[#f9fafb] text-gray-900 font-sans flex flex-col selection:bg-blue-600 selection:text-white min-h-screen">
       <AnimatePresence mode="wait">
         {selectedReport ? (
-          <ReportDetails report={selectedReport} onBack={() => setSelectedReport(null)} />
+          <ReportDetails report={selectedReport} user={user} onBack={() => setSelectedReport(null)} />
         ) : (
           <motion.main 
             key="overview"

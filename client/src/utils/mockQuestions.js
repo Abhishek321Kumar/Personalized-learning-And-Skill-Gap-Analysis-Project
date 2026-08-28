@@ -16,29 +16,67 @@ const randomizeOptions = (question) => {
   };
 };
 
-// Shared Banks
-const aptitudeBank = [
-  { text: "What is the next number in the series: 2, 6, 12, 20, 30, ...?", options: ["40", "42", "44", "48"], correctAnswer: "42", section: "aptitude" },
-  { text: "If all Bloops are Razzies and all Razzies are Lazzies, which of the following is necessarily true?", options: ["All Lazzies are Bloops", "Some Lazzies are definitely not Bloops", "All Bloops are Lazzies", "No Razzies are Bloops"], correctAnswer: "All Bloops are Lazzies", section: "aptitude" },
-  { text: "A train running at the speed of 60 km/hr crosses a pole in 9 seconds. What is the length of the train?", options: ["120 metres", "180 metres", "324 metres", "150 metres"], correctAnswer: "150 metres", section: "aptitude" },
-  { text: "Which word does not belong with the others?", options: ["Parsley", "Basil", "Dill", "Mayonnaise"], correctAnswer: "Mayonnaise", section: "aptitude" },
-  { text: "If 5 machines take 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?", options: ["1 minute", "5 minutes", "100 minutes", "500 minutes"], correctAnswer: "5 minutes", section: "aptitude" },
+
+// Role-specific Aptitude Banks
+const dataAptitude = [
+  { text: "If the probability of event A is 0.4 and event B is 0.5, and they are independent, what is the probability of both occurring?", options: ["0.9", "0.2", "0.1", "0.8"], correctAnswer: "0.2", section: "aptitude" },
+  { text: "A dataset has values: 2, 4, 4, 4, 5, 5, 7, 9. What is the mode?", options: ["4", "5", "7", "9"], correctAnswer: "4", section: "aptitude" },
   { text: "Look at this series: 36, 34, 30, 28, 24, ... What number should come next?", options: ["20", "22", "23", "26"], correctAnswer: "22", section: "aptitude" },
-  { text: "SCD, TEF, UGH, ____, WKL. What comes in the blank?", options: ["CMN", "UJI", "VIJ", "IJT"], correctAnswer: "VIJ", section: "aptitude" },
-  { text: "A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How much does the ball cost?", options: ["$0.05", "$0.10", "$1.00", "$0.50"], correctAnswer: "$0.05", section: "aptitude" },
-  { text: "If you rearrange the letters 'CIFAIPC', you would have the name of a(n):", options: ["City", "Animal", "Ocean", "River"], correctAnswer: "Ocean", section: "aptitude" },
+  { text: "If a company's revenue grows by 10% in year 1 and 20% in year 2, what is the total percentage growth?", options: ["30%", "32%", "35%", "25%"], correctAnswer: "32%", section: "aptitude" },
   { text: "Which of the following numbers is completely divisible by 9?", options: ["4213533", "5213634", "6324645", "7325756"], correctAnswer: "5213634", section: "aptitude" }
 ];
 
-const verbalBank = [
-  { text: "Choose the word most similar in meaning to 'ABUNDANT'.", options: ["Scarce", "Plentiful", "Minimal", "Rare"], correctAnswer: "Plentiful", section: "verbal" },
+const devAptitude = [
+  { text: "What is the next number in the series: 2, 6, 12, 20, 30, ...?", options: ["40", "42", "44", "48"], correctAnswer: "42", section: "aptitude" },
+  { text: "If all Bloops are Razzies and all Razzies are Lazzies, which of the following is necessarily true?", options: ["All Lazzies are Bloops", "Some Lazzies are definitely not Bloops", "All Bloops are Lazzies", "No Razzies are Bloops"], correctAnswer: "All Bloops are Lazzies", section: "aptitude" },
+  { text: "A train running at the speed of 60 km/hr crosses a pole in 9 seconds. What is the length of the train?", options: ["120 metres", "180 metres", "324 metres", "150 metres"], correctAnswer: "150 metres", section: "aptitude" },
+  { text: "If 5 machines take 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?", options: ["1 minute", "5 minutes", "100 minutes", "500 minutes"], correctAnswer: "5 minutes", section: "aptitude" },
+  { text: "In a certain code, 'COMPUTER' is written as 'RFUVQNPC'. How is 'MEDICINE' written in that code?", options: ["MFEDJJOE", "EOJDEJFM", "MFEJDJOE", "EOJDJEFM"], correctAnswer: "EOJDJEFM", section: "aptitude" }
+];
+
+const productAptitude = [
+  { text: "A product's user base doubles every month. If it takes 12 months to reach 100% market penetration, when was it at 50%?", options: ["Month 6", "Month 11", "Month 9", "Month 10"], correctAnswer: "Month 11", section: "aptitude" },
+  { text: "A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How much does the ball cost?", options: ["$0.05", "$0.10", "$1.00", "$0.50"], correctAnswer: "$0.05", section: "aptitude" },
+  { text: "SCD, TEF, UGH, ____, WKL. What comes in the blank?", options: ["CMN", "UJI", "VIJ", "IJT"], correctAnswer: "VIJ", section: "aptitude" },
+  { text: "If 3 PMs can write 3 specs in 3 days, how long does it take 1 PM to write 1 spec?", options: ["1 day", "3 days", "9 days", "0.33 days"], correctAnswer: "3 days", section: "aptitude" },
+  { text: "If a project has a 20% chance of failing in phase 1 and a 50% chance of failing in phase 2, what is the chance of succeeding both?", options: ["30%", "40%", "50%", "70%"], correctAnswer: "40%", section: "aptitude" }
+];
+
+const uxAptitude = [
+  { text: "Which word does not belong with the others?", options: ["Parsley", "Basil", "Dill", "Mayonnaise"], correctAnswer: "Mayonnaise", section: "aptitude" },
+  { text: "If you rearrange the letters 'CIFAIPC', you would have the name of a(n):", options: ["City", "Animal", "Ocean", "River"], correctAnswer: "Ocean", section: "aptitude" },
+  { text: "Odometer is to mileage as compass is to:", options: ["Speed", "Hiking", "Needle", "Direction"], correctAnswer: "Direction", section: "aptitude" },
+  { text: "Window is to pane as book is to:", options: ["Novel", "Glass", "Cover", "Page"], correctAnswer: "Page", section: "aptitude" },
+  { text: "Cup is to coffee as bowl is to:", options: ["Dish", "Soup", "Spoon", "Food"], correctAnswer: "Soup", section: "aptitude" }
+];
+
+// Role-specific Verbal Banks
+const dataVerbal = [
+  { text: "Identify the correct sentence.", options: ["The data is clear.", "The data are clear.", "Both are acceptable.", "Neither is acceptable."], correctAnswer: "Both are acceptable.", section: "verbal" },
+  { text: "What is the antonym of 'EMPIRICAL'?", options: ["Theoretical", "Practical", "Factual", "Observational"], correctAnswer: "Theoretical", section: "verbal" },
+  { text: "Fill in the blank: The analyst _____ the anomaly to a sensor malfunction.", options: ["attributed", "contributed", "distributed", "retributed"], correctAnswer: "attributed", section: "verbal" },
+  { text: "What is the synonym of 'CORRELATE'?", options: ["Separate", "Associate", "Deviate", "Isolate"], correctAnswer: "Associate", section: "verbal" }
+];
+
+const devVerbal = [
   { text: "Identify the grammatically correct sentence.", options: ["She don't like apples.", "She doesn't likes apples.", "She doesn't like apples.", "She do not likes apples."], correctAnswer: "She doesn't like apples.", section: "verbal" },
   { text: "Fill in the blank: The company decided to _____ its operations due to heavy losses.", options: ["expand", "curtail", "promote", "invest"], correctAnswer: "curtail", section: "verbal" },
-  { text: "What is the antonym of 'OBSOLETE'?", options: ["Ancient", "Current", "Outdated", "Antique"], correctAnswer: "Current", section: "verbal" },
   { text: "Which word is spelled correctly?", options: ["Accomodate", "Acommodate", "Accommodate", "Acomodate"], correctAnswer: "Accommodate", section: "verbal" },
-  { text: "Choose the correct preposition: He is extremely good _____ mathematics.", options: ["in", "at", "with", "on"], correctAnswer: "at", section: "verbal" },
+  { text: "Choose the correct preposition: He is extremely good _____ mathematics.", options: ["in", "at", "with", "on"], correctAnswer: "at", section: "verbal" }
+];
+
+const productVerbal = [
   { text: "What is the meaning of the idiom 'Bite the bullet'?", options: ["To get angry", "To face a difficult situation with courage", "To eat something hard", "To make a mistake"], correctAnswer: "To face a difficult situation with courage", section: "verbal" },
-  { text: "Select the pair that expresses a similar relationship to 'Doctor : Hospital'.", options: ["Teacher : School", "Farmer : Crop", "Chef : Food", "Mechanic : Car"], correctAnswer: "Teacher : School", section: "verbal" }
+  { text: "Choose the word most similar in meaning to 'ABUNDANT'.", options: ["Scarce", "Plentiful", "Minimal", "Rare"], correctAnswer: "Plentiful", section: "verbal" },
+  { text: "Fill in the blank: The new feature will _____ the overall user experience.", options: ["detract", "enhance", "confuse", "complicate"], correctAnswer: "enhance", section: "verbal" },
+  { text: "What is the antonym of 'OBSOLETE'?", options: ["Ancient", "Current", "Outdated", "Antique"], correctAnswer: "Current", section: "verbal" }
+];
+
+const uxVerbal = [
+  { text: "Select the pair that expresses a similar relationship to 'Doctor : Hospital'.", options: ["Teacher : School", "Farmer : Crop", "Chef : Food", "Mechanic : Car"], correctAnswer: "Teacher : School", section: "verbal" },
+  { text: "What is the synonym of 'AESTHETIC'?", options: ["Ugly", "Functional", "Beautiful", "Practical"], correctAnswer: "Beautiful", section: "verbal" },
+  { text: "Fill in the blank: The design was so _____ that it won an award.", options: ["mediocre", "innovative", "mundane", "derivative"], correctAnswer: "innovative", section: "verbal" },
+  { text: "What is the antonym of 'INTUITIVE'?", options: ["Natural", "Instinctive", "Confusing", "Innate"], correctAnswer: "Confusing", section: "verbal" }
 ];
 
 const codeReasoningBank = [
@@ -88,6 +126,7 @@ const codeReasoningBank = [
 
 // Role-specific Technical Banks
 const dataQuestions = [
+
   { text: "Which of the following is a common method for handling missing data in a dataset?", options: ["Mean/Median Imputation", "Listwise Deletion", "Data Augmentation", "All of the above"], correctAnswer: "All of the above", section: "technical", skill: "Data Cleaning" },
   { text: "What is the primary purpose of a validation set in machine learning?", options: ["To train the model", "To tune hyperparameters", "To evaluate final performance", "To clean data"], correctAnswer: "To tune hyperparameters", section: "technical", skill: "Machine Learning" },
   { text: "Which algorithm is typically used for classification tasks?", options: ["Linear Regression", "K-Means Clustering", "Random Forest", "Principal Component Analysis"], correctAnswer: "Random Forest", section: "technical", skill: "Machine Learning" },
@@ -153,36 +192,47 @@ const uxQuestions = [
 
 export const generateRoleQuestions = (role) => {
   const normalizedRole = role ? role.toLowerCase() : "";
+  
   let technicalQuestions = [];
+  let aptitudeQuestions = [];
+  let verbalQuestions = [];
   let isTechnicalRole = true;
 
   if (normalizedRole.includes("data") || normalizedRole.includes("analyst") || normalizedRole.includes("scientist") || normalizedRole.includes("machine learning")) {
     technicalQuestions = [...dataQuestions];
+    aptitudeQuestions = [...dataAptitude];
+    verbalQuestions = [...dataVerbal];
   } else if (normalizedRole.includes("product") || normalizedRole.includes("manager") || normalizedRole.includes("marketing")) {
     technicalQuestions = [...productQuestions];
+    aptitudeQuestions = [...productAptitude];
+    verbalQuestions = [...productVerbal];
     isTechnicalRole = false;
   } else if (normalizedRole.includes("ux") || normalizedRole.includes("ui") || normalizedRole.includes("design")) {
     technicalQuestions = [...uxQuestions];
+    aptitudeQuestions = [...uxAptitude];
+    verbalQuestions = [...uxVerbal];
     isTechnicalRole = false;
   } else {
     // Default to Full-stack / Dev
     technicalQuestions = [...devQuestions];
+    aptitudeQuestions = [...devAptitude];
+    verbalQuestions = [...devVerbal];
   }
 
   const finalQuestions = [];
 
-  // 1. Aptitude (Random 5 questions)
-  finalQuestions.push(...shuffleArray(aptitudeBank).slice(0, 5));
+  // 1. Aptitude (Random up to 5 questions)
+  finalQuestions.push(...shuffleArray(aptitudeQuestions).slice(0, 5));
 
-  // 2. Verbal (Random 4 questions)
-  finalQuestions.push(...shuffleArray(verbalBank).slice(0, 4));
+  // 2. Verbal (Random up to 4 questions)
+  finalQuestions.push(...shuffleArray(verbalQuestions).slice(0, 4));
 
-  // 3. Code Reasoning (Random 4 questions if technical role)
+  // 3. Code Reasoning (Random up to 4 questions if technical role)
   if (isTechnicalRole) {
     finalQuestions.push(...shuffleArray(codeReasoningBank).slice(0, 4));
   }
 
-  // 4. Technical (Random 10 questions)
+  // 4. Technical (Random up to 10 questions)
   finalQuestions.push(...shuffleArray(technicalQuestions).slice(0, 10));
 
   // Assign sequential IDs while keeping metadata intact, and randomize the options within each question
