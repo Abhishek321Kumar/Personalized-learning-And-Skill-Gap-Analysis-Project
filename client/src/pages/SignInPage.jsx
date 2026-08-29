@@ -9,6 +9,7 @@ export function SignInPage({ onAuthSuccess }) {
     email: "",
     password: ""
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -120,18 +121,23 @@ export function SignInPage({ onAuthSuccess }) {
               <label className="text-[0.7rem] tracking-[0.1em] uppercase text-[#71717a] block w-full mb-2" htmlFor="password">
                 Password
               </label>
-              <input 
-                className={`w-full px-4 py-3 border ${error ? 'border-red-300 focus:ring-red-500' : 'border-gray-200 focus:ring-blue-500'} focus:ring-2 focus:border-transparent outline-none transition-all`}
-                id="password" 
-                name="password" 
-                required 
-                type="password"
-                value={formData.password}
-                onChange={e => {
-                  setError(null);
-                  setFormData({ ...formData, password: e.target.value });
-                }}
-              />
+              <div className="relative">
+                <input 
+                  className={`w-full px-4 py-3 border ${error ? 'border-red-300 focus:ring-red-500' : 'border-gray-200 focus:ring-blue-500'} focus:ring-2 focus:border-transparent outline-none transition-all pr-12`}
+                  id="password" 
+                  name="password" 
+                  required 
+                  type={showPassword ? "text" : "password"}
+                  value={formData.password}
+                  onChange={e => {
+                    setError(null);
+                    setFormData({ ...formData, password: e.target.value });
+                  }}
+                />
+                <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none" onClick={() => setShowPassword(!showPassword)}>
+                  <span className="material-symbols-outlined text-[20px]">{showPassword ? 'visibility_off' : 'visibility'}</span>
+                </button>
+              </div>
             </div>
 
             {/* Sign In Button */}
