@@ -15,7 +15,7 @@ import { SkillGapLoadingPage } from "./pages/SkillGapLoadingPage";
 import { SkillGapFlow } from "./pages/SkillGapFlow";
 import { ProfilePage } from "./pages/ProfilePage";
 import { AboutPage } from "./pages/AboutPage";
-
+import { BlogPage } from "./pages/BlogPage";
 const getStoredUser = () => {
   try {
     return JSON.parse(window.localStorage.getItem("skillbridge-user") || "null");
@@ -54,6 +54,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomePage modules={modules} user={user} />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/blogs" element={<BlogPage user={user} />} />
         
         {/* Auth Routes */}
         <Route path="/login" element={<SignInPage onAuthSuccess={handleUserUpdate} />} />
