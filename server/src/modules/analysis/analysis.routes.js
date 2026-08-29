@@ -53,6 +53,50 @@ router.post("/parse-resume", upload.single("resume"), async (req, res, next) => 
     const textLower = extractedText.toLowerCase();
     const linesArr = extractedText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
 
+    const searchOutwards = (lines, centerIdx, maxDist, matcher) => {
+      let res = matcher(lines[centerIdx]);
+      if (res) return res;
+      for (let dist = 1; dist <= maxDist; dist++) {
+        if (centerIdx + dist < lines.length) {
+          res = matcher(lines[centerIdx + dist]);
+          if (res) return res;
+        }
+        if (centerIdx - dist >= 0) {
+          res = matcher(lines[centerIdx - dist]);
+          if (res) return res;
+        }
+      }
+      return "";
+    };
+
+    const extractDate = (lines, centerIdx) => {
+      return searchOutwards(lines, centerIdx, 2, (line) => {
+        const matches = line.match(/(?:19|20)\d{2}/g);
+        if (matches) return matches[matches.length - 1];
+        return null;
+      });
+    };
+
+    const extractCGPA = (lines, centerIdx) => {
+      return searchOutwards(lines, centerIdx, 2, (line) => {
+        const match = line.match(/(?:cgpa|gpa|percentage|score)[\s:]*([0-9.]+)/i);
+        if (match) return match[1];
+        return null;
+      });
+    };
+
+    const extractUniversity = (lines, centerIdx) => {
+      const keywords = ['college', 'university', 'institute', 'school', 'academy', 'technology', 'management'];
+      return searchOutwards(lines, centerIdx, 2, (line) => {
+        const lowerLine = line.toLowerCase();
+        if (lowerLine.includes("bachelor") || lowerLine.includes("master") || lowerLine.includes("degree") || lowerLine.includes("education")) return null;
+        if (keywords.some(kw => lowerLine.includes(kw))) {
+          return line.split(',')[0].trim();
+        }
+        return null;
+      });
+    };
+
     for (let i = 0; i < linesArr.length; i++) {
       const line = linesArr[i];
       const lowerLine = line.toLowerCase();
@@ -69,20 +113,9 @@ router.post("/parse-resume", upload.single("resume"), async (req, res, next) => 
         else if (lowerLine.includes("me") || lowerLine.includes("m.e")) education.pgDegree = "ME";
         else education.pgDegree = "Other";
 
-        // Try to find University name on the line above
-        if (i > 0 && !education.pgUniversity) {
-          const prevLine = linesArr[i - 1];
-          if (prevLine.toLowerCase() !== "education" && prevLine.length > 5) {
-             // Split by comma to drop location (e.g., "Presidency College, Bangalore" -> "Presidency College")
-             education.pgUniversity = prevLine.split(',')[0].trim();
-          }
-        }
-        
-        // Extract graduation year (e.g. 2025)
-        const yearMatch = line.match(/(?:19|20)\d{2}/g);
-        if (yearMatch) {
-          education.pgYear = yearMatch[yearMatch.length - 1]; // get the last year mentioned (usually graduation)
-        }
+        if (!education.pgYear) education.pgYear = extractDate(linesArr, i);
+        if (!education.pgCgpa) education.pgCgpa = extractCGPA(linesArr, i);
+        if (!education.pgUniversity) education.pgUniversity = extractUniversity(linesArr, i);
       }
 
       // Detect Bachelor's / UG
@@ -95,19 +128,9 @@ router.post("/parse-resume", upload.single("resume"), async (req, res, next) => 
         else if (lowerLine.includes("be") || lowerLine.includes("b.e")) education.ugDegree = "BE";
         else education.ugDegree = "Other";
 
-        // Try to find University name on the line above
-        if (i > 0 && !education.ugUniversity) {
-          const prevLine = linesArr[i - 1];
-          if (prevLine.toLowerCase() !== "education" && prevLine.length > 5) {
-             education.ugUniversity = prevLine.split(',')[0].trim();
-          }
-        }
-        
-        // Extract graduation year
-        const yearMatch = line.match(/(?:19|20)\d{2}/g);
-        if (yearMatch) {
-          education.ugYear = yearMatch[yearMatch.length - 1];
-        }
+        if (!education.ugYear) education.ugYear = extractDate(linesArr, i);
+        if (!education.ugCgpa) education.ugCgpa = extractCGPA(linesArr, i);
+        if (!education.ugUniversity) education.ugUniversity = extractUniversity(linesArr, i);
       }
     }
 
