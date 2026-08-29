@@ -50,7 +50,7 @@ export function HomePage({ user }) {
           {/* Quick Stats */}
           <motion.div variants={fadeUp} className="flex gap-12 border-t border-gray-100 pt-8 items-end">
             <div className="flex flex-col">
-              <span className="text-2xl font-bold text-[#1a1a1a] h-8 flex items-center">5</span>
+              <span className="text-2xl font-bold text-[#1a1a1a] h-8 flex items-center">6</span>
               <span className="font-mono text-[10px] tracking-widest text-gray-400 uppercase border-t border-gray-900 pt-1 mt-1">Modules Live</span>
             </div>
             <div className="flex flex-col">
@@ -143,7 +143,7 @@ export function HomePage({ user }) {
               The Platform
             </div>
             <h2 className="text-4xl font-semibold tracking-tight text-gray-900 max-w-xl text-center">
-              Five modules. One coherent flow. Built to grow.
+              Six modules. One coherent flow. Built to grow.
             </h2>
           </motion.div>
           {/* Bento Grid */}
@@ -185,7 +185,7 @@ export function HomePage({ user }) {
               <span className="font-mono text-[10px] text-skillblue font-bold mb-4">M5</span>
               <h3 className="text-xl font-semibold mb-4 text-gray-800">Progress Analytics</h3>
               <p className="text-sm text-gray-500 leading-relaxed mt-auto m-0">
-                Radar charts, trends, session history on a bento dashboard.
+                Job readiness scoring, trends, and session history on a dynamic bento dashboard.
               </p>
             </motion.div>
             {/* Card M6 */}
@@ -193,7 +193,7 @@ export function HomePage({ user }) {
               <span className="font-mono text-[10px] text-skillblue font-bold mb-4">M6</span>
               <h3 className="text-xl font-semibold mb-4 text-gray-800">Roadmap &amp; Re-Assessment</h3>
               <p className="text-sm text-gray-500 leading-relaxed mt-auto m-0">
-                Coming soon — modular hooks already wired in.
+                Personalized learning pathways, curated resources, and iterative readiness checks.
               </p>
             </motion.div>
           </div>
