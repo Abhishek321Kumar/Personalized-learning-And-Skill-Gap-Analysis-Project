@@ -10,6 +10,7 @@ export function RegistrationFlow({ onAuthSuccess }) {
   const navigate = useNavigate();
 
   const [userId, setUserId] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   // Step 0: Account Form
   const [accountForm, setAccountForm] = useState({ fullName: "", email: "", password: "" });
@@ -58,6 +59,13 @@ export function RegistrationFlow({ onAuthSuccess }) {
   const handleAccountCreation = async (e) => {
     e.preventDefault();
     setError("");
+
+    const nameRegex = /^[A-Za-z\s]+$/;
+    if (!nameRegex.test(accountForm.fullName)) {
+      setError("Full Name must contain only alphabetic characters.");
+      return;
+    }
+
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
     if (!passwordRegex.test(accountForm.password)) {
       setError("Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character.");
@@ -112,9 +120,11 @@ export function RegistrationFlow({ onAuthSuccess }) {
           ugDegree: data.education?.ugDegree || prev.ugDegree,
           ugUniversity: data.education?.ugUniversity || prev.ugUniversity,
           ugYear: data.education?.ugYear || prev.ugYear,
+          ugCgpa: data.education?.ugCgpa || prev.ugCgpa,
           pgDegree: data.education?.pgDegree || prev.pgDegree,
           pgUniversity: data.education?.pgUniversity || prev.pgUniversity,
           pgYear: data.education?.pgYear || prev.pgYear,
+          pgCgpa: data.education?.pgCgpa || prev.pgCgpa,
           internshipTitle: data.internship?.title || prev.internshipTitle,
           internshipCompany: data.internship?.company || prev.internshipCompany,
           internshipDuration: data.internship?.duration || prev.internshipDuration,
@@ -147,6 +157,19 @@ export function RegistrationFlow({ onAuthSuccess }) {
       setError("Please fill all mandatory fields.");
       return;
     }
+
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    if (age < 18) {
+      setError("You must be at least 18 years old to register.");
+      return;
+    }
+
     setError("");
     setStep(2);
   };
@@ -279,7 +302,12 @@ export function RegistrationFlow({ onAuthSuccess }) {
                 </div>
                 <div>
                   <label className="label-accent block w-full" htmlFor="password">Password</label>
-                  <input className={`w-full px-4 py-3 border ${error ? 'border-red-500' : 'border-gray-200'} focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all`} id="password" minLength="8" required type="password" value={accountForm.password} onChange={e => { setError(""); setAccountForm({ ...accountForm, password: e.target.value }) }} />
+                  <div className="relative">
+                    <input className={`w-full px-4 py-3 border ${error ? 'border-red-500' : 'border-gray-200'} focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all pr-12`} id="password" minLength="8" required type={showPassword ? "text" : "password"} value={accountForm.password} onChange={e => { setError(""); setAccountForm({ ...accountForm, password: e.target.value }) }} />
+                    <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none" onClick={() => setShowPassword(!showPassword)}>
+                      <span className="material-symbols-outlined text-[20px]">{showPassword ? 'visibility_off' : 'visibility'}</span>
+                    </button>
+                  </div>
                 </div>
                 <button className="w-full bg-blue-600 text-white py-4 font-medium flex items-center justify-center hover:bg-blue-700 transition-colors disabled:opacity-50" type="submit" disabled={loading}>
                   {loading ? "Creating..." : "Create account →"}
