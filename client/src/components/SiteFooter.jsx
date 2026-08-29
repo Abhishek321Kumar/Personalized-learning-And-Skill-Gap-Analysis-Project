@@ -26,7 +26,7 @@ export function SiteFooter() {
             <div className="space-y-6 md:pt-11">
               <ul className="space-y-4 text-sm text-gray-500 list-none p-0 m-0">
                 <li><Link className="hover:text-slate-900 transition-colors no-underline text-gray-500" to="/login">Login</Link></li>
-                <li><a className="hover:text-slate-900 transition-colors no-underline" href="#">Blogs</a></li>
+                <li><Link className="hover:text-slate-900 transition-colors no-underline text-gray-500" to="/blogs">Blogs</Link></li>
               </ul>
             </div>
           </div>
