@@ -182,9 +182,11 @@ export function ProfilePage({ user, onUserUpdate }) {
       try {
         const latest = await api.getLatestAnalysis();
         const role = latest?.snapshot?.targetRole || user?.targetRole || "Software Engineer";
+        const jobDesc = latest?.snapshot?.jobDescription || "Standard requirements for " + role;
         await api.runAnalysis({
           targetRole: role,
-          jobDescription: "Standard requirements for " + role
+          jobDescription: jobDesc,
+          jobRoleId: latest?.snapshot?.jobRoleId // Pass along if exists
         });
       } catch (analysisErr) {
         console.warn("Could not auto-update analysis snapshot", analysisErr);
