@@ -196,7 +196,10 @@ router.post("/run", requireAuth, async (req, res, next) => {
       strengths: response.data.strengths,
       improvementPriorities: response.data.improvementPriorities,
       categoryBreakdown: response.data.categoryBreakdown,
-      ictIndicator: response.data.ictIndicator
+      ictIndicator: response.data.ictIndicator,
+      resumeScore: response.data.resumeScore,
+      resumePros: response.data.resumePros,
+      resumeCons: response.data.resumeCons
     });
 
     res.json({ snapshot });

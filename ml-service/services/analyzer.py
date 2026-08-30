@@ -104,6 +104,41 @@ def build_category_breakdown(required_skills, matched_skill_names, assessment_sc
     return breakdown
 
 
+def evaluate_resume_structure(resume_text: str):
+    score = 60
+    pros = []
+    cons = []
+    text_lower = (resume_text or "").lower()
+    
+    if len(text_lower) > 500:
+        score += 15
+        pros.append("Good overall length and detail")
+    else:
+        score -= 10
+        cons.append("Resume seems a bit short. Add more details about your achievements.")
+        
+    if "experience" in text_lower or "work history" in text_lower:
+        score += 10
+        pros.append("Clear experience section")
+    else:
+        cons.append("Missing a clear 'Experience' section")
+        
+    if "education" in text_lower or "university" in text_lower or "degree" in text_lower:
+        score += 10
+        pros.append("Education details are present")
+    else:
+        cons.append("Missing education details")
+        
+    if "achieved" in text_lower or "improved" in text_lower or "increased" in text_lower or "developed" in text_lower:
+        score += 5
+        pros.append("Good use of action verbs")
+    else:
+        cons.append("Consider using more action verbs (e.g., achieved, developed)")
+        
+    score = max(0, min(100, score))
+    return score, pros, cons
+
+
 def analyze_profile(payload):
     resume_text = payload.get("resumeText", "")
     job_description = payload.get("jobDescription", "")
@@ -167,6 +202,8 @@ def analyze_profile(payload):
     elif readiness_score >= 50:
         confidence_band = "Progressing"
 
+    resume_score, resume_pros, resume_cons = evaluate_resume_structure(resume_text)
+
     return {
         "targetRole": target_role,
         "readinessScore": readiness_score,
@@ -183,5 +220,8 @@ def analyze_profile(payload):
         },
         "confidenceBand": confidence_band,
         "detectedResumeSkills": user_skills,
+        "resumeScore": resume_score,
+        "resumePros": resume_pros,
+        "resumeCons": resume_cons,
     }
 

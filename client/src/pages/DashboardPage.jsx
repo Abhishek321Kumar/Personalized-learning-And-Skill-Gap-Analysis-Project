@@ -42,6 +42,7 @@ export function DashboardPage({ user }) {
     missingSkills: 0,
     quizzesTaken: 0,
     avgScore: 0,
+    resumeScore: null,
     topMissing: [],
     skills: [],
     competencies: [],
@@ -78,6 +79,7 @@ export function DashboardPage({ user }) {
             missingSkills: 0,
             quizzesTaken: 0,
             avgScore: 0,
+            resumeScore: null,
             topMissing: [],
             skills: [],
             competencies: [],
@@ -228,6 +230,7 @@ export function DashboardPage({ user }) {
       missingSkills: latestAnalysis.missingSkills?.length || 0,
       quizzesTaken: filteredAttempts.length,
       avgScore: avgScore,
+      resumeScore: latestAnalysis.resumeScore ?? null,
       topMissing: latestAnalysis.missingSkills?.slice(0, 3) || [],
       skills: finalSkills,
       competencies: competencies,
@@ -488,7 +491,7 @@ export function DashboardPage({ user }) {
             </motion.div>
 
             {/* Quiz Trend */}
-            <motion.div variants={fadeUp} className="grid-item lg:col-span-6 p-8 min-h-[320px] flex flex-col relative">
+            <motion.div variants={fadeUp} className="grid-item lg:col-span-5 p-8 min-h-[320px] flex flex-col relative">
               <div className="flex items-center justify-between pb-2 mb-4">
                 <p className="font-mono text-xs tracking-wider text-gray-500 uppercase cursor-help" title="Your assessment score progression over time">Quiz Trend</p>
                 <div className="w-8 h-8 rounded bg-indigo-50 text-indigo-600 flex items-center justify-center">
@@ -551,7 +554,7 @@ export function DashboardPage({ user }) {
             </motion.div>
 
             {/* Competency Matrix */}
-            <motion.div variants={fadeUp} className="grid-item lg:col-span-6 p-8 min-h-[320px] flex flex-col relative">
+            <motion.div variants={fadeUp} className="grid-item lg:col-span-4 p-8 min-h-[320px] flex flex-col relative">
               <div className="flex items-center justify-between pb-2 mb-6">
                 <p className="font-mono text-xs tracking-wider text-gray-500 uppercase cursor-help" title="Breakdown of your proficiency across core competency areas">Competency Matrix</p>
                 <div className="w-8 h-8 rounded bg-purple-50 text-purple-600 flex items-center justify-center">
@@ -583,6 +586,32 @@ export function DashboardPage({ user }) {
                   </div>
                 )}
               </div>
+            </motion.div>
+
+            {/* ATS Resume Score */}
+            <motion.div variants={fadeUp} className="grid-item lg:col-span-3 p-8 flex flex-col justify-start min-h-card relative">
+              <div className="flex items-center justify-between pb-2 mb-6">
+                <p className="font-mono text-xs tracking-wider text-gray-500 uppercase cursor-help" title="Score of your uploaded resume based on ATS parsability and content">Resume Score</p>
+                <div className="w-8 h-8 rounded bg-pink-50 text-pink-600 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-sm">description</span>
+                </div>
+              </div>
+              
+              {data.resumeScore !== null ? (
+                <>
+                  <div className="flex items-baseline mb-3">
+                    <span className="text-7xl font-light text-gray-900">{data.resumeScore}</span>
+                    <span className="text-3xl text-gray-300 font-light ml-1">/100</span>
+                  </div>
+                  <div className="flex items-center gap-3 mt-auto">
+                    <p className="text-gray-500 text-sm">Based on ATS scan</p>
+                  </div>
+                </>
+              ) : (
+                <div className="flex-grow flex items-center justify-center text-gray-400 text-sm text-center">
+                  Upload resume to score
+                </div>
+              )}
             </motion.div>
 
             {/* Recent Assessments */}

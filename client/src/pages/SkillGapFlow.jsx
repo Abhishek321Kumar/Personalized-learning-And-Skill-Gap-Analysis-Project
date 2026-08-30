@@ -132,6 +132,56 @@ function ReportDetails({ report, user, onBack }) {
             </div>
           </motion.div>
 
+          {/* 1.75 RESUME PRESENTATION (NEW) */}
+          {(report.resumePros?.length > 0 || report.resumeCons?.length > 0) && (
+            <motion.div variants={fadeUp} className="flex flex-col gap-6 mt-2">
+              <div className="flex flex-col gap-1">
+                <h2 className="text-3xl font-black text-gray-900 tracking-tight">Resume ATS Feedback</h2>
+                <p className="text-gray-500 font-medium">Strengths and areas for improvement based on ATS parsing.</p>
+              </div>
+              
+              <div className="bg-white p-8 md:p-10 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Pros */}
+                <div className="flex flex-col gap-4">
+                  <h3 className="flex items-center gap-2 font-black text-green-700 uppercase tracking-widest text-sm">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Resume Strengths
+                  </h3>
+                  {report.resumePros?.length > 0 ? (
+                    <ul className="flex flex-col gap-3">
+                      {report.resumePros.map((pro, i) => (
+                        <li key={i} className="flex items-start gap-3 text-gray-700 font-medium bg-green-50/50 p-4 rounded-xl border border-green-100">
+                          {pro}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div className="text-gray-400 italic">No specific strengths identified.</div>
+                  )}
+                </div>
+                
+                {/* Cons */}
+                <div className="flex flex-col gap-4">
+                  <h3 className="flex items-center gap-2 font-black text-red-600 uppercase tracking-widest text-sm">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    Areas to Improve
+                  </h3>
+                  {report.resumeCons?.length > 0 ? (
+                    <ul className="flex flex-col gap-3">
+                      {report.resumeCons.map((con, i) => (
+                        <li key={i} className="flex items-start gap-3 text-gray-700 font-medium bg-red-50/50 p-4 rounded-xl border border-red-100">
+                          {con}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div className="text-gray-400 italic">No significant issues found.</div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
+
           {/* 2. ROADMAP TIMELINE */}
           <motion.div variants={fadeUp} className="flex flex-col gap-6">
             <div className="flex flex-col gap-1">
@@ -513,8 +563,19 @@ export function SkillGapFlow() {
           const bestScore = roleAttempts.length > 0 ? Math.max(...roleAttempts.map(a => a.score)) : 0;
           const dateStr = latestAttempt ? new Date(latestAttempt.createdAt).toLocaleDateString() : new Date().toLocaleDateString();
 
+          const roleAnalyses = (dashboardData.analyses || []).filter(a => a.targetRole?.toLowerCase() === role.toLowerCase());
+          const latestAnalysis = roleAnalyses[0] || {};
+
           if (template) {
-            userReports.push({ ...template, score: bestScore, date: dateStr, id: "rep_" + role.replace(/\s+/g, '_') });
+            userReports.push({ 
+              ...template, 
+              score: bestScore, 
+              date: dateStr, 
+              id: "rep_" + role.replace(/\s+/g, '_'),
+              resumeScore: latestAnalysis.resumeScore,
+              resumePros: latestAnalysis.resumePros || [],
+              resumeCons: latestAnalysis.resumeCons || [],
+            });
           } else {
             // Default mock for an unknown role. Uses generic terms so non-technical roles don't see SQL or System Design.
             userReports.push({
@@ -536,6 +597,9 @@ export function SkillGapFlow() {
               ],
               verifiedSkills: ["Core Fundamentals"],
               description: `Personalized skill gap report and readiness analysis for ${role}.`,
+              resumeScore: latestAnalysis.resumeScore,
+              resumePros: latestAnalysis.resumePros || [],
+              resumeCons: latestAnalysis.resumeCons || [],
             });
           }
         });
