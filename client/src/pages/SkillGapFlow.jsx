@@ -205,14 +205,53 @@ function ReportDetails({ report, user, onBack }) {
                                     <li key={fidx} className={`flex items-start gap-3 p-4 rounded-xl border text-sm font-medium ${
                                       fb.type === 'pro' 
                                         ? 'bg-green-50/50 border-green-100 text-green-800' 
-                                        : 'bg-red-50/50 border-red-100 text-red-800'
+                                        : fb.type === 'info'
+                                          ? 'bg-blue-50/50 border-blue-100 text-blue-800 flex-col'
+                                          : 'bg-red-50/50 border-red-100 text-red-800'
                                     }`}>
-                                      {fb.type === 'pro' ? (
-                                        <svg className="w-5 h-5 text-green-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                      {fb.type === 'info' ? (
+                                        <div className="w-full">
+                                          <div className="flex items-center gap-2 mb-3">
+                                            <svg className="w-5 h-5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            <span className="font-bold">{fb.text}</span>
+                                          </div>
+                                          
+                                          {fb.matched && fb.matched.length > 0 && (
+                                            <div className="mb-3">
+                                              <div className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Matched Skills</div>
+                                              <div className="flex flex-wrap gap-2">
+                                                {fb.matched.map((skill, i) => (
+                                                  <span key={`matched-${i}`} className="bg-green-100 text-green-700 px-2 py-1 rounded-md text-xs border border-green-200 shadow-sm">
+                                                    ✓ {skill}
+                                                  </span>
+                                                ))}
+                                              </div>
+                                            </div>
+                                          )}
+                                          
+                                          {fb.missing && fb.missing.length > 0 && (
+                                            <div>
+                                              <div className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Missing Skills</div>
+                                              <div className="flex flex-wrap gap-2">
+                                                {fb.missing.map((skill, i) => (
+                                                  <span key={`missing-${i}`} className="bg-white text-red-600 px-2 py-1 rounded-md text-xs border border-red-200 shadow-sm">
+                                                    × {skill}
+                                                  </span>
+                                                ))}
+                                              </div>
+                                            </div>
+                                          )}
+                                        </div>
                                       ) : (
-                                        <svg className="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                        <>
+                                          {fb.type === 'pro' ? (
+                                            <svg className="w-5 h-5 text-green-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                          ) : (
+                                            <svg className="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                          )}
+                                          <span className="pt-0.5">{fb.text}</span>
+                                        </>
                                       )}
-                                      <span className="pt-0.5">{fb.text}</span>
                                     </li>
                                   ))}
                                 </ul>
