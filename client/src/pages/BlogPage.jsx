@@ -332,7 +332,7 @@ export function BlogPage({ user }) {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-4">
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900">
-              Skill<span className="text-[#0052FF]">Bridge</span> Hub
+              Skill<span className="text-[#0052FF]">Bridge</span> Blogs
             </h1>
             <p className="text-lg text-slate-600 max-w-2xl">
               AI-powered insights, tutorials, and career advice tailored to close your skill gaps.
@@ -347,8 +347,8 @@ export function BlogPage({ user }) {
             </div>
             <input
               type="text"
-              className="block w-full pl-11 pr-10 py-3.5 border-2 border-indigo-100 rounded-2xl leading-5 bg-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 sm:text-sm transition-all duration-300 shadow-sm"
-              placeholder="✨ Semantic Search: Ask a question..."
+              className="block w-full pl-12 pr-10 py-3.5 border-2 border-indigo-100 rounded-2xl leading-5 bg-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 sm:text-sm transition-all duration-300 shadow-sm"
+              placeholder="Search a blog"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />

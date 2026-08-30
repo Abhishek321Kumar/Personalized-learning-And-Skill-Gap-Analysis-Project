@@ -92,6 +92,14 @@ export function Layout({ children, user }) {
                   </Link>
                 );
               })}
+              {user && (
+                <Link 
+                  to="/dashboard" 
+                  className="bg-[#0052FF] !text-white px-4 py-1.5 rounded-md text-base hover:bg-blue-700 transition-colors"
+                >
+                  Dashboard
+                </Link>
+              )}
             </>
           )}
 
@@ -197,6 +205,15 @@ export function Layout({ children, user }) {
                     </Link>
                   );
                 })}
+                {user && (
+                  <Link 
+                    to="/dashboard" 
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="bg-[#0052FF] !text-white px-4 py-2 rounded-md text-base text-center mt-4 mb-2 hover:bg-blue-700 transition-colors inline-block w-full no-underline"
+                  >
+                    Dashboard
+                  </Link>
+                )}
               </>
             )}
 
