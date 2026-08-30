@@ -297,7 +297,7 @@ function ReportDetails({ report, user, onBack }) {
                      
                      <h3 className="text-2xl font-black text-gray-900 mb-6">{phase.label}</h3>
                      
-                     <div className="flex flex-col gap-3 mt-auto">
+                     <div className="flex flex-col gap-3">
                        {phase.skills.length > 0 ? (
                          phase.skills.map((s, i) => (
                            <button 
