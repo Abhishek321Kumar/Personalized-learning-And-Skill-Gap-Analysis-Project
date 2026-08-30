@@ -9,23 +9,13 @@ import { User } from "../../models/User.js";
 import { AssessmentAttempt } from "../../models/AssessmentAttempt.js";
 import { AnalysisSnapshot } from "../../models/AnalysisSnapshot.js";
 
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const pdfParse = require("pdf-parse");
+
 const router = Router();
 
-try {
-  fs.mkdirSync(env.uploadsDir, { recursive: true });
-} catch (e) {
-  console.warn("Could not create uploads dir in profile.routes:", e.message);
-}
-
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => cb(null, env.uploadsDir),
-  filename: (_req, file, cb) => {
-    const safeName = `${Date.now()}-${file.originalname.replace(/\s+/g, "-")}`;
-    cb(null, safeName);
-  }
-});
-
-const upload = multer({ storage });
+const upload = multer({ storage: multer.memoryStorage() });
 
 router.get("/me", requireAuth, async (req, res) => {
   res.json({ user: req.user });
@@ -84,14 +74,18 @@ router.post("/resume", requireAuth, upload.single("resume"), async (req, res, ne
       return res.status(400).json({ message: "Please upload a resume file." });
     }
 
-    const response = await axios.post(`${env.mlServiceUrl}/extract-file`, {
-      filePath: path.resolve(req.file.path)
-    });
+    let extractedText = "";
+    if (req.file.mimetype === "application/pdf") {
+      const data = await pdfParse(req.file.buffer);
+      extractedText = data.text;
+    } else {
+      extractedText = req.file.buffer.toString("utf-8");
+    }
 
     const user = await User.findByIdAndUpdate(
       req.user._id,
       {
-        resumeText: response.data.text,
+        resumeText: extractedText,
         resumeFileName: req.file.originalname
       },
       { new: true }
@@ -99,7 +93,7 @@ router.post("/resume", requireAuth, upload.single("resume"), async (req, res, ne
 
     res.json({
       user,
-      extractedTextPreview: response.data.text.slice(0, 1200)
+      extractedTextPreview: extractedText.slice(0, 1200)
     });
   } catch (error) {
     next(error);
