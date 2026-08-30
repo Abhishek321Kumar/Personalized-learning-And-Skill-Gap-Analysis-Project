@@ -336,7 +336,10 @@ function ReportDetails({ report, user, onBack }) {
                   if (!staticResource) {
                     staticResource = {
                       coreConcepts: ["Foundational principles", "Industry best practices", "Advanced application"],
-                      courses: [{ platform: "Coursera", title: `${skill.name} Masterclass`, url: "#" }]
+                      courses: [
+                        { platform: "Coursera", title: `${skill.name} Masterclass`, url: `https://www.coursera.org/search?query=${encodeURIComponent(skill.name)}` },
+                        { platform: "Udemy", title: `Complete ${skill.name} Bootcamp`, url: `https://www.udemy.com/courses/search/?src=ukw&q=${encodeURIComponent(skill.name)}` }
+                      ]
                     };
                   }
                   
