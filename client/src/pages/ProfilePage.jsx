@@ -181,46 +181,7 @@ export function ProfilePage({ user, onUserUpdate }) {
       setResumeFileName(res.user.resumeFileName);
       if (onUserUpdate) onUserUpdate(res.user);
       
-      try {
-        const dashboardData = await api.getDashboard();
-        const analyses = dashboardData.analyses || [];
-        
-        const uniqueRoles = [];
-        const seenRoles = new Set();
-        
-        for (const snapshot of analyses) {
-          if (snapshot.targetRole && !seenRoles.has(snapshot.targetRole)) {
-            seenRoles.add(snapshot.targetRole);
-            uniqueRoles.push(snapshot);
-          }
-        }
-        
-        if (uniqueRoles.length > 0) {
-          await Promise.all(uniqueRoles.map(async (snapshot) => {
-            const role = snapshot.targetRole;
-            let jobDesc = snapshot.jobDescription;
-            if (!jobDesc || jobDesc.startsWith("Standard requirements for")) {
-               jobDesc = roleTemplates[role] || "Standard requirements for " + role;
-            }
-            return api.runAnalysis({
-              targetRole: role,
-              jobDescription: jobDesc,
-              jobRoleId: snapshot.jobRoleId
-            }).catch(e => console.warn(`Could not update analysis for ${role}`, e));
-          }));
-        } else {
-          const role = user?.targetRole || "Software Engineer";
-          const jobDesc = roleTemplates[role] || "Standard requirements for " + role;
-          await api.runAnalysis({
-            targetRole: role,
-            jobDescription: jobDesc
-          });
-        }
-      } catch (analysisErr) {
-        console.warn("Could not auto-update analysis snapshots", analysisErr);
-      }
-
-      alert("Resume uploaded successfully! Your ATS scores have been updated.");
+      alert("Resume uploaded successfully! To see your updated ATS scores, please complete a new assessment.");
     } catch (err) {
       alert("Failed to upload resume: " + err.message);
     } finally {
