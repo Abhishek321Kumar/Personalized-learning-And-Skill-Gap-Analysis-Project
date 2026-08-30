@@ -136,7 +136,15 @@ function ReportDetails({ report, user, onBack }) {
           {(report.resumePros?.length > 0 || report.resumeCons?.length > 0) && (
             <motion.div variants={fadeUp} className="flex flex-col gap-6 mt-2">
               <div className="flex flex-col gap-1">
-                <h2 className="text-3xl font-black text-gray-900 tracking-tight">Resume ATS Feedback</h2>
+                <div className="flex items-center justify-between">
+                  <h2 className="text-3xl font-black text-gray-900 tracking-tight">Resume ATS Feedback</h2>
+                  {report.resumeScore !== null && report.resumeScore !== undefined && (
+                    <div className="bg-blue-50 px-4 py-2 rounded-xl flex items-baseline gap-1 border border-blue-100 shadow-sm">
+                      <span className="text-2xl font-black text-blue-700">{report.resumeScore}</span>
+                      <span className="text-sm font-bold text-blue-400">/ 100</span>
+                    </div>
+                  )}
+                </div>
                 <p className="text-gray-500 font-medium">Strengths and areas for improvement based on ATS parsing.</p>
               </div>
               
