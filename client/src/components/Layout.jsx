@@ -95,7 +95,7 @@ export function Layout({ children, user }) {
               {user && (
                 <Link 
                   to="/dashboard" 
-                  className="bg-[#0052FF] !text-white px-4 py-1.5 rounded-md text-base hover:bg-blue-700 transition-colors"
+                  className="transition-colors text-lg text-gray-600 hover-nav-blue"
                 >
                   Dashboard
                 </Link>
@@ -209,7 +209,7 @@ export function Layout({ children, user }) {
                   <Link 
                     to="/dashboard" 
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="bg-[#0052FF] !text-white px-4 py-2 rounded-md text-base text-center mt-4 mb-2 hover:bg-blue-700 transition-colors inline-block w-full no-underline"
+                    className="transition-colors py-3 text-lg border-b border-gray-50 last:border-0 no-underline text-gray-600 hover:text-[#0052FF]"
                   >
                     Dashboard
                   </Link>
