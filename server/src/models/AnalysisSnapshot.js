@@ -23,8 +23,7 @@ const analysisSnapshotSchema = new mongoose.Schema(
       ),
     },
     resumeScore: { type: Number, default: 0 },
-    resumePros: { type: [String], default: [] },
-    resumeCons: { type: [String], default: [] }
+    resumeCategories: { type: Array, default: [] }
   },
   { timestamps: true }
 );

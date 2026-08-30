@@ -199,8 +199,7 @@ router.post("/run", requireAuth, async (req, res, next) => {
       categoryBreakdown: response.data.categoryBreakdown,
       ictIndicator: response.data.ictIndicator,
       resumeScore: response.data.resumeScore,
-      resumePros: response.data.resumePros,
-      resumeCons: response.data.resumeCons
+      resumeCategories: response.data.resumeCategories
     });
 
     res.json({ snapshot });

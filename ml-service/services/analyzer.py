@@ -106,94 +106,119 @@ def build_category_breakdown(required_skills, matched_skill_names, assessment_sc
 
 def evaluate_resume_structure(resume_text: str, matched_skills: list, missing_skills: list, user_skills: set):
     score = 0
-    pros = []
-    cons = []
+    categories = []
     text_lower = (resume_text or "").lower()
     text_nospace = text_lower.replace(" ", "")
 
     # 1. Keyword Relevance (40 points)
+    keyword_score = 0
+    keyword_feedback = []
     total_skills = len(matched_skills) + len(missing_skills)
     if total_skills > 0:
         match_ratio = len(matched_skills) / total_skills
-        score += int(match_ratio * 40)
+        keyword_score = int(match_ratio * 40)
         if match_ratio >= 0.8:
-            pros.append("High keyword relevance for the target role.")
+            keyword_feedback.append({"type": "pro", "text": "High keyword relevance for the target role."})
         elif match_ratio >= 0.4:
-            cons.append(f"Moderate keyword match ({len(matched_skills)}/{total_skills} target skills). Consider tailoring more to the job description.")
+            keyword_feedback.append({"type": "con", "text": f"Moderate keyword match ({len(matched_skills)}/{total_skills} target skills). Consider tailoring more to the job description."})
         else:
-            cons.append(f"Low keyword match ({len(matched_skills)}/{total_skills} target skills). Include more relevant skills.")
+            keyword_feedback.append({"type": "con", "text": f"Low keyword match ({len(matched_skills)}/{total_skills} target skills). Include more relevant skills."})
     else:
         # Fallback if no target skills to compare against
         if len(user_skills) >= 8:
-            score += 40
-            pros.append(f"Detected a strong variety of professional skills ({len(user_skills)} skills found).")
+            keyword_score = 40
+            keyword_feedback.append({"type": "pro", "text": f"Detected a strong variety of professional skills ({len(user_skills)} skills found)."})
         elif len(user_skills) >= 4:
-            score += 30
-            pros.append(f"Detected several professional skills ({len(user_skills)} skills found).")
-            cons.append("Consider adding more specific technical or soft skills to stand out.")
+            keyword_score = 30
+            keyword_feedback.append({"type": "pro", "text": f"Detected several professional skills ({len(user_skills)} skills found)."})
+            keyword_feedback.append({"type": "con", "text": "Consider adding more specific technical or soft skills to stand out."})
         elif len(user_skills) > 0:
-            score += 15
-            cons.append(f"Very few skills detected ({len(user_skills)} skills). Ensure you use standard industry keywords.")
+            keyword_score = 15
+            keyword_feedback.append({"type": "con", "text": f"Very few skills detected ({len(user_skills)} skills). Ensure you use standard industry keywords."})
         else:
-            cons.append("No professional skills detected. Make sure your skills section uses standard keywords.")
+            keyword_feedback.append({"type": "con", "text": "No professional skills detected. Make sure your skills section uses standard keywords."})
+            
+    categories.append({
+        "name": "Keyword Optimization",
+        "score": keyword_score,
+        "maxScore": 40,
+        "feedback": keyword_feedback
+    })
 
     # 2. Formatting and Structure (30 points)
     struct_score = 0
+    struct_feedback = []
     if any(kw in text_nospace for kw in ["experience", "workhistory", "employment"]):
         struct_score += 10
-        pros.append("Clear 'Experience' section detected.")
+        struct_feedback.append({"type": "pro", "text": "Clear 'Experience' section detected."})
     else:
-        cons.append("Missing a clear 'Experience' or 'Work History' section.")
+        struct_feedback.append({"type": "con", "text": "Missing a clear 'Experience' or 'Work History' section."})
         
     if any(kw in text_nospace for kw in ["education", "university", "degree", "bachelor", "master"]):
         struct_score += 10
-        pros.append("Education details are present.")
+        struct_feedback.append({"type": "pro", "text": "Education details are present."})
     else:
-        cons.append("Missing clear education details. Include your degree or university.")
+        struct_feedback.append({"type": "con", "text": "Missing clear education details. Include your degree or university."})
         
     if "@" in text_nospace or re.search(r'\d{3}[-.\s]?\d{3}[-.\s]?\d{4}', text_lower):
         struct_score += 10
     else:
-        cons.append("Could not detect contact information (email or phone number).")
+        struct_feedback.append({"type": "con", "text": "Could not detect contact information (email or phone number)."})
         
-    score += struct_score
+    categories.append({
+        "name": "Formatting & Structure",
+        "score": struct_score,
+        "maxScore": 30,
+        "feedback": struct_feedback
+    })
 
     # 3. Readability and Clarity (30 points)
     read_score = 0
+    read_feedback = []
     
     if len(text_lower) > 800:
         read_score += 10
-        pros.append("Good overall length and detail.")
+        read_feedback.append({"type": "pro", "text": "Good overall length and detail."})
     elif len(text_lower) > 400:
         read_score += 5
-        cons.append("Resume is somewhat brief. Consider elaborating on your responsibilities.")
+        read_feedback.append({"type": "con", "text": "Resume is somewhat brief. Consider elaborating on your responsibilities."})
     else:
-        cons.append("Resume is very short. Add more details about your achievements.")
+        read_feedback.append({"type": "con", "text": "Resume is very short. Add more details about your achievements."})
 
     action_verbs = ["achieved", "improved", "increased", "developed", "managed", "led", "created", "designed", "engineered", "delivered", "optimized", "spearheaded"]
     found_verbs = [v for v in action_verbs if v in text_lower]
     if len(found_verbs) >= 4:
         read_score += 10
-        pros.append("Strong use of action verbs.")
+        read_feedback.append({"type": "pro", "text": "Strong use of action verbs."})
     elif len(found_verbs) > 0:
         read_score += 5
-        cons.append("Consider using a wider variety of action verbs to describe impact.")
+        read_feedback.append({"type": "con", "text": "Consider using a wider variety of action verbs to describe impact."})
     else:
-        cons.append("Lacking action verbs (e.g., achieved, optimized). Use these to highlight accomplishments.")
+        read_feedback.append({"type": "con", "text": "Lacking action verbs (e.g., achieved, optimized). Use these to highlight accomplishments."})
 
     if re.search(r'\d+%|\$\d+|\d+\s*(?:users|clients|revenue|sales)', text_lower) or len(re.findall(r'\d+', text_lower)) > 8:
         read_score += 10
-        pros.append("Good use of metrics to quantify achievements.")
+        read_feedback.append({"type": "pro", "text": "Good use of metrics to quantify achievements."})
     else:
-        cons.append("Achievements are not quantified. Add numbers or percentages (e.g., 'Increased sales by 20%').")
+        read_feedback.append({"type": "con", "text": "Achievements are not quantified. Add numbers or percentages (e.g., 'Increased sales by 20%')."})
 
-    score += read_score
+    categories.append({
+        "name": "Readability & Clarity",
+        "score": read_score,
+        "maxScore": 30,
+        "feedback": read_feedback
+    })
+
+    score = keyword_score + struct_score + read_score
     score = max(0, min(100, score))
     
-    if len(cons) == 0 and score < 100:
-        cons.append("Consider adding more detailed achievements or matching more keywords to reach a perfect score.")
+    # Sanity check
+    if score < 100:
+        all_cons = any(f["type"] == "con" for cat in categories for f in cat["feedback"])
+        if not all_cons:
+            categories[0]["feedback"].append({"type": "con", "text": "Consider adding more detailed achievements to reach a perfect score."})
 
-    return score, pros, cons
+    return score, categories
 
 
 def analyze_profile(payload):
@@ -259,7 +284,7 @@ def analyze_profile(payload):
     elif readiness_score >= 50:
         confidence_band = "Progressing"
 
-    resume_score, resume_pros, resume_cons = evaluate_resume_structure(resume_text, matched_skills, missing_skills)
+    resume_score, resume_categories = evaluate_resume_structure(resume_text, matched_skills, missing_skills, user_skill_names)
 
     return {
         "targetRole": target_role,
@@ -278,7 +303,6 @@ def analyze_profile(payload):
         "confidenceBand": confidence_band,
         "detectedResumeSkills": user_skills,
         "resumeScore": resume_score,
-        "resumePros": resume_pros,
-        "resumeCons": resume_cons,
+        "resumeCategories": resume_categories,
     }
 
