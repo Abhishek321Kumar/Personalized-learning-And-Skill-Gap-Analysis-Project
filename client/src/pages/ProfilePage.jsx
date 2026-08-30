@@ -182,21 +182,42 @@ export function ProfilePage({ user, onUserUpdate }) {
       if (onUserUpdate) onUserUpdate(res.user);
       
       try {
-        const latest = await api.getLatestAnalysis();
-        const role = latest?.snapshot?.targetRole || user?.targetRole || "Software Engineer";
+        const dashboardData = await api.getDashboard();
+        const analyses = dashboardData.analyses || [];
         
-        let jobDesc = latest?.snapshot?.jobDescription;
-        if (!jobDesc || jobDesc.startsWith("Standard requirements for")) {
-           jobDesc = roleTemplates[role] || "Standard requirements for " + role;
+        const uniqueRoles = [];
+        const seenRoles = new Set();
+        
+        for (const snapshot of analyses) {
+          if (snapshot.targetRole && !seenRoles.has(snapshot.targetRole)) {
+            seenRoles.add(snapshot.targetRole);
+            uniqueRoles.push(snapshot);
+          }
         }
-
-        await api.runAnalysis({
-          targetRole: role,
-          jobDescription: jobDesc,
-          jobRoleId: latest?.snapshot?.jobRoleId // Pass along if exists
-        });
+        
+        if (uniqueRoles.length > 0) {
+          await Promise.all(uniqueRoles.map(async (snapshot) => {
+            const role = snapshot.targetRole;
+            let jobDesc = snapshot.jobDescription;
+            if (!jobDesc || jobDesc.startsWith("Standard requirements for")) {
+               jobDesc = roleTemplates[role] || "Standard requirements for " + role;
+            }
+            return api.runAnalysis({
+              targetRole: role,
+              jobDescription: jobDesc,
+              jobRoleId: snapshot.jobRoleId
+            }).catch(e => console.warn(`Could not update analysis for ${role}`, e));
+          }));
+        } else {
+          const role = user?.targetRole || "Software Engineer";
+          const jobDesc = roleTemplates[role] || "Standard requirements for " + role;
+          await api.runAnalysis({
+            targetRole: role,
+            jobDescription: jobDesc
+          });
+        }
       } catch (analysisErr) {
-        console.warn("Could not auto-update analysis snapshot", analysisErr);
+        console.warn("Could not auto-update analysis snapshots", analysisErr);
       }
 
       alert("Resume uploaded successfully! Your ATS scores have been updated.");
