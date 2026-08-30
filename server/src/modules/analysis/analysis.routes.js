@@ -155,7 +155,8 @@ router.post("/parse-resume", upload.single("resume"), async (req, res, next) => 
       residentialAddress: "",
       education,
       internship,
-      rawText: extractedText.substring(0, 500) // snippet
+      rawText: extractedText.substring(0, 500), // snippet
+      resumeText: extractedText
     });
   } catch (error) {
     next(error);
