@@ -1,11 +1,14 @@
 import { Router } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 import { User } from "../../models/User.js";
 import { env } from "../../config/env.js";
 import { emailService } from "../../services/email.service.js";
 
 const router = Router();
+
+const pendingRegistrations = new Map();
 
 router.post("/register/part1", async (req, res, next) => {
   try {
@@ -22,19 +25,8 @@ router.post("/register/part1", async (req, res, next) => {
       if (existingUser.isVerified) {
         return res.status(409).json({ message: "An account already exists for this email." });
       } else {
-        // User abandoned registration before verifying OTP. 
-        // Update their details and let them continue.
-        const nameParts = name.trim().split(" ");
-        existingUser.firstName = nameParts[0] || "Unknown";
-        existingUser.lastName = nameParts.slice(1).join(" ") || "Unknown";
-        existingUser.passwordHash = await bcrypt.hash(password, 10);
-        existingUser.targetRole = targetRole || existingUser.targetRole;
-        await existingUser.save();
-        
-        return res.status(200).json({
-          message: "Part 1 successful (re-registration)",
-          userId: existingUser._id
-        });
+        // Cleanup old unverified user from DB
+        await User.findByIdAndDelete(existingUser._id);
       }
     }
 
@@ -44,7 +36,9 @@ router.post("/register/part1", async (req, res, next) => {
     const firstName = nameParts[0] || "Unknown";
     const lastName = nameParts.slice(1).join(" ") || "Unknown";
 
-    const user = await User.create({
+    const pendingId = new mongoose.Types.ObjectId().toString();
+
+    pendingRegistrations.set(pendingId, {
       firstName,
       lastName,
       email: email.toLowerCase(),
@@ -55,7 +49,7 @@ router.post("/register/part1", async (req, res, next) => {
 
     res.status(201).json({
       message: "Part 1 successful",
-      userId: user._id
+      userId: pendingId
     });
   } catch (error) {
     next(error);
@@ -64,9 +58,8 @@ router.post("/register/part1", async (req, res, next) => {
 
 router.post("/register/cancel/:userId", async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.userId);
-    if (user && !user.isVerified) {
-      await User.findByIdAndDelete(req.params.userId);
+    if (pendingRegistrations.has(req.params.userId)) {
+      pendingRegistrations.delete(req.params.userId);
     }
     res.status(200).json({ message: "Registration cancelled" });
   } catch (error) {
@@ -78,22 +71,22 @@ router.post("/register/part2", async (req, res, next) => {
   try {
     const { userId, personalInfo, education, experience, internships, resumeText, declaredSkills } = req.body;
 
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: "User not found." });
+    const pendingUser = pendingRegistrations.get(userId);
+    if (!pendingUser) {
+      return res.status(404).json({ message: "User not found or registration session expired." });
     }
 
     // Generate simulated OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    console.log(`[SIMULATED OTP for ${user.email}]: ${otp}`);
+    console.log(`[SIMULATED OTP for ${pendingUser.email}]: ${otp}`);
 
     if (personalInfo) {
-      user.firstName = personalInfo.firstName || user.firstName;
-      user.lastName = personalInfo.lastName || user.lastName;
-      user.gender = personalInfo.gender || user.gender;
-      if (personalInfo.dob) user.dob = new Date(personalInfo.dob);
-      user.phone = personalInfo.phone || user.phone;
-      user.address = {
+      pendingUser.firstName = personalInfo.firstName || pendingUser.firstName;
+      pendingUser.lastName = personalInfo.lastName || pendingUser.lastName;
+      pendingUser.gender = personalInfo.gender || pendingUser.gender;
+      if (personalInfo.dob) pendingUser.dob = new Date(personalInfo.dob);
+      pendingUser.phone = personalInfo.phone || pendingUser.phone;
+      pendingUser.address = {
         residentialAddress: personalInfo.residentialAddress || "",
         city: personalInfo.city || "",
         state: personalInfo.state || "",
@@ -102,25 +95,23 @@ router.post("/register/part2", async (req, res, next) => {
       };
     }
 
-    user.education = education || user.education;
-    user.internships = experience || internships || user.internships;
-    user.resumeText = resumeText || user.resumeText;
-    user.declaredSkills = declaredSkills || user.declaredSkills;
-    user.otp = otp;
-    user.otpExpires = new Date(Date.now() + 10 * 60000); // 10 mins
-
-    await user.save();
+    pendingUser.education = education || pendingUser.education;
+    pendingUser.internships = experience || internships || pendingUser.internships;
+    pendingUser.resumeText = resumeText || pendingUser.resumeText;
+    pendingUser.declaredSkills = declaredSkills || pendingUser.declaredSkills;
+    pendingUser.otp = otp;
+    pendingUser.otpExpires = new Date(Date.now() + 10 * 60000); // 10 mins
 
     let previewUrl = null;
     try {
-      previewUrl = await emailService.sendOTP(user.email, otp);
+      previewUrl = await emailService.sendOTP(pendingUser.email, otp);
     } catch (e) {
       console.error("Failed to send OTP", e);
     }
 
     res.status(200).json({
       message: "Part 2 successful. OTP sent.",
-      userId: user._id,
+      userId,
       previewUrl
     });
   } catch (error) {
@@ -132,18 +123,23 @@ router.post("/register/verify", async (req, res, next) => {
   try {
     const { userId, otp } = req.body;
 
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: "User not found." });
+    const pendingUser = pendingRegistrations.get(userId);
+    if (!pendingUser) {
+      return res.status(404).json({ message: "User not found or registration session expired." });
     }
 
-    if (user.otp !== otp || user.otpExpires < new Date()) {
+    if (pendingUser.otp !== otp || pendingUser.otpExpires < new Date()) {
       return res.status(400).json({ message: "Invalid or expired OTP." });
     }
 
-    user.isVerified = true;
-    user.otp = "";
-    await user.save();
+    pendingUser.isVerified = true;
+    pendingUser.otp = "";
+    
+    // Save to MongoDB only now
+    const user = await User.create(pendingUser);
+    
+    // Remove from pending map
+    pendingRegistrations.delete(userId);
 
     const token = jwt.sign({ userId: user._id }, env.jwtSecret, { expiresIn: "7d" });
 

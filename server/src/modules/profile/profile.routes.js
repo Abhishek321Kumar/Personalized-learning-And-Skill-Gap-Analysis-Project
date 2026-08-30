@@ -6,6 +6,8 @@ import axios from "axios";
 import { env } from "../../config/env.js";
 import { requireAuth } from "../../middleware/auth.js";
 import { User } from "../../models/User.js";
+import { AssessmentAttempt } from "../../models/AssessmentAttempt.js";
+import { AnalysisSnapshot } from "../../models/AnalysisSnapshot.js";
 
 const router = Router();
 
@@ -68,6 +70,8 @@ router.put("/me", requireAuth, async (req, res, next) => {
 router.delete("/me", requireAuth, async (req, res, next) => {
   try {
     await User.findByIdAndDelete(req.user._id);
+    await AssessmentAttempt.deleteMany({ userId: req.user._id });
+    await AnalysisSnapshot.deleteMany({ userId: req.user._id });
     res.json({ message: "Account deleted successfully." });
   } catch (error) {
     next(error);
