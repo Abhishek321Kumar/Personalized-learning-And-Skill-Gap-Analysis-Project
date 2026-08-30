@@ -67,12 +67,8 @@ export function QuizPage() {
     }
     const initialQuestions = generateRoleQuestions(targetRole);
     return initialQuestions.reduce((total, q) => {
-      let time = 60; // 1 min by default
-      if (q.difficulty === 'hard') time = 120;
-      else if (q.difficulty === 'medium') time = 60;
-      else if (q.difficulty === 'easy') time = 45;
-      else if (q.section === 'code_reasoning') time = 120; // fallback
-      return total + time;
+      const timeInMinutes = q.section === 'code_reasoning' ? 2 : 1;
+      return total + (timeInMinutes * 60);
     }, 0);
   });
 

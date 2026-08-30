@@ -104,39 +104,89 @@ def build_category_breakdown(required_skills, matched_skill_names, assessment_sc
     return breakdown
 
 
-def evaluate_resume_structure(resume_text: str):
-    score = 60
+def evaluate_resume_structure(resume_text: str, matched_skills: list, missing_skills: list):
+    score = 0
     pros = []
     cons = []
     text_lower = (resume_text or "").lower()
     text_nospace = text_lower.replace(" ", "")
+
+    # 1. Keyword Relevance (40 points)
+    total_skills = len(matched_skills) + len(missing_skills)
+    if total_skills > 0:
+        match_ratio = len(matched_skills) / total_skills
+        score += int(match_ratio * 40)
+        if match_ratio >= 0.7:
+            pros.append("High keyword relevance for the target role.")
+        elif match_ratio >= 0.4:
+            cons.append("Moderate keyword match. Consider tailoring your resume more closely to the job description.")
+        else:
+            cons.append("Low keyword match. Ensure you include relevant skills from the job requirements.")
+    else:
+        cons.append("No specific target skills detected.")
+
+    # 2. Formatting and Structure (30 points)
+    struct_score = 0
+    sections = [
+        ("experience", ["experience", "workhistory", "employment"]),
+        ("education", ["education", "university", "degree"]),
+        ("skills", ["skills", "technologies", "competencies"])
+    ]
+    for sec_name, keywords in sections:
+        if any(kw in text_nospace for kw in keywords):
+            struct_score += 10
+        else:
+            cons.append(f"Missing a clear '{sec_name.title()}' section.")
     
-    if len(text_lower) > 500:
-        score += 15
-        pros.append("Good overall length and detail")
+    if struct_score == 30:
+        pros.append("Excellent structure with all essential sections present.")
+    elif struct_score > 10:
+        pros.append("Good basic structure, but some standard sections are missing.")
+    score += struct_score
+
+    # 3. Readability and Clarity (30 points)
+    read_score = 0
+    
+    # Length
+    if len(text_lower) > 800:
+        read_score += 10
+        pros.append("Good overall length and detail.")
+    elif len(text_lower) > 400:
+        read_score += 5
+        cons.append("Resume is somewhat brief. Consider elaborating on your responsibilities.")
     else:
-        score -= 10
-        cons.append("Resume seems a bit short. Add more details about your achievements.")
-        
-    if "experience" in text_nospace or "workhistory" in text_nospace:
-        score += 10
-        pros.append("Clear experience section")
+        cons.append("Resume is too short. Add more details about your achievements.")
+
+    # Action verbs
+    action_verbs = ["achieved", "improved", "increased", "developed", "managed", "led", "created", "designed", "engineered", "delivered"]
+    found_verbs = [v for v in action_verbs if v in text_lower]
+    if len(found_verbs) >= 3:
+        read_score += 10
+        pros.append("Strong use of action verbs.")
+    elif len(found_verbs) > 0:
+        read_score += 5
+        cons.append("Consider using a wider variety of action verbs to describe impact.")
     else:
-        cons.append("Missing a clear 'Experience' section")
-        
-    if "education" in text_nospace or "university" in text_nospace or "degree" in text_nospace:
-        score += 10
-        pros.append("Education details are present")
+        cons.append("Lacking action verbs (e.g., achieved, developed). Use these to highlight accomplishments.")
+
+    # Metrics/Quantification
+    # Look for digits or % sign which often indicate metrics
+    import re
+    if re.search(r'\d+%|\$\d+|\d+\s*(?:users|clients|revenue|sales)', text_lower) or len(re.findall(r'\d+', text_lower)) > 5:
+        read_score += 10
+        pros.append("Good use of metrics to quantify achievements.")
     else:
-        cons.append("Missing education details")
-        
-    if "achieved" in text_nospace or "improved" in text_nospace or "increased" in text_nospace or "developed" in text_nospace:
-        score += 5
-        pros.append("Good use of action verbs")
-    else:
-        cons.append("Consider using more action verbs (e.g., achieved, developed)")
-        
+        cons.append("Achievements are not quantified. Add numbers or percentages (e.g., 'Increased sales by 20%').")
+
+    score += read_score
+
+    # Ensure score is between 0 and 100
     score = max(0, min(100, score))
+    
+    # If a resume somehow gets 100 but has cons, or has no cons but a low score, just a sanity check
+    if len(cons) == 0 and score < 100:
+        cons.append("Consider adding more detailed achievements or matching more keywords to reach a perfect score.")
+
     return score, pros, cons
 
 
@@ -203,7 +253,7 @@ def analyze_profile(payload):
     elif readiness_score >= 50:
         confidence_band = "Progressing"
 
-    resume_score, resume_pros, resume_cons = evaluate_resume_structure(resume_text)
+    resume_score, resume_pros, resume_cons = evaluate_resume_structure(resume_text, matched_skills, missing_skills)
 
     return {
         "targetRole": target_role,
