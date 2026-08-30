@@ -1,0 +1,43 @@
+A B H I S H E K  A N I L  K U M A R
+j i t h u a a k a b h i s h e k 1 2 3 @ g m a i l . c o m
+ + 9 1 - 8 8 8 4 9 2 2 1 7 4
+ L i n k e d i n G i t h u b
+E d u c a t i o n
+B M S  I n s t i t u t e  o f  T e c h n o l o g y  a n d  M a n a g e m e n t ,  B e n g a l u r u
+M a s t e r  o f  C o m p u t e r  A p p l i c a t i o n s  ( M C A ) ,  C G P A :  8 . 6 5
+N o v  2 0 2 5  -  P r e s e n t
+J u l  2 0 1 9  -   J u l  2 0 2 2
+B a c h e l o r  o f  C o m p u t e r  A p p l i c a t i o n s  ( B C A ) ,  C G P A :  9 . 1 3
+P r e s i d e n c y  C o l l e g e ,  B e n g a l u r u
+W o r k  E x p e r i e n c e
+I n d e g e n e ,  B e n g a l u r u ,  I n d i a
+W e b  D e v e l o p e r  T r a i n e e
+O c t  2 0 2 2  -  N o v  2 0 2 3
+Delivered error-free, on-schedule deployments to V eeva Sandbox for pharmaceutical marketing
+campaigns, collaborating cross-functionally with design, QA, and content teams in an agile workflow .
+Developed responsive web pages with UI/UX-focused design using semantic HTML  and modular CSS,
+improving usability and visual consistency across desktop and mobile breakpoints.
+HTML5, CSS3, JavaScript, V eeva vault  
+Engineered 30+ pixel-perfect, responsive HTML5/CSS3 email templates translated from Figma and PSD
+designs, reducing post-QA  defect rate by 30% and improving cross-client rendering accuracy across 10+
+email clients
+C e r t i f i c a t i o n s
+P r o g r a m m i n g  w i t h  J a v a S c r i p t  —  M e t a  ( v i a  C o u r s e r a )
+Gained hands-on experience in core and advanced JavaScript concepts including
+variables, data types, functions, arrays, objects, and classes, inheritance, data
+structures, DOM manipulation, JSON, and error handling and testing with Jest
+Covered fundamentals of computer networks and UI frameworks, utilizing HTML, CSS,
+and Bootstrap to build responsive and visually consistent web pages.
+2 0 2 5
+2 0 2 5I n t r o  t o  F r o n t  E n d  D e v e l o p m e n t  —  M e t a  ( v i a  C o u r s e r a )
+P r o f e s s i o n a l  S u m m a r y
+F r o n t - E n d  S o f t w a r e  E n g i n e e r  w i t h  1 +  y e a r  o f  e x p e r i e n c e  b u i l d i n g  r e s p o n s i v e  w e b  a p p l i c a t i o n s ,  w i t h  s t r o n g
+f o u n d a t i o n s  i n  J a v a ,  O O P ,  a n d  D a t a  S t r u c t u r e s .  S k i l l e d  i n  d e b u g g i n g  a n d  c o l l a b o r a t i n g  w i t h i n  a g i l e ,  c r o s s -
+f u n c t i o n a l  t e a m s  t o  d e l i v e r  u s e r - f o c u s e d  s o l u t i o n s .  C u r r e n t l y  p u r s u i n g  a n  M C A  w h i l e  e x p a n d i n g  i n t o  f u l l - s t a c k
+d e v e l o p m e n t  t h r o u g h  R e a c t ,  N o d e . j s ,  a n d  R E S T  A P I s .
+S k i l l s
+L a n g u a g e s :   J a v a ,  J a v a S c r i p t  ( E S 6 + ) ,  C ,  S Q L
+D a t a b a s e s :  P o s t g r e S Q L ,  M o n g o D B
+T o o l s  &  P l a t f o r m s :  G i t / G i t h u b ,  N e t b e a n s ,  V S  C o d e ,  A n d r o i d  S t u d i o ,  F i g m a
+F r a m e w o r k s  a n d  L i b r a r i e s :  R e a c t  J S ,  T a i l w i n d  C S S ,  E x p r e s s . j s  
+W e b  T e c h n o l o g i e s :  H T M L 5 ,  C S S 3 ,  J S P ,  J a v a  S e r v l e t s

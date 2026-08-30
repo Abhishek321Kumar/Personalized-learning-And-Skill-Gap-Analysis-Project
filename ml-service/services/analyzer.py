@@ -109,6 +109,7 @@ def evaluate_resume_structure(resume_text: str):
     pros = []
     cons = []
     text_lower = (resume_text or "").lower()
+    text_nospace = text_lower.replace(" ", "")
     
     if len(text_lower) > 500:
         score += 15
@@ -117,19 +118,19 @@ def evaluate_resume_structure(resume_text: str):
         score -= 10
         cons.append("Resume seems a bit short. Add more details about your achievements.")
         
-    if "experience" in text_lower or "work history" in text_lower:
+    if "experience" in text_nospace or "workhistory" in text_nospace:
         score += 10
         pros.append("Clear experience section")
     else:
         cons.append("Missing a clear 'Experience' section")
         
-    if "education" in text_lower or "university" in text_lower or "degree" in text_lower:
+    if "education" in text_nospace or "university" in text_nospace or "degree" in text_nospace:
         score += 10
         pros.append("Education details are present")
     else:
         cons.append("Missing education details")
         
-    if "achieved" in text_lower or "improved" in text_lower or "increased" in text_lower or "developed" in text_lower:
+    if "achieved" in text_nospace or "improved" in text_nospace or "increased" in text_nospace or "developed" in text_nospace:
         score += 5
         pros.append("Good use of action verbs")
     else:
