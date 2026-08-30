@@ -547,26 +547,25 @@ export function SkillGapFlow() {
         )];
 
         // Mock templates for rich data
-        const allMockReports = [
+                const allMockReports = [
           {
             role: "Senior Data Analyst",
             category: "Data Analytics",
             status: "pending_actions",
             skills: [
-              { name: "Python (Data Science Stack)", current: 40, target: 85 },
+              { name: "Advanced Predictive Modeling", current: 40, target: 85 },
               { name: "SQL & Database Optimization", current: 75, target: 90 },
               { name: "Statistical Analysis", current: 30, target: 70 },
               { name: "Data Visualization (Tableau/PowerBI)", current: 80, target: 80 },
-              { name: "Machine Learning Fundamentals", current: 15, target: 60 },
-              { name: "Business Communication", current: 60, target: 90 }
+              { name: "Python (Data Science Stack)", current: 65, target: 85 }
             ],
             missingSkills: [
-              { name: "SQL & Database Optimization", effortTag: "Quick win", current: 75 },
+              { name: "Advanced Predictive Modeling", effortTag: "Deep skill", current: 40 },
               { name: "Statistical Analysis", effortTag: "Moderate", current: 30 },
-              { name: "Machine Learning Fundamentals", effortTag: "Deep skill", current: 15 },
-              { name: "Business Communication", effortTag: "Moderate", current: 60 }
+              { name: "Python (Data Science Stack)", effortTag: "Moderate", current: 65 },
+              { name: "SQL & Database Optimization", effortTag: "Quick win", current: 75 }
             ],
-            verifiedSkills: ["Data Visualization", "Python (Data Science Stack)"],
+            verifiedSkills: ["Data Visualization", "Business Communication"],
             description: "Requires advanced analytical capabilities, cross-functional communication, strategic planning, and the ability to turn complex datasets into actionable business insights.",
           },
           {
@@ -574,16 +573,19 @@ export function SkillGapFlow() {
             category: "Technology / Development",
             status: "verified",
             skills: [
-              { name: "React & Next.js", current: 85, target: 90 },
-              { name: "CSS/Tailwind Architecture", current: 90, target: 80 },
-              { name: "React & Next.js Performance", current: 60, target: 85 },
-              { name: "Advanced State Management", current: 70, target: 85 }
+              { name: "Advanced State Management", current: 70, target: 90 },
+              { name: "Web Performance Optimization", current: 60, target: 85 },
+              { name: "React & Next.js Architecture", current: 75, target: 85 },
+              { name: "UI Component Styling", current: 90, target: 90 },
+              { name: "Accessibility (a11y)", current: 80, target: 85 }
             ],
             missingSkills: [
-              { name: "React & Next.js Performance", effortTag: "Quick win", current: 60 },
-              { name: "Advanced State Management", effortTag: "Moderate", current: 70 }
+              { name: "Advanced State Management", effortTag: "Deep skill", current: 70 },
+              { name: "Web Performance Optimization", effortTag: "Deep skill", current: 60 },
+              { name: "React & Next.js Architecture", effortTag: "Moderate", current: 75 },
+              { name: "Accessibility (a11y)", effortTag: "Quick win", current: 80 }
             ],
-            verifiedSkills: ["React & Next.js", "CSS/Tailwind Architecture"],
+            verifiedSkills: ["UI Component Styling", "CSS/Tailwind Architecture"],
             description: "Focuses on building robust user interfaces, complex state management, and delivering high-performance web experiences.",
           },
           {
@@ -591,18 +593,20 @@ export function SkillGapFlow() {
             category: "Technology / Development",
             status: "pending_actions",
             skills: [
-              { name: "React & Next.js Performance", current: 65, target: 85 },
-              { name: "System Design & Architecture", current: 40, target: 80 },
-              { name: "SQL & Database Optimization", current: 70, target: 90 },
-              { name: "Advanced State Management", current: 75, target: 85 }
+              { name: "System Design & Architecture", current: 40, target: 85 },
+              { name: "Microservices", current: 30, target: 80 },
+              { name: "Advanced State Management", current: 75, target: 85 },
+              { name: "CI/CD Pipelines", current: 50, target: 80 },
+              { name: "REST API Integration", current: 80, target: 90 },
+              { name: "UI Component Styling", current: 85, target: 90 }
             ],
             missingSkills: [
-              { name: "SQL & Database Optimization", effortTag: "Quick win", current: 70 },
-              { name: "Advanced State Management", effortTag: "Quick win", current: 75 },
-              { name: "React & Next.js Performance", effortTag: "Moderate", current: 65 },
-              { name: "System Design & Architecture", effortTag: "Deep skill", current: 40 }
+              { name: "System Design & Architecture", effortTag: "Deep skill", current: 40 },
+              { name: "Microservices", effortTag: "Deep skill", current: 30 },
+              { name: "CI/CD Pipelines", effortTag: "Moderate", current: 50 },
+              { name: "REST API Integration", effortTag: "Quick win", current: 80 }
             ],
-            verifiedSkills: ["REST API Development", "Node.js Fundamentals"],
+            verifiedSkills: ["Advanced State Management", "UI Component Styling"],
             description: "Requires mastering both client-side and server-side architecture, managing state, optimizing databases, and scaling systems.",
           },
           {
@@ -610,16 +614,20 @@ export function SkillGapFlow() {
             category: "Product Management",
             status: "pending_actions",
             skills: [
-              { name: "Data-Driven Prioritization", current: 50, target: 85 },
               { name: "Go-To-Market Strategy", current: 40, target: 80 },
+              { name: "Product Vision & Strategy", current: 50, target: 85 },
+              { name: "Data-Driven Prioritization", current: 60, target: 85 },
+              { name: "Market Research", current: 55, target: 80 },
+              { name: "User Story Mapping", current: 80, target: 90 },
               { name: "Business Communication", current: 75, target: 90 }
             ],
             missingSkills: [
               { name: "Go-To-Market Strategy", effortTag: "Deep skill", current: 40 },
-              { name: "Data-Driven Prioritization", effortTag: "Moderate", current: 50 },
+              { name: "Data-Driven Prioritization", effortTag: "Moderate", current: 60 },
+              { name: "User Story Mapping", effortTag: "Quick win", current: 80 },
               { name: "Business Communication", effortTag: "Quick win", current: 75 }
             ],
-            verifiedSkills: ["Agile Fundamentals", "User Story Mapping"],
+            verifiedSkills: ["Product Vision & Strategy", "Market Research"],
             description: "Focuses on strategic prioritization, product positioning, market analysis, and cross-functional leadership.",
           },
           {
@@ -627,15 +635,20 @@ export function SkillGapFlow() {
             category: "Design",
             status: "pending_actions",
             skills: [
-              { name: "Interaction Design", current: 45, target: 85 },
+              { name: "Advanced Interaction Design", current: 45, target: 85 },
+              { name: "Design System Architecture", current: 40, target: 80 },
               { name: "User Research Methods", current: 70, target: 90 },
-              { name: "Prototyping & Wireframing", current: 80, target: 85 }
+              { name: "Information Architecture", current: 65, target: 85 },
+              { name: "Prototyping & Wireframing", current: 80, target: 85 },
+              { name: "Figma Fundamentals", current: 85, target: 90 }
             ],
             missingSkills: [
-              { name: "Interaction Design", effortTag: "Deep skill", current: 45 },
-              { name: "User Research Methods", effortTag: "Moderate", current: 70 }
+              { name: "Advanced Interaction Design", effortTag: "Deep skill", current: 45 },
+              { name: "Design System Architecture", effortTag: "Deep skill", current: 40 },
+              { name: "User Research Methods", effortTag: "Moderate", current: 70 },
+              { name: "Prototyping & Wireframing", effortTag: "Quick win", current: 80 }
             ],
-            verifiedSkills: ["Prototyping & Wireframing", "Figma Fundamentals"],
+            verifiedSkills: ["Information Architecture", "Figma Fundamentals"],
             description: "Focuses on user-centered design, interaction modeling, and translating requirements into intuitive interfaces.",
           },
           {
@@ -643,17 +656,20 @@ export function SkillGapFlow() {
             category: "Marketing",
             status: "pending_actions",
             skills: [
-              { name: "Digital Marketing (SEO/SEM)", current: 55, target: 90 },
-              { name: "Marketing Analytics (ROI/CAC)", current: 40, target: 85 },
-              { name: "Content & Copywriting", current: 75, target: 85 },
-              { name: "Budget Optimization", current: 50, target: 80 }
+              { name: "Marketing Mix Modeling", current: 30, target: 80 },
+              { name: "Predictive LTV/CAC Analytics", current: 40, target: 85 },
+              { name: "Digital Marketing (SEO/SEM)", current: 70, target: 90 },
+              { name: "Content Strategy & Branding", current: 65, target: 85 },
+              { name: "Budget Tracking", current: 75, target: 80 },
+              { name: "Social Media Metrics", current: 80, target: 85 }
             ],
             missingSkills: [
-              { name: "Marketing Analytics (ROI/CAC)", effortTag: "Deep skill", current: 40 },
-              { name: "Budget Optimization", effortTag: "Moderate", current: 50 },
-              { name: "Digital Marketing (SEO/SEM)", effortTag: "Quick win", current: 55 }
+              { name: "Marketing Mix Modeling", effortTag: "Deep skill", current: 30 },
+              { name: "Predictive LTV/CAC Analytics", effortTag: "Deep skill", current: 40 },
+              { name: "Digital Marketing (SEO/SEM)", effortTag: "Moderate", current: 70 },
+              { name: "Budget Tracking", effortTag: "Quick win", current: 75 }
             ],
-            verifiedSkills: ["Content & Copywriting", "Cross-functional Collaboration"],
+            verifiedSkills: ["Content Strategy & Branding", "Social Media Metrics"],
             description: "Focuses on strategic campaign planning, multi-channel growth, and data-driven customer acquisition.",
           },
           {
@@ -661,17 +677,20 @@ export function SkillGapFlow() {
             category: "Data Science",
             status: "pending_actions",
             skills: [
-              { name: "Python (Data Science Stack)", current: 60, target: 90 },
-              { name: "Strategic Execution", current: 36, target: 80 },
-              { name: "Advanced Domain Concepts", current: 46, target: 90 },
-              { name: "Cross-functional Collaboration", current: 41, target: 85 }
+              { name: "Machine Learning Architecture", current: 36, target: 80 },
+              { name: "NLP & Deep Learning", current: 46, target: 90 },
+              { name: "Python (Data Science Stack)", current: 75, target: 90 },
+              { name: "Advanced Statistical Modeling", current: 60, target: 85 },
+              { name: "SQL & Data Wrangling", current: 80, target: 90 },
+              { name: "Cross-functional Collaboration", current: 70, target: 85 }
             ],
             missingSkills: [
-              { name: "Advanced Domain Concepts", effortTag: "Deep skill", current: 46 },
-              { name: "Strategic Execution", effortTag: "Moderate", current: 36 },
-              { name: "Cross-functional Collaboration", effortTag: "Quick win", current: 41 }
+              { name: "Machine Learning Architecture", effortTag: "Deep skill", current: 36 },
+              { name: "NLP & Deep Learning", effortTag: "Deep skill", current: 46 },
+              { name: "Python (Data Science Stack)", effortTag: "Moderate", current: 75 },
+              { name: "Cross-functional Collaboration", effortTag: "Quick win", current: 70 }
             ],
-            verifiedSkills: ["Python (Data Science Stack)", "Core Fundamentals"],
+            verifiedSkills: ["SQL & Data Wrangling", "Advanced Statistical Modeling"],
             description: "Focuses on building predictive models, strategic execution of data initiatives, and cross-functional collaboration.",
           }
         ];
@@ -713,10 +732,16 @@ export function SkillGapFlow() {
                     });
                 }
                 
-                dynamicMissingSkills = merged.map((skill, i) => {
-                    let tag = "Moderate";
-                    if (i === 0) tag = "Quick win";
-                    else if (i === merged.length - 1 && merged.length >= 3) tag = "Deep skill";
+                                dynamicMissingSkills = merged.map((skill, i) => {
+                    const matched = template.missingSkills?.find(ts => ts.name === skill.name);
+                    let tag = matched?.effortTag;
+                    
+                    if (!tag) {
+                        if (i === 0) tag = "Quick win";
+                        else if (i === merged.length - 1 && merged.length >= 3) tag = "Deep skill";
+                        else tag = "Moderate";
+                    }
+                    
                     return { ...skill, effortTag: tag };
                 });
             } else if (latestAnalysis && latestAnalysis.missingSkills && latestAnalysis.missingSkills.length > 0) {
@@ -733,10 +758,16 @@ export function SkillGapFlow() {
                     });
                 }
                 
-                dynamicMissingSkills = merged.map((skill, i) => {
-                    let tag = "Moderate";
-                    if (i === 0) tag = "Quick win";
-                    else if (i === merged.length - 1 && merged.length >= 3) tag = "Deep skill";
+                                dynamicMissingSkills = merged.map((skill, i) => {
+                    const matched = template.missingSkills?.find(ts => ts.name === skill.name);
+                    let tag = matched?.effortTag;
+                    
+                    if (!tag) {
+                        if (i === 0) tag = "Quick win";
+                        else if (i === merged.length - 1 && merged.length >= 3) tag = "Deep skill";
+                        else tag = "Moderate";
+                    }
+                    
                     return { ...skill, effortTag: tag };
                 });
             } else if (latestAnalysis && latestAnalysis.matchPercentage >= 0) {
@@ -779,10 +810,15 @@ export function SkillGapFlow() {
                     }
                 });
                 
-                defaultMissing = merged.map((skill, i) => {
-                    let tag = "Moderate";
-                    if (i === 0) tag = "Quick win";
-                    else if (i === merged.length - 1 && merged.length >= 3) tag = "Deep skill";
+                                defaultMissing = merged.map((skill, i) => {
+                    const matched = defaultMissing.find(ts => ts.name === skill.name);
+                    let tag = matched?.effortTag;
+                    
+                    if (!tag) {
+                        if (i === 0) tag = "Quick win";
+                        else if (i === merged.length - 1 && merged.length >= 3) tag = "Deep skill";
+                        else tag = "Moderate";
+                    }
                     return { ...skill, effortTag: tag };
                 });
             }
