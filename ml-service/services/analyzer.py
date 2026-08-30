@@ -125,15 +125,19 @@ def evaluate_resume_structure(resume_text: str, matched_skills: list, missing_sk
             keyword_feedback.append({"type": "con", "text": f"Low keyword match ({len(matched_skills)}/{total_skills} target skills). Include more relevant skills."})
     else:
         # Fallback if no target skills to compare against
-        if len(user_skills) >= 8:
+        if len(user_skills) >= 20:
             keyword_score = 40
             keyword_feedback.append({"type": "pro", "text": f"Detected a strong variety of professional skills ({len(user_skills)} skills found)."})
-        elif len(user_skills) >= 4:
+        elif len(user_skills) >= 12:
             keyword_score = 30
             keyword_feedback.append({"type": "pro", "text": f"Detected several professional skills ({len(user_skills)} skills found)."})
             keyword_feedback.append({"type": "con", "text": "Consider adding more specific technical or soft skills to stand out."})
+        elif len(user_skills) >= 6:
+            keyword_score = 20
+            keyword_feedback.append({"type": "pro", "text": f"Detected some professional skills ({len(user_skills)} skills found)."})
+            keyword_feedback.append({"type": "con", "text": "Needs significantly more skills to be competitive."})
         elif len(user_skills) > 0:
-            keyword_score = 15
+            keyword_score = 10
             keyword_feedback.append({"type": "con", "text": f"Very few skills detected ({len(user_skills)} skills). Ensure you use standard industry keywords."})
         else:
             keyword_feedback.append({"type": "con", "text": "No professional skills detected. Make sure your skills section uses standard keywords."})
@@ -160,10 +164,16 @@ def evaluate_resume_structure(resume_text: str, matched_skills: list, missing_sk
     else:
         struct_feedback.append({"type": "con", "text": "Missing clear education details. Include your degree or university."})
         
-    if "@" in text_nospace or re.search(r'\d{3}[-.\s]?\d{3}[-.\s]?\d{4}', text_lower):
-        struct_score += 10
+    if "@" in text_nospace and re.search(r'\d{3}[-.\s]?\d{3}[-.\s]?\d{4}', text_lower):
+        if "linkedin" in text_lower:
+            struct_score += 10
+            struct_feedback.append({"type": "pro", "text": "Contact info and LinkedIn profile detected."})
+        else:
+            struct_score += 5
+            struct_feedback.append({"type": "pro", "text": "Basic contact info detected."})
+            struct_feedback.append({"type": "con", "text": "Consider adding your LinkedIn profile URL."})
     else:
-        struct_feedback.append({"type": "con", "text": "Could not detect contact information (email or phone number)."})
+        struct_feedback.append({"type": "con", "text": "Missing complete contact information (needs both email and phone number)."})
         
     categories.append({
         "name": "Formatting & Structure",
@@ -176,29 +186,32 @@ def evaluate_resume_structure(resume_text: str, matched_skills: list, missing_sk
     read_score = 0
     read_feedback = []
     
-    if len(text_lower) > 800:
+    if len(text_lower) > 2000:
         read_score += 10
         read_feedback.append({"type": "pro", "text": "Good overall length and detail."})
-    elif len(text_lower) > 400:
+    elif len(text_lower) > 1000:
         read_score += 5
         read_feedback.append({"type": "con", "text": "Resume is somewhat brief. Consider elaborating on your responsibilities."})
     else:
         read_feedback.append({"type": "con", "text": "Resume is very short. Add more details about your achievements."})
 
-    action_verbs = ["achieved", "improved", "increased", "developed", "managed", "led", "created", "designed", "engineered", "delivered", "optimized", "spearheaded"]
+    action_verbs = ["achieved", "improved", "increased", "developed", "managed", "led", "created", "designed", "engineered", "delivered", "optimized", "spearheaded", "orchestrated", "implemented", "resolved"]
     found_verbs = [v for v in action_verbs if v in text_lower]
-    if len(found_verbs) >= 4:
+    if len(found_verbs) >= 8:
         read_score += 10
         read_feedback.append({"type": "pro", "text": "Strong use of action verbs."})
-    elif len(found_verbs) > 0:
+    elif len(found_verbs) >= 4:
         read_score += 5
         read_feedback.append({"type": "con", "text": "Consider using a wider variety of action verbs to describe impact."})
     else:
         read_feedback.append({"type": "con", "text": "Lacking action verbs (e.g., achieved, optimized). Use these to highlight accomplishments."})
 
-    if re.search(r'\d+%|\$\d+|\d+\s*(?:users|clients|revenue|sales)', text_lower) or len(re.findall(r'\d+', text_lower)) > 8:
+    if re.search(r'\d+%|\$\d+', text_lower) and len(re.findall(r'\d+', text_lower)) > 10:
         read_score += 10
-        read_feedback.append({"type": "pro", "text": "Good use of metrics to quantify achievements."})
+        read_feedback.append({"type": "pro", "text": "Excellent use of metrics to quantify achievements."})
+    elif re.search(r'\d+%|\$\d+|\d+\s*(?:users|clients|revenue|sales)', text_lower) or len(re.findall(r'\d+', text_lower)) > 5:
+        read_score += 5
+        read_feedback.append({"type": "con", "text": "Some metrics found, but achievements could be quantified further."})
     else:
         read_feedback.append({"type": "con", "text": "Achievements are not quantified. Add numbers or percentages (e.g., 'Increased sales by 20%')."})
 
