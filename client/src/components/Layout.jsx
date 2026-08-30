@@ -65,7 +65,7 @@ export function Layout({ children, user }) {
               {user && (
                 <Link 
                   to="/" 
-                  className="text-[#0052FF] font-semibold border-2 border-[#0052FF] px-4 py-1.5 rounded-md text-base hover:bg-[#0052FF] hover:text-white transition-colors ml-2"
+                  className="text-[#0052FF] font-semibold border-2 border-[#0052FF] px-4 py-1.5 rounded-md text-base hover:bg-[#0052FF] hover:!text-white transition-colors ml-2"
                 >
                   Go to Home
                 </Link>
@@ -103,7 +103,7 @@ export function Layout({ children, user }) {
               {user && (
                 <Link 
                   to="/dashboard" 
-                  className="text-[#0052FF] font-semibold border-2 border-[#0052FF] px-4 py-1.5 rounded-md text-base hover:bg-[#0052FF] hover:text-white transition-colors ml-2"
+                  className="text-[#0052FF] font-semibold border-2 border-[#0052FF] px-4 py-1.5 rounded-md text-base hover:bg-[#0052FF] hover:!text-white transition-colors ml-2"
                 >
                   Go to Dashboard
                 </Link>
@@ -186,7 +186,7 @@ export function Layout({ children, user }) {
                   <Link 
                     to="/" 
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="text-[#0052FF] font-semibold border-2 border-[#0052FF] px-4 py-2 rounded-md text-base text-center mt-4 mb-2 hover:bg-[#0052FF] hover:text-white transition-colors inline-block w-full no-underline"
+                    className="text-[#0052FF] font-semibold border-2 border-[#0052FF] px-4 py-2 rounded-md text-base text-center mt-4 mb-2 hover:bg-[#0052FF] hover:!text-white transition-colors inline-block w-full no-underline"
                   >
                     Go to Home
                   </Link>
@@ -226,7 +226,7 @@ export function Layout({ children, user }) {
                   <Link 
                     to="/dashboard" 
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="text-[#0052FF] font-semibold border-2 border-[#0052FF] px-4 py-2 rounded-md text-base text-center mt-4 mb-2 hover:bg-[#0052FF] hover:text-white transition-colors inline-block w-full no-underline"
+                    className="text-[#0052FF] font-semibold border-2 border-[#0052FF] px-4 py-2 rounded-md text-base text-center mt-4 mb-2 hover:bg-[#0052FF] hover:!text-white transition-colors inline-block w-full no-underline"
                   >
                     Go to Dashboard
                   </Link>
