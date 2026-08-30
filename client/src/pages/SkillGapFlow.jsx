@@ -654,17 +654,70 @@ export function SkillGapFlow() {
           const latestAnalysis = roleAnalyses[0] || {};
 
           if (template) {
+            let dynamicMissingSkills = template.missingSkills;
+            if (latestAnalysis && latestAnalysis.improvementPriorities && latestAnalysis.improvementPriorities.length > 0) {
+                dynamicMissingSkills = latestAnalysis.improvementPriorities.map((skillName, i) => {
+                    let tag = i === 0 ? "Quick win" : (i > 2 ? "Deep skill" : "Moderate");
+                    let currentScore = Math.max(0, bestScore - (10 + i*5));
+                    const matchedTemplateSkill = template.missingSkills?.find(s => s.name === skillName) || template.skills?.find(s => s.name === skillName);
+                    if (matchedTemplateSkill && matchedTemplateSkill.current) {
+                        currentScore = matchedTemplateSkill.current;
+                    }
+                    return {
+                        name: skillName,
+                        effortTag: tag,
+                        current: currentScore
+                    };
+                });
+            } else if (latestAnalysis && latestAnalysis.missingSkills && latestAnalysis.missingSkills.length > 0) {
+                dynamicMissingSkills = latestAnalysis.missingSkills.slice(0, 4).map((skillName, i) => {
+                    let tag = i === 0 ? "Quick win" : (i > 2 ? "Deep skill" : "Moderate");
+                    return {
+                        name: skillName,
+                        effortTag: tag,
+                        current: Math.max(0, bestScore - (10 + i*5))
+                    };
+                });
+            } else if (latestAnalysis && latestAnalysis.matchPercentage >= 0) {
+                // If it ran but has no missing skills, they did perfectly
+                dynamicMissingSkills = [];
+            }
+
+            let dynamicVerifiedSkills = template.verifiedSkills;
+            if (latestAnalysis && latestAnalysis.strengths && latestAnalysis.strengths.length > 0) {
+                dynamicVerifiedSkills = latestAnalysis.strengths;
+            }
+
             userReports.push({ 
               ...template, 
               score: bestScore, 
               date: dateStr, 
               id: "rep_" + role.replace(/\s+/g, '_'),
-              resumeScore: latestAnalysis.resumeScore,
+              missingSkills: dynamicMissingSkills,
+              verifiedSkills: dynamicVerifiedSkills,
               resumeScore: latestAnalysis.resumeScore,
               resumeCategories: latestAnalysis.resumeCategories || [],
             });
           } else {
-            // Default mock for an unknown role. Uses generic terms so non-technical roles don't see SQL or System Design.
+            let defaultMissing = [
+              { name: "Advanced Domain Concepts", effortTag: "Quick win", current: Math.max(0, bestScore - 10) },
+              { name: "Cross-functional Collaboration", effortTag: "Moderate", current: Math.max(0, bestScore - 15) },
+              { name: "Strategic Execution", effortTag: "Deep skill", current: Math.max(0, bestScore - 20) }
+            ];
+
+            if (latestAnalysis && latestAnalysis.improvementPriorities && latestAnalysis.improvementPriorities.length > 0) {
+                defaultMissing = latestAnalysis.improvementPriorities.map((skillName, i) => ({
+                    name: skillName,
+                    effortTag: i === 0 ? "Quick win" : (i > 2 ? "Deep skill" : "Moderate"),
+                    current: Math.max(0, bestScore - (10 + i*5))
+                }));
+            }
+
+            let defaultVerified = ["Core Fundamentals"];
+            if (latestAnalysis && latestAnalysis.strengths && latestAnalysis.strengths.length > 0) {
+                defaultVerified = latestAnalysis.strengths;
+            }
+
             userReports.push({
               id: "rep_" + role.replace(/\s+/g, '_'),
               role: role,
@@ -677,14 +730,9 @@ export function SkillGapFlow() {
                 { name: "Advanced Domain Concepts", current: Math.max(0, bestScore - 10), target: 90 },
                 { name: "Cross-functional Collaboration", current: Math.max(0, bestScore - 15), target: 85 }
               ],
-              missingSkills: [
-                { name: "Advanced Domain Concepts", effortTag: "Quick win", current: Math.max(0, bestScore - 10) },
-                { name: "Cross-functional Collaboration", effortTag: "Moderate", current: Math.max(0, bestScore - 15) },
-                { name: "Strategic Execution", effortTag: "Deep skill", current: Math.max(0, bestScore - 20) }
-              ],
-              verifiedSkills: ["Core Fundamentals"],
+              missingSkills: defaultMissing,
+              verifiedSkills: defaultVerified,
               description: `Personalized skill gap report and readiness analysis for ${role}.`,
-              resumeScore: latestAnalysis.resumeScore,
               resumeScore: latestAnalysis.resumeScore,
               resumeCategories: latestAnalysis.resumeCategories || [],
             });
