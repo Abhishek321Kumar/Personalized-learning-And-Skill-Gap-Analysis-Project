@@ -174,6 +174,85 @@ export const SKILL_RESOURCES = [
       { platform: "Coursera", title: "Marketing Plan", url: "https://www.coursera.org/learn/marketing-plan" }
     ]
   }
+,
+  {
+    skill: "Machine Learning Architecture",
+    applicableRoles: ["Data Scientist"],
+    coreConcepts: [
+      "Distributed Training (Horovod, Ray)",
+      "Model Deployment & Serving (TF Serving, TorchServe)",
+      "Feature Stores (Feast)",
+      "MLOps & CI/CD for ML"
+    ],
+    courses: [
+      { platform: "Coursera", title: "Machine Learning Engineering for Production (MLOps)", url: "https://www.coursera.org/specializations/machine-learning-engineering-for-production-mlops" }
+    ]
+  },
+  {
+    skill: "NLP & Deep Learning",
+    applicableRoles: ["Data Scientist"],
+    coreConcepts: [
+      "Transformers & Attention Mechanisms",
+      "Large Language Models (LLMs) & Fine-Tuning",
+      "Sequence-to-Sequence Models",
+      "Word Embeddings & Vector Databases"
+    ],
+    courses: [
+      { platform: "DeepLearning.AI", title: "Natural Language Processing Specialization", url: "https://www.coursera.org/specializations/natural-language-processing" }
+    ]
+  },
+  {
+    skill: "Advanced Predictive Modeling",
+    applicableRoles: ["Senior Data Analyst"],
+    coreConcepts: [
+      "Time Series Forecasting (ARIMA, Prophet)",
+      "Survival Analysis",
+      "Ensemble Methods (Random Forest, XGBoost)",
+      "Dimensionality Reduction"
+    ],
+    courses: [
+      { platform: "Coursera", title: "Advanced Data Science with IBM", url: "https://www.coursera.org/specializations/advanced-data-science-ibm" }
+    ]
+  },
+  {
+    skill: "Predictive LTV/CAC Analytics",
+    applicableRoles: ["Marketing Manager"],
+    coreConcepts: [
+      "Predictive Customer Lifetime Value (pLTV)",
+      "Cohort Analysis & Retention Modeling",
+      "Multi-Touch Attribution (Markov Chains, Shapley)",
+      "Marketing Spend Optimization"
+    ],
+    courses: [
+      { platform: "Udacity", title: "Predictive Analytics for Business", url: "https://www.udacity.com/course/predictive-analytics-for-business-nanodegree--nd008" }
+    ]
+  },
+  {
+    skill: "Advanced Interaction Design",
+    applicableRoles: ["UI/UX Designer"],
+    coreConcepts: [
+      "Complex Micro-interactions",
+      "Motion Design Principles",
+      "Gestural Interfaces",
+      "State Transitions"
+    ],
+    courses: [
+      { platform: "Coursera", title: "Interaction Design Specialization", url: "https://www.coursera.org/specializations/interaction-design" }
+    ]
+  },
+  {
+    skill: "Design System Architecture",
+    applicableRoles: ["UI/UX Designer"],
+    coreConcepts: [
+      "Tokenization (Design Tokens)",
+      "Component Library Governance",
+      "Version Control in Figma",
+      "Documentation & Handoff"
+    ],
+    courses: [
+      { platform: "Memorisely", title: "Design Systems Bootcamp", url: "https://www.memorisely.com/bootcamp/design-systems" }
+    ]
+  }
 ];
 
 export const ROLE_INTERVIEW_GUIDES = [
