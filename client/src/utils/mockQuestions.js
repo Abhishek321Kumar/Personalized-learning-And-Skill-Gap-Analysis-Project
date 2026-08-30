@@ -210,6 +210,19 @@ const uxQuestions = [
   { text: "According to Hick's Law, what happens when you increase the number of choices?", options: ["Decision time decreases", "Decision time increases logarithmically", "Users make better choices", "It has no effect on decision time"], correctAnswer: "Decision time increases logarithmically", section: "technical", skill: "User Research Methods", difficulty: "hard" }
 ];
 
+const marketingQuestions = [
+  { text: "Which bidding strategy is most appropriate for a campaign focused on lead generation with a strict target cost?", options: ["Target CPA", "Target ROAS", "Maximize Clicks", "Target Impression Share"], correctAnswer: "Target CPA", section: "technical", skill: "Digital Marketing (SEO/SEM)", difficulty: "medium" },
+  { text: "What is the primary difference between SEO and SEM?", options: ["SEO is organic traffic, SEM involves paid search", "SEO is paid, SEM is organic", "They are identical terms", "SEO is for social media, SEM is for search engines"], correctAnswer: "SEO is organic traffic, SEM involves paid search", section: "technical", skill: "Digital Marketing (SEO/SEM)", difficulty: "easy" },
+  { text: "How do you calculate Customer Acquisition Cost (CAC)?", options: ["Total Sales / Number of Customers", "Total Marketing and Sales Cost / Number of New Customers Acquired", "Total Revenue / Total Ad Spend", "Lifetime Value - Ad Spend"], correctAnswer: "Total Marketing and Sales Cost / Number of New Customers Acquired", section: "technical", skill: "Marketing Analytics (ROI/CAC)", difficulty: "medium" },
+  { text: "What is the purpose of UTM parameters in a URL?", options: ["To encrypt the website connection", "To track the source, medium, and campaign name of traffic in Google Analytics", "To improve page loading speed", "To dynamically change the page content"], correctAnswer: "To track the source, medium, and campaign name of traffic in Google Analytics", section: "technical", skill: "Marketing Analytics (ROI/CAC)", difficulty: "easy" },
+  { text: "Which element is most critical in direct-response copywriting?", options: ["A clear and compelling Call to Action (CTA)", "Complex vocabulary", "A minimalist design without text", "Using a passive voice"], correctAnswer: "A clear and compelling Call to Action (CTA)", section: "technical", skill: "Content & Copywriting", difficulty: "medium" },
+  { text: "What is A/B testing in the context of email marketing?", options: ["Sending an email twice to the same person", "Sending two variations of an email to a subset of subscribers to see which performs better before sending to the rest", "Testing if the email server is online", "Using two different email clients"], correctAnswer: "Sending two variations of an email to a subset of subscribers to see which performs better before sending to the rest", section: "technical", skill: "Marketing Analytics (ROI/CAC)", difficulty: "easy" },
+  { text: "When conducting Marketing Mix Modeling, what are you primarily trying to determine?", options: ["Which font to use on a landing page", "The historical impact of various marketing tactics to optimize future spend and predict ROI", "The exact age of your customers", "Which competitor is spending the most"], correctAnswer: "The historical impact of various marketing tactics to optimize future spend and predict ROI", section: "technical", skill: "Budget Optimization", difficulty: "hard" },
+  { text: "If your campaign's CPA is rising but your conversion rate is steady, what is likely happening?", options: ["Your Cost Per Click (CPC) or CPM is increasing", "Your website is broken", "You have stopped spending money", "Users are converting more often"], correctAnswer: "Your Cost Per Click (CPC) or CPM is increasing", section: "technical", skill: "Budget Optimization", difficulty: "hard" },
+  { text: "What is an effective strategy for aligning the sales and marketing teams?", options: ["Keep them in separate buildings", "Establish shared KPIs (like pipeline generated) and regular feedback loops", "Let marketing dictate all sales scripts", "Only let sales talk to customers"], correctAnswer: "Establish shared KPIs (like pipeline generated) and regular feedback loops", section: "technical", skill: "Cross-functional Collaboration", difficulty: "medium" },
+  { text: "Which tool is standard for creating and managing an inbound marketing and sales pipeline?", options: ["Adobe Premiere", "HubSpot", "AutoCAD", "Figma"], correctAnswer: "HubSpot", section: "technical", skill: "Digital Marketing (SEO/SEM)", difficulty: "easy" }
+];
+
 export const generateRoleQuestions = (role) => {
   const normalizedRole = role ? role.toLowerCase() : "";
   
@@ -222,7 +235,12 @@ export const generateRoleQuestions = (role) => {
     technicalQuestions = [...dataQuestions];
     aptitudeQuestions = [...dataAptitude];
     verbalQuestions = [...dataVerbal];
-  } else if (normalizedRole.includes("product") || normalizedRole.includes("manager") || normalizedRole.includes("marketing")) {
+  } else if (normalizedRole.includes("marketing")) {
+    technicalQuestions = [...marketingQuestions];
+    aptitudeQuestions = [...productAptitude];
+    verbalQuestions = [...productVerbal];
+    isTechnicalRole = false;
+  } else if (normalizedRole.includes("product") || normalizedRole.includes("manager")) {
     technicalQuestions = [...productQuestions];
     aptitudeQuestions = [...productAptitude];
     verbalQuestions = [...productVerbal];

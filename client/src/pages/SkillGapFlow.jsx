@@ -637,6 +637,24 @@ export function SkillGapFlow() {
             ],
             verifiedSkills: ["Prototyping & Wireframing", "Figma Fundamentals"],
             description: "Focuses on user-centered design, interaction modeling, and translating requirements into intuitive interfaces.",
+          },
+          {
+            role: "Marketing Manager",
+            category: "Marketing",
+            status: "pending_actions",
+            skills: [
+              { name: "Digital Marketing (SEO/SEM)", current: 55, target: 90 },
+              { name: "Marketing Analytics (ROI/CAC)", current: 40, target: 85 },
+              { name: "Content & Copywriting", current: 75, target: 85 },
+              { name: "Budget Optimization", current: 50, target: 80 }
+            ],
+            missingSkills: [
+              { name: "Marketing Analytics (ROI/CAC)", effortTag: "Deep skill", current: 40 },
+              { name: "Budget Optimization", effortTag: "Moderate", current: 50 },
+              { name: "Digital Marketing (SEO/SEM)", effortTag: "Quick win", current: 55 }
+            ],
+            verifiedSkills: ["Content & Copywriting", "Cross-functional Collaboration"],
+            description: "Focuses on strategic campaign planning, multi-channel growth, and data-driven customer acquisition.",
           }
         ];
 
