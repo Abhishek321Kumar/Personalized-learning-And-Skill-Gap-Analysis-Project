@@ -46,6 +46,10 @@ export function ProfilePage({ user, onUserUpdate }) {
   const [internships, setInternships] = useState(user?.internships || []);
   const [isEditingInt, setIsEditingInt] = useState(false);
 
+  // Resume State
+  const [resumeFileName, setResumeFileName] = useState(user?.resumeFileName || "");
+  const [isUploadingResume, setIsUploadingResume] = useState(false);
+
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -72,6 +76,7 @@ export function ProfilePage({ user, onUserUpdate }) {
           });
           setEducation(fullUser.education || []);
           setInternships(fullUser.internships || []);
+          setResumeFileName(fullUser.resumeFileName || "");
           if (onUserUpdate) onUserUpdate(fullUser);
         }
       } catch (err) {
@@ -161,6 +166,24 @@ export function ProfilePage({ user, onUserUpdate }) {
       alert("Failed to save changes: " + err.message);
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handleResumeUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    setIsUploadingResume(true);
+    try {
+      const res = await api.uploadResume(file);
+      setResumeFileName(res.user.resumeFileName);
+      if (onUserUpdate) onUserUpdate(res.user);
+      alert("Resume uploaded successfully!");
+    } catch (err) {
+      alert("Failed to upload resume: " + err.message);
+    } finally {
+      setIsUploadingResume(false);
+      e.target.value = null; // Reset so the same file can be re-uploaded if needed
     }
   };
 
@@ -455,6 +478,45 @@ export function ProfilePage({ user, onUserUpdate }) {
               {isEditingInt && (
                 <button onClick={() => setInternships([...internships, { role: "", company: "", duration: "" }])} className="text-sm text-blue-600 font-medium hover:underline">+ Add Internship</button>
               )}
+            </div>
+          </div>
+
+          {/* Resume Card */}
+          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 relative md:col-span-2">
+            <div className="flex justify-between items-start mb-6">
+              <h2 className="text-lg font-semibold text-gray-800">Resume</h2>
+            </div>
+            <div className="flex flex-col gap-4">
+              {resumeFileName ? (
+                <div className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                  <span className="material-symbols-outlined text-blue-600 text-2xl">description</span>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-gray-900 truncate">{resumeFileName}</p>
+                    <p className="text-xs text-gray-500">Currently active resume</p>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-sm text-gray-500">No resume uploaded yet.</p>
+              )}
+              
+              <div>
+                <input 
+                  type="file" 
+                  id="resume-upload" 
+                  className="hidden" 
+                  accept=".pdf,.doc,.docx"
+                  onChange={handleResumeUpload}
+                  disabled={isUploadingResume}
+                />
+                <label 
+                  htmlFor="resume-upload" 
+                  className={`inline-flex items-center gap-2 px-4 py-2 border border-blue-600 text-blue-600 rounded-md font-medium text-sm transition-colors cursor-pointer ${isUploadingResume ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-50'}`}
+                >
+                  <span className="material-symbols-outlined text-[18px]">upload</span>
+                  {isUploadingResume ? "Uploading..." : (resumeFileName ? "Upload New Resume" : "Upload Resume")}
+                </label>
+                <p className="text-xs text-gray-400 mt-2">Uploading a new resume will update it across all your target assessments.</p>
+              </div>
             </div>
           </div>
         </div>
