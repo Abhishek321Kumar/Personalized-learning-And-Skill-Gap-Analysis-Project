@@ -655,6 +655,24 @@ export function SkillGapFlow() {
             ],
             verifiedSkills: ["Content & Copywriting", "Cross-functional Collaboration"],
             description: "Focuses on strategic campaign planning, multi-channel growth, and data-driven customer acquisition.",
+          },
+          {
+            role: "Data Scientist",
+            category: "Data Science",
+            status: "pending_actions",
+            skills: [
+              { name: "Python (Data Science Stack)", current: 60, target: 90 },
+              { name: "Strategic Execution", current: 36, target: 80 },
+              { name: "Advanced Domain Concepts", current: 46, target: 90 },
+              { name: "Cross-functional Collaboration", current: 41, target: 85 }
+            ],
+            missingSkills: [
+              { name: "Advanced Domain Concepts", effortTag: "Deep skill", current: 46 },
+              { name: "Strategic Execution", effortTag: "Moderate", current: 36 },
+              { name: "Cross-functional Collaboration", effortTag: "Quick win", current: 41 }
+            ],
+            verifiedSkills: ["Python (Data Science Stack)", "Core Fundamentals"],
+            description: "Focuses on building predictive models, strategic execution of data initiatives, and cross-functional collaboration.",
           }
         ];
 
@@ -675,29 +693,51 @@ export function SkillGapFlow() {
           const latestAnalysis = roleAnalyses[0] || {};
 
           if (template) {
-            let dynamicMissingSkills = template.missingSkills;
+            let dynamicMissingSkills = template.missingSkills ? [...template.missingSkills] : [];
             if (latestAnalysis && latestAnalysis.improvementPriorities && latestAnalysis.improvementPriorities.length > 0) {
-                dynamicMissingSkills = latestAnalysis.improvementPriorities.map((skillName, i) => {
-                    let tag = i === 0 ? "Quick win" : (i > 2 ? "Deep skill" : "Moderate");
+                const mlSkills = latestAnalysis.improvementPriorities.map((skillName, i) => {
                     let currentScore = Math.max(0, bestScore - (10 + i*5));
                     const matchedTemplateSkill = template.missingSkills?.find(s => s.name === skillName) || template.skills?.find(s => s.name === skillName);
                     if (matchedTemplateSkill && matchedTemplateSkill.current) {
                         currentScore = matchedTemplateSkill.current;
                     }
-                    return {
-                        name: skillName,
-                        effortTag: tag,
-                        current: currentScore
-                    };
+                    return { name: skillName, current: currentScore };
+                });
+                
+                let merged = [...mlSkills];
+                if (template.missingSkills) {
+                    template.missingSkills.forEach(ts => {
+                        if (!merged.find(ms => ms.name === ts.name)) {
+                            merged.push(ts);
+                        }
+                    });
+                }
+                
+                dynamicMissingSkills = merged.map((skill, i) => {
+                    let tag = "Moderate";
+                    if (i === 0) tag = "Quick win";
+                    else if (i === merged.length - 1 && merged.length >= 3) tag = "Deep skill";
+                    return { ...skill, effortTag: tag };
                 });
             } else if (latestAnalysis && latestAnalysis.missingSkills && latestAnalysis.missingSkills.length > 0) {
-                dynamicMissingSkills = latestAnalysis.missingSkills.slice(0, 4).map((skillName, i) => {
-                    let tag = i === 0 ? "Quick win" : (i > 2 ? "Deep skill" : "Moderate");
-                    return {
-                        name: skillName,
-                        effortTag: tag,
-                        current: Math.max(0, bestScore - (10 + i*5))
-                    };
+                const mlSkills = latestAnalysis.missingSkills.slice(0, 4).map((skillName, i) => {
+                    return { name: skillName, current: Math.max(0, bestScore - (10 + i*5)) };
+                });
+                
+                let merged = [...mlSkills];
+                if (template.missingSkills) {
+                    template.missingSkills.forEach(ts => {
+                        if (!merged.find(ms => ms.name === ts.name)) {
+                            merged.push(ts);
+                        }
+                    });
+                }
+                
+                dynamicMissingSkills = merged.map((skill, i) => {
+                    let tag = "Moderate";
+                    if (i === 0) tag = "Quick win";
+                    else if (i === merged.length - 1 && merged.length >= 3) tag = "Deep skill";
+                    return { ...skill, effortTag: tag };
                 });
             } else if (latestAnalysis && latestAnalysis.matchPercentage >= 0) {
                 // If it ran but has no missing skills, they did perfectly
@@ -727,11 +767,24 @@ export function SkillGapFlow() {
             ];
 
             if (latestAnalysis && latestAnalysis.improvementPriorities && latestAnalysis.improvementPriorities.length > 0) {
-                defaultMissing = latestAnalysis.improvementPriorities.map((skillName, i) => ({
+                const mlSkills = latestAnalysis.improvementPriorities.map((skillName, i) => ({
                     name: skillName,
-                    effortTag: i === 0 ? "Quick win" : (i > 2 ? "Deep skill" : "Moderate"),
                     current: Math.max(0, bestScore - (10 + i*5))
                 }));
+                
+                let merged = [...mlSkills];
+                defaultMissing.forEach(ts => {
+                    if (!merged.find(ms => ms.name === ts.name)) {
+                        merged.push(ts);
+                    }
+                });
+                
+                defaultMissing = merged.map((skill, i) => {
+                    let tag = "Moderate";
+                    if (i === 0) tag = "Quick win";
+                    else if (i === merged.length - 1 && merged.length >= 3) tag = "Deep skill";
+                    return { ...skill, effortTag: tag };
+                });
             }
 
             let defaultVerified = ["Core Fundamentals"];
