@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { api } from "../api/client";
 import { useNavigate } from "react-router-dom";
+import { roleTemplates } from "../config/roleTemplates";
+
 const sortEducation = (eduArray) => {
   return [...(eduArray || [])].sort((a, b) => {
     const getRank = (level) => {
@@ -182,7 +184,12 @@ export function ProfilePage({ user, onUserUpdate }) {
       try {
         const latest = await api.getLatestAnalysis();
         const role = latest?.snapshot?.targetRole || user?.targetRole || "Software Engineer";
-        const jobDesc = latest?.snapshot?.jobDescription || "Standard requirements for " + role;
+        
+        let jobDesc = latest?.snapshot?.jobDescription;
+        if (!jobDesc || jobDesc.startsWith("Standard requirements for")) {
+           jobDesc = roleTemplates[role] || "Standard requirements for " + role;
+        }
+
         await api.runAnalysis({
           targetRole: role,
           jobDescription: jobDesc,
