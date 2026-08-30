@@ -129,7 +129,7 @@ export const SKILL_RESOURCES = [
       "State & Flow Mapping"
     ],
     courses: [
-      { platform: "Interaction Design Foundation", title: "UI Animation", url: "https://www.interaction-design.org/courses/ui-animation" }
+      { platform: "Coursera", title: "UX Design Fundamentals", url: "https://www.coursera.org/learn/ux-design-fundamentals" }
     ]
   },
   // Marketing Roles
@@ -171,7 +171,7 @@ export const SKILL_RESOURCES = [
       "Agency Management"
     ],
     courses: [
-      { platform: "LinkedIn Learning", title: "Marketing Budgeting", url: "https://www.linkedin.com/learning/marketing-budgeting" }
+      { platform: "Coursera", title: "Marketing Plan", url: "https://www.coursera.org/learn/marketing-plan" }
     ]
   }
 ];
@@ -187,7 +187,7 @@ export const ROLE_INTERVIEW_GUIDES = [
       },
       { 
         title: "A/B Testing Interview Prep", 
-        url: "https://towardsdatascience.com/a-b-testing-interview-questions-and-answers-for-data-scientists-827b40974ed2", 
+        url: "https://www.springboard.com/blog/data-science/ab-testing-interview-questions/", 
         description: "Focuses on statistical foundations and real-world scenario questions." 
       }
     ]
@@ -252,7 +252,7 @@ export const ROLE_INTERVIEW_GUIDES = [
     interviewGuides: [
       {
         title: "Top Digital Marketing Interview Questions",
-        url: "https://www.simplilearn.com/digital-marketing-interview-questions-article",
+        url: "https://www.edureka.co/blog/digital-marketing-interview-questions/",
         description: "Covers SEO, SEM, analytics, and campaign strategy questions."
       },
       {
