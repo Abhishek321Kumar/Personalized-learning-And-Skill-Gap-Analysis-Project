@@ -23,6 +23,7 @@ function ReportDetails({ report, user, onBack }) {
   const topSkill = phases.flatMap(p => p.skills)[0] || { name: "General Skill Review" }; 
   
   const [expandedSkill, setExpandedSkill] = useState(topSkill.name);
+  const [expandedCategory, setExpandedCategory] = useState(null);
 
   const roleGuides = ROLE_INTERVIEW_GUIDES.find(r => r.role.toLowerCase() === (report?.role || "").toLowerCase())?.interviewGuides || ROLE_INTERVIEW_GUIDES[0].interviewGuides;
 
@@ -133,7 +134,7 @@ function ReportDetails({ report, user, onBack }) {
           </motion.div>
 
           {/* 1.75 RESUME PRESENTATION (NEW) */}
-          {(report.resumePros?.length > 0 || report.resumeCons?.length > 0) && (
+          {(report.resumeCategories?.length > 0) && (
             <motion.div variants={fadeUp} className="flex flex-col gap-6 mt-2">
               <div className="flex flex-col gap-1">
                 <div className="flex items-center justify-between">
@@ -148,44 +149,83 @@ function ReportDetails({ report, user, onBack }) {
                 <p className="text-gray-500 font-medium">Strengths and areas for improvement based on ATS parsing.</p>
               </div>
               
-              <div className="bg-white p-8 md:p-10 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Pros */}
-                <div className="flex flex-col gap-4">
-                  <h3 className="flex items-center gap-2 font-black text-green-700 uppercase tracking-widest text-sm">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    Resume Strengths
-                  </h3>
-                  {report.resumePros?.length > 0 ? (
-                    <ul className="flex flex-col gap-3">
-                      {report.resumePros.map((pro, i) => (
-                        <li key={i} className="flex items-start gap-3 text-gray-700 font-medium bg-green-50/50 p-4 rounded-xl border border-green-100">
-                          {pro}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <div className="text-gray-400 italic">No specific strengths identified.</div>
-                  )}
-                </div>
-                
-                {/* Cons */}
-                <div className="flex flex-col gap-4">
-                  <h3 className="flex items-center gap-2 font-black text-red-600 uppercase tracking-widest text-sm">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                    Areas to Improve
-                  </h3>
-                  {report.resumeCons?.length > 0 ? (
-                    <ul className="flex flex-col gap-3">
-                      {report.resumeCons.map((con, i) => (
-                        <li key={i} className="flex items-start gap-3 text-gray-700 font-medium bg-red-50/50 p-4 rounded-xl border border-red-100">
-                          {con}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <div className="text-gray-400 italic">No significant issues found.</div>
-                  )}
-                </div>
+              <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 flex flex-col gap-4">
+                {report.resumeCategories.map((cat, idx) => {
+                  const isExpanded = expandedCategory === cat.name;
+                  const ratio = cat.maxScore > 0 ? cat.score / cat.maxScore : 0;
+                  const colorClass = ratio >= 0.8 ? 'text-green-600 bg-green-50 border-green-100' : ratio >= 0.5 ? 'text-orange-600 bg-orange-50 border-orange-100' : 'text-red-600 bg-red-50 border-red-100';
+                  const barClass = ratio >= 0.8 ? 'bg-green-500' : ratio >= 0.5 ? 'bg-orange-400' : 'bg-red-500';
+
+                  return (
+                    <div key={idx} className={`border rounded-2xl transition-all duration-300 overflow-hidden ${isExpanded ? 'border-blue-200 shadow-sm' : 'border-gray-100 hover:border-gray-200'}`}>
+                      <button 
+                        onClick={() => setExpandedCategory(isExpanded ? null : cat.name)}
+                        className="w-full px-6 py-5 flex flex-col md:flex-row md:items-center justify-between gap-4 text-left group bg-white hover:bg-gray-50/50 transition-colors"
+                      >
+                        <div className="flex items-center gap-4 flex-1">
+                          <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 border ${colorClass}`}>
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={ratio >= 0.8 ? "M5 13l4 4L19 7" : ratio >= 0.5 ? "M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" : "M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"}></path></svg>
+                          </div>
+                          <div className="flex flex-col flex-1">
+                            <h3 className="font-bold text-gray-800 text-lg group-hover:text-blue-700 transition-colors">{cat.name}</h3>
+                            <div className="flex items-center gap-3 mt-2 md:max-w-[200px] w-full">
+                              <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                                <motion.div 
+                                  initial={{ width: 0 }}
+                                  whileInView={{ width: `${ratio * 100}%` }}
+                                  viewport={{ once: true }}
+                                  transition={{ duration: 1, ease: "easeOut" }}
+                                  className={`h-full rounded-full ${barClass}`} 
+                                ></motion.div>
+                              </div>
+                              <span className="text-xs font-bold text-gray-500 whitespace-nowrap">{Math.round(ratio * 100)}%</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3 self-end md:self-auto">
+                          <span className="text-sm font-bold text-gray-400">{cat.score} / {cat.maxScore} pts</span>
+                          <div className={`p-2 rounded-full transition-colors ${isExpanded ? 'bg-blue-50 text-blue-600' : 'bg-gray-50 text-gray-400 group-hover:bg-gray-100'}`}>
+                            <svg className={`w-4 h-4 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                          </div>
+                        </div>
+                      </button>
+
+                      <AnimatePresence>
+                        {isExpanded && (
+                          <motion.div 
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="overflow-hidden bg-gray-50/50"
+                          >
+                            <div className="px-6 pb-6 pt-2 border-t border-gray-100">
+                              {cat.feedback && cat.feedback.length > 0 ? (
+                                <ul className="flex flex-col gap-3">
+                                  {cat.feedback.map((fb, fidx) => (
+                                    <li key={fidx} className={`flex items-start gap-3 p-4 rounded-xl border text-sm font-medium ${
+                                      fb.type === 'pro' 
+                                        ? 'bg-green-50/50 border-green-100 text-green-800' 
+                                        : 'bg-red-50/50 border-red-100 text-red-800'
+                                    }`}>
+                                      {fb.type === 'pro' ? (
+                                        <svg className="w-5 h-5 text-green-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                      ) : (
+                                        <svg className="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                      )}
+                                      <span className="pt-0.5">{fb.text}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              ) : (
+                                <div className="text-gray-400 italic text-sm">No specific feedback provided for this category.</div>
+                              )}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                })}
               </div>
             </motion.div>
           )}
@@ -581,8 +621,8 @@ export function SkillGapFlow() {
               date: dateStr, 
               id: "rep_" + role.replace(/\s+/g, '_'),
               resumeScore: latestAnalysis.resumeScore,
-              resumePros: latestAnalysis.resumePros || [],
-              resumeCons: latestAnalysis.resumeCons || [],
+              resumeScore: latestAnalysis.resumeScore,
+              resumeCategories: latestAnalysis.resumeCategories || [],
             });
           } else {
             // Default mock for an unknown role. Uses generic terms so non-technical roles don't see SQL or System Design.
@@ -606,8 +646,8 @@ export function SkillGapFlow() {
               verifiedSkills: ["Core Fundamentals"],
               description: `Personalized skill gap report and readiness analysis for ${role}.`,
               resumeScore: latestAnalysis.resumeScore,
-              resumePros: latestAnalysis.resumePros || [],
-              resumeCons: latestAnalysis.resumeCons || [],
+              resumeScore: latestAnalysis.resumeScore,
+              resumeCategories: latestAnalysis.resumeCategories || [],
             });
           }
         });
