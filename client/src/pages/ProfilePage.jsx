@@ -178,7 +178,19 @@ export function ProfilePage({ user, onUserUpdate }) {
       const res = await api.uploadResume(file);
       setResumeFileName(res.user.resumeFileName);
       if (onUserUpdate) onUserUpdate(res.user);
-      alert("Resume uploaded successfully!");
+      
+      try {
+        const latest = await api.getLatestAnalysis();
+        const role = latest?.snapshot?.targetRole || user?.targetRole || "Software Engineer";
+        await api.runAnalysis({
+          targetRole: role,
+          jobDescription: "Standard requirements for " + role
+        });
+      } catch (analysisErr) {
+        console.warn("Could not auto-update analysis snapshot", analysisErr);
+      }
+
+      alert("Resume uploaded successfully! Your ATS scores have been updated.");
     } catch (err) {
       alert("Failed to upload resume: " + err.message);
     } finally {
