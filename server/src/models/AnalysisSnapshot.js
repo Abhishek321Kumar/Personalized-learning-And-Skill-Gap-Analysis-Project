@@ -21,8 +21,10 @@ const analysisSnapshotSchema = new mongoose.Schema(
         },
         { _id: false }
       ),
-      default: {}
-    }
+    },
+    resumeScore: { type: Number, default: 0 },
+    resumePros: { type: [String], default: [] },
+    resumeCons: { type: [String], default: [] }
   },
   { timestamps: true }
 );

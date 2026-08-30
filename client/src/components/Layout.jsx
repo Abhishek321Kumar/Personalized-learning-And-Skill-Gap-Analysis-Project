@@ -62,6 +62,14 @@ export function Layout({ children, user }) {
                   </Link>
                 );
               })}
+              {user && (
+                <Link 
+                  to="/" 
+                  className="text-[#0052FF] font-semibold border-2 border-[#0052FF] px-4 py-1.5 rounded-md text-base hover:bg-blue-50 transition-colors ml-2"
+                >
+                  Go to Home
+                </Link>
+              )}
             </>
           ) : (
             <>
@@ -95,9 +103,9 @@ export function Layout({ children, user }) {
               {user && (
                 <Link 
                   to="/dashboard" 
-                  className="transition-colors text-lg text-gray-600 hover-nav-blue"
+                  className="text-[#0052FF] font-semibold border-2 border-[#0052FF] px-4 py-1.5 rounded-md text-base hover:bg-blue-50 transition-colors ml-2"
                 >
-                  Dashboard
+                  Go to Dashboard
                 </Link>
               )}
             </>
@@ -174,6 +182,15 @@ export function Layout({ children, user }) {
                     </Link>
                   );
                 })}
+                {user && (
+                  <Link 
+                    to="/" 
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="text-[#0052FF] font-semibold border-2 border-[#0052FF] px-4 py-2 rounded-md text-base text-center mt-4 mb-2 hover:bg-blue-50 transition-colors inline-block w-full no-underline"
+                  >
+                    Go to Home
+                  </Link>
+                )}
               </>
             ) : (
               <>
@@ -209,9 +226,9 @@ export function Layout({ children, user }) {
                   <Link 
                     to="/dashboard" 
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="transition-colors py-3 text-lg border-b border-gray-50 last:border-0 no-underline text-gray-600 hover:text-[#0052FF]"
+                    className="text-[#0052FF] font-semibold border-2 border-[#0052FF] px-4 py-2 rounded-md text-base text-center mt-4 mb-2 hover:bg-blue-50 transition-colors inline-block w-full no-underline"
                   >
-                    Dashboard
+                    Go to Dashboard
                   </Link>
                 )}
               </>
