@@ -131,6 +131,48 @@ export const SKILL_RESOURCES = [
     courses: [
       { platform: "Interaction Design Foundation", title: "UI Animation", url: "https://www.interaction-design.org/courses/ui-animation" }
     ]
+  },
+  // Marketing Roles
+  {
+    skill: "Marketing Analytics (ROI/CAC)",
+    applicableRoles: ["Marketing Manager"],
+    coreConcepts: [
+      "Customer Acquisition Cost (CAC) & LTV",
+      "Return on Ad Spend (ROAS)",
+      "Google Analytics & UTM Tracking",
+      "A/B Testing & CRO"
+    ],
+    courses: [
+      { platform: "Coursera", title: "Marketing Analytics Foundation", url: "https://www.coursera.org/learn/marketing-analytics" },
+      { platform: "Udemy", title: "Advanced Google Analytics 4", url: "https://www.udemy.com/course/google-analytics-4/" }
+    ]
+  },
+  {
+    skill: "Digital Marketing (SEO/SEM)",
+    applicableRoles: ["Marketing Manager"],
+    coreConcepts: [
+      "Search Engine Optimization (On-page & Off-page)",
+      "PPC Campaign Management",
+      "Keyword Bidding Strategies",
+      "Multi-channel Attribution"
+    ],
+    courses: [
+      { platform: "HubSpot", title: "SEO Certification", url: "https://academy.hubspot.com/courses/seo" },
+      { platform: "Coursera", title: "Search Engine Optimization (SEO) Specialization", url: "https://www.coursera.org/specializations/seo" }
+    ]
+  },
+  {
+    skill: "Budget Optimization",
+    applicableRoles: ["Marketing Manager"],
+    coreConcepts: [
+      "Marketing Mix Modeling",
+      "Media Planning & Buying",
+      "Cost Optimization",
+      "Agency Management"
+    ],
+    courses: [
+      { platform: "LinkedIn Learning", title: "Marketing Budgeting", url: "https://www.linkedin.com/learning/marketing-budgeting" }
+    ]
   }
 ];
 
@@ -202,6 +244,21 @@ export const ROLE_INTERVIEW_GUIDES = [
         title: "UX Portfolio Review & Interview Prep",
         url: "https://www.interaction-design.org/literature/article/how-to-ace-your-ux-design-interview",
         description: "Tips on presenting your design process and case studies."
+      }
+    ]
+  },
+  {
+    role: "Marketing Manager",
+    interviewGuides: [
+      {
+        title: "Top Digital Marketing Interview Questions",
+        url: "https://www.simplilearn.com/digital-marketing-interview-questions-article",
+        description: "Covers SEO, SEM, analytics, and campaign strategy questions."
+      },
+      {
+        title: "Growth Marketing Case Studies",
+        url: "https://growthhackers.com/growth-studies/",
+        description: "Real-world examples of successful marketing campaigns and ROI analysis."
       }
     ]
   }
