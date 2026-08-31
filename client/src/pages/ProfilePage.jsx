@@ -3,6 +3,7 @@ import { api } from "../api/client";
 import { useNavigate } from "react-router-dom";
 import { roleTemplates } from "../config/roleTemplates";
 import { motion } from "framer-motion";
+import { COUNTRY_CODES, LOCATION_DATA } from "../config/locationData";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -336,14 +337,38 @@ export function ProfilePage({ user, onUserUpdate }) {
                          basicInfo.country === "us" ? "United States" : 
                          basicInfo.country === "uk" ? "United Kingdom" : 
                          basicInfo.country === "sg" ? "Singapore" : 
+                         basicInfo.country === "de" ? "Germany" : 
+                         basicInfo.country === "fr" ? "France" : 
+                         basicInfo.country === "it" ? "Italy" : 
                          basicInfo.country || "-"}
                       </span>
                     ) : (
-                      <select className={inputClass} value={basicInfo.country} onChange={e => setBasicInfo({...basicInfo, country: e.target.value})}>
+                      <select className={inputClass} value={basicInfo.country} onChange={e => {
+                        const newCountry = e.target.value;
+                        const code = COUNTRY_CODES[newCountry] || "";
+                        let newPhone = basicInfo.phone || "";
+                        let foundCode = false;
+                        for (const c of Object.values(COUNTRY_CODES)) {
+                          if (newPhone.startsWith(c + " ")) {
+                            newPhone = newPhone.replace(c + " ", "");
+                            foundCode = true;
+                            break;
+                          } else if (newPhone.startsWith(c)) {
+                            newPhone = newPhone.replace(c, "");
+                            foundCode = true;
+                            break;
+                          }
+                        }
+                        setBasicInfo({...basicInfo, country: newCountry, phone: code + " " + newPhone.trim()});
+                        setAddress({...address, state: "", city: ""}); // clear address state/city when country changes
+                      }}>
                         <option value="in">India</option>
                         <option value="us">United States</option>
                         <option value="uk">United Kingdom</option>
                         <option value="sg">Singapore</option>
+                        <option value="de">Germany</option>
+                        <option value="fr">France</option>
+                        <option value="it">Italy</option>
                       </select>
                     )}
                   </div>
@@ -387,10 +412,9 @@ export function ProfilePage({ user, onUserUpdate }) {
                   ) : (
                     <select className={inputClass} value={address.city} onChange={e => setAddress({...address, city: e.target.value})}>
                       <option value="">Select City</option>
-                      <option value="mumbai">Mumbai</option>
-                      <option value="bangalore">Bangalore</option>
-                      <option value="delhi">Delhi</option>
-                      <option value="hyderabad">Hyderabad</option>
+                      {basicInfo.country && address.state && LOCATION_DATA[basicInfo.country]?.[address.state]?.map(c => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
                     </select>
                   )}
                 </div>
@@ -399,12 +423,11 @@ export function ProfilePage({ user, onUserUpdate }) {
                   {!isEditingAddress ? (
                     <span className="text-sm text-gray-700 capitalize">{address.state || "-"}</span>
                   ) : (
-                    <select className={inputClass} value={address.state} onChange={e => setAddress({...address, state: e.target.value})}>
+                    <select className={inputClass} value={address.state} onChange={e => setAddress({...address, state: e.target.value, city: ""})}>
                       <option value="">Select State</option>
-                      <option value="maharashtra">Maharashtra</option>
-                      <option value="karnataka">Karnataka</option>
-                      <option value="delhi">Delhi</option>
-                      <option value="telangana">Telangana</option>
+                      {basicInfo.country && LOCATION_DATA[basicInfo.country] && Object.keys(LOCATION_DATA[basicInfo.country]).map(s => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
                     </select>
                   )}
                 </div>

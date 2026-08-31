@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { api } from "../api/client";
+import { COUNTRY_CODES, LOCATION_DATA } from "../config/locationData";
 
 export function RegistrationFlow({ onAuthSuccess }) {
   const [step, setStep] = useState(0); // 0: Create, 1: Part 1, 2: Part 2, 3: Verify
@@ -373,11 +374,32 @@ export function RegistrationFlow({ onAuthSuccess }) {
                     <div><label className="form-label">Phone Number<span className="required">*</span></label><input className={`form-input ${error && !part1Form.phone ? 'border-red-500' : ''}`} placeholder="XXXXXXXXXX" required type="tel" value={part1Form.phone} onChange={e => setPart1Form({ ...part1Form, phone: e.target.value })} disabled={!resumeUploaded} /></div>
                     <div>
                       <label className="form-label">Country<span className="required">*</span></label>
-                      <select className={`form-input ${error && !part1Form.country ? 'border-red-500' : ''}`} required value={part1Form.country} onChange={e => setPart1Form({ ...part1Form, country: e.target.value })} disabled={!resumeUploaded}>
+                      <select className={`form-input ${error && !part1Form.country ? 'border-red-500' : ''}`} required value={part1Form.country} onChange={e => {
+                        const newCountry = e.target.value;
+                        const code = COUNTRY_CODES[newCountry] || "";
+                        let newPhone = part1Form.phone || "";
+                        // If phone already starts with a known country code, replace it. Otherwise, prepend.
+                        let foundCode = false;
+                        for (const c of Object.values(COUNTRY_CODES)) {
+                          if (newPhone.startsWith(c + " ")) {
+                            newPhone = newPhone.replace(c + " ", "");
+                            foundCode = true;
+                            break;
+                          } else if (newPhone.startsWith(c)) {
+                            newPhone = newPhone.replace(c, "");
+                            foundCode = true;
+                            break;
+                          }
+                        }
+                        setPart1Form({ ...part1Form, country: newCountry, phone: code + " " + newPhone.trim(), state: "", city: "" });
+                      }} disabled={!resumeUploaded}>
                         <option value="in">India</option>
                         <option value="us">United States</option>
                         <option value="uk">United Kingdom</option>
                         <option value="sg">Singapore</option>
+                        <option value="de">Germany</option>
+                        <option value="fr">France</option>
+                        <option value="it">Italy</option>
                       </select>
                     </div>
                   </div>
@@ -390,13 +412,19 @@ export function RegistrationFlow({ onAuthSuccess }) {
                     <div>
                       <label className="form-label">City<span className="required">*</span></label>
                       <select className={`form-input ${error && !part1Form.city ? 'border-red-500' : ''}`} required value={part1Form.city} onChange={e => setPart1Form({ ...part1Form, city: e.target.value })} disabled={!resumeUploaded}>
-                        <option value="">Select City</option><option value="mumbai">Mumbai</option><option value="bangalore">Bangalore</option><option value="delhi">Delhi</option><option value="hyderabad">Hyderabad</option>
+                        <option value="">Select City</option>
+                        {part1Form.country && part1Form.state && LOCATION_DATA[part1Form.country]?.[part1Form.state]?.map(c => (
+                          <option key={c} value={c}>{c}</option>
+                        ))}
                       </select>
                     </div>
                     <div>
                       <label className="form-label">State<span className="required">*</span></label>
-                      <select className={`form-input ${error && !part1Form.state ? 'border-red-500' : ''}`} required value={part1Form.state} onChange={e => setPart1Form({ ...part1Form, state: e.target.value })} disabled={!resumeUploaded}>
-                        <option value="">Select State</option><option value="maharashtra">Maharashtra</option><option value="karnataka">Karnataka</option><option value="delhi">Delhi</option><option value="telangana">Telangana</option>
+                      <select className={`form-input ${error && !part1Form.state ? 'border-red-500' : ''}`} required value={part1Form.state} onChange={e => setPart1Form({ ...part1Form, state: e.target.value, city: "" })} disabled={!resumeUploaded}>
+                        <option value="">Select State</option>
+                        {part1Form.country && LOCATION_DATA[part1Form.country] && Object.keys(LOCATION_DATA[part1Form.country]).map(s => (
+                          <option key={s} value={s}>{s}</option>
+                        ))}
                       </select>
                     </div>
                     <div><label className="form-label">Pincode<span className="required">*</span></label><input className={`form-input ${error && !part1Form.pincode ? 'border-red-500' : ''}`} placeholder="Enter Pincode" required type="text" value={part1Form.pincode} onChange={e => setPart1Form({ ...part1Form, pincode: e.target.value })} disabled={!resumeUploaded} /></div>
