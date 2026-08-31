@@ -113,6 +113,20 @@ export function ProfilePage({ user, onUserUpdate }) {
           setIsSaving(false);
           return;
         }
+
+        const birthDate = new Date(basicInfo.dob);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        if (age < 18) {
+          alert("You must be at least 18 years old.");
+          setIsSaving(false);
+          return;
+        }
+
         Object.assign(updates, {
           firstName: basicInfo.firstName,
           lastName: basicInfo.lastName,
@@ -371,7 +385,13 @@ export function ProfilePage({ user, onUserUpdate }) {
                   {!isEditingAddress ? (
                     <span className="text-sm text-gray-700">{address.city || "-"}</span>
                   ) : (
-                    <input className={inputClass} value={address.city} onChange={e => setAddress({...address, city: e.target.value})} />
+                    <select className={inputClass} value={address.city} onChange={e => setAddress({...address, city: e.target.value})}>
+                      <option value="">Select City</option>
+                      <option value="mumbai">Mumbai</option>
+                      <option value="bangalore">Bangalore</option>
+                      <option value="delhi">Delhi</option>
+                      <option value="hyderabad">Hyderabad</option>
+                    </select>
                   )}
                 </div>
                 <div>
@@ -379,7 +399,13 @@ export function ProfilePage({ user, onUserUpdate }) {
                   {!isEditingAddress ? (
                     <span className="text-sm text-gray-700">{address.state || "-"}</span>
                   ) : (
-                    <input className={inputClass} value={address.state} onChange={e => setAddress({...address, state: e.target.value})} />
+                    <select className={inputClass} value={address.state} onChange={e => setAddress({...address, state: e.target.value})}>
+                      <option value="">Select State</option>
+                      <option value="maharashtra">Maharashtra</option>
+                      <option value="karnataka">Karnataka</option>
+                      <option value="delhi">Delhi</option>
+                      <option value="telangana">Telangana</option>
+                    </select>
                   )}
                 </div>
               </div>
