@@ -24,6 +24,7 @@ export function RegistrationFlow({ onAuthSuccess }) {
   // Step 1: Part 1 Form
   const [resumeUploaded, setResumeUploaded] = useState(false);
   const [resumeText, setResumeText] = useState("");
+  const [resumeFileName, setResumeFileName] = useState("");
   const [part1Form, setPart1Form] = useState({
     firstName: "", lastName: "", dob: "", gender: "", email: "", phone: "+91 ", country: "in", residentialAddress: "", city: "", state: "", pincode: ""
   });
@@ -155,6 +156,7 @@ export function RegistrationFlow({ onAuthSuccess }) {
         setResumeText(data.resumeText);
       }
 
+      setResumeFileName(file.name);
       setResumeUploaded(true);
     } catch (err) {
       setError(err.message || "Failed to parse resume.");
@@ -216,7 +218,8 @@ export function RegistrationFlow({ onAuthSuccess }) {
         personalInfo: part1Form,
         education: educationData,
         experience: experienceData,
-        resumeText: resumeText
+        resumeText: resumeText,
+        resumeFileName: resumeFileName
       });
       setStep(3);
     } catch (err) {

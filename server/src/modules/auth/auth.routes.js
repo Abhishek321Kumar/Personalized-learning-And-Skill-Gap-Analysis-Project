@@ -69,7 +69,7 @@ router.post("/register/cancel/:userId", async (req, res, next) => {
 
 router.post("/register/part2", async (req, res, next) => {
   try {
-    const { userId, personalInfo, education, experience, internships, resumeText, declaredSkills } = req.body;
+    const { userId, personalInfo, education, experience, internships, resumeText, resumeFileName, declaredSkills } = req.body;
 
     const pendingUser = pendingRegistrations.get(userId);
     if (!pendingUser) {
@@ -98,6 +98,7 @@ router.post("/register/part2", async (req, res, next) => {
     pendingUser.education = education || pendingUser.education;
     pendingUser.internships = experience || internships || pendingUser.internships;
     pendingUser.resumeText = resumeText || pendingUser.resumeText;
+    pendingUser.resumeFileName = resumeFileName || pendingUser.resumeFileName || "";
     pendingUser.declaredSkills = declaredSkills || pendingUser.declaredSkills;
     pendingUser.otp = otp;
     pendingUser.otpExpires = new Date(Date.now() + 10 * 60000); // 10 mins
