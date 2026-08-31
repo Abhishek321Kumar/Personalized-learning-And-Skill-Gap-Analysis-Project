@@ -25,10 +25,15 @@ const educationSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const toTitleCase = (str) => {
+  if (!str) return str;
+  return str.split(' ').map(w => w ? w[0].toUpperCase() + w.substring(1).toLowerCase() : '').join(' ');
+};
+
 const userSchema = new mongoose.Schema(
   {
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
+    firstName: { type: String, required: true, set: toTitleCase },
+    lastName: { type: String, required: true, set: toTitleCase },
     email: { type: String, required: true, unique: true },
     passwordHash: { type: String, required: true },
     
