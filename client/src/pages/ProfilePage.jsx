@@ -276,13 +276,13 @@ export function ProfilePage({ user, onUserUpdate }) {
                   {basicInfo.firstName?.charAt(0) || "U"}
                 </div>
                 <div className="flex-1 space-y-3">
-                  <div className="flex gap-2 text-xl font-bold text-gray-900">
+                  <div className={`flex gap-2 text-gray-900 ${!isEditingBasic ? 'text-xl font-bold' : ''}`}>
                     {!isEditingBasic ? (
                       <span>{basicInfo.firstName} {basicInfo.lastName}</span>
                     ) : (
                       <>
-                        <input className="border border-blue-300 rounded px-2 py-1 w-1/2" value={basicInfo.firstName} onChange={e => setBasicInfo({...basicInfo, firstName: e.target.value})} placeholder="First Name"/>
-                        <input className="border border-blue-300 rounded px-2 py-1 w-1/2" value={basicInfo.lastName} onChange={e => setBasicInfo({...basicInfo, lastName: e.target.value})} placeholder="Last Name"/>
+                        <input className={inputClass} value={basicInfo.firstName} onChange={e => setBasicInfo({...basicInfo, firstName: e.target.value})} placeholder="First Name"/>
+                        <input className={inputClass} value={basicInfo.lastName} onChange={e => setBasicInfo({...basicInfo, lastName: e.target.value})} placeholder="Last Name"/>
                       </>
                     )}
                   </div>
@@ -383,7 +383,7 @@ export function ProfilePage({ user, onUserUpdate }) {
                 <div>
                   <span className={labelClass}>City</span>
                   {!isEditingAddress ? (
-                    <span className="text-sm text-gray-700">{address.city || "-"}</span>
+                    <span className="text-sm text-gray-700 capitalize">{address.city || "-"}</span>
                   ) : (
                     <select className={inputClass} value={address.city} onChange={e => setAddress({...address, city: e.target.value})}>
                       <option value="">Select City</option>
@@ -397,7 +397,7 @@ export function ProfilePage({ user, onUserUpdate }) {
                 <div>
                   <span className={labelClass}>State</span>
                   {!isEditingAddress ? (
-                    <span className="text-sm text-gray-700">{address.state || "-"}</span>
+                    <span className="text-sm text-gray-700 capitalize">{address.state || "-"}</span>
                   ) : (
                     <select className={inputClass} value={address.state} onChange={e => setAddress({...address, state: e.target.value})}>
                       <option value="">Select State</option>
