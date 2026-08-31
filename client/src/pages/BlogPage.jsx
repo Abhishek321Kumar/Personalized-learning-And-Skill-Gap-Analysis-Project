@@ -1,5 +1,19 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
 
 const BLOG_POSTS = [
   {
@@ -258,7 +272,8 @@ export function BlogPage({ user }) {
   // --- Components ---
 
   const ArticleCard = ({ post, layout = 'vertical' }) => (
-    <div 
+    <motion.div 
+      variants={fadeUp}
       onClick={() => openArticle(post)}
       className={`bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-xl transition-all duration-300 group flex cursor-pointer ${layout === 'horizontal' ? 'flex-col md:flex-row md:h-44 w-full' : 'flex-col hover:-translate-y-1'}`}
     >
@@ -321,15 +336,15 @@ export function BlogPage({ user }) {
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 
   return (
     <div className="bg-slate-50 min-h-screen pt-8 pb-20 w-full relative">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 space-y-12">
+      <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="max-w-7xl mx-auto px-6 md:px-12 space-y-12">
         
         {/* Header & AI Semantic Search */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <motion.div variants={fadeUp} className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-4">
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900">
               Skill<span className="text-[#0052FF]">Bridge</span> Blogs
@@ -362,10 +377,10 @@ export function BlogPage({ user }) {
               </button>
             )}
           </div>
-        </div>
+        </motion.div>
 
         {/* Categories Filter */}
-        <div className="flex flex-wrap gap-2">
+        <motion.div variants={fadeUp} className="flex flex-wrap gap-2">
           {CATEGORIES.map(category => (
             <button
               key={category}
@@ -379,7 +394,7 @@ export function BlogPage({ user }) {
               {category}
             </button>
           ))}
-        </div>
+        </motion.div>
 
         {/* Personalized & Trending Carousels (Only show when no search/filter) */}
         {searchQuery === "" && selectedCategory === "All" && (
@@ -416,20 +431,20 @@ export function BlogPage({ user }) {
         )}
 
         {/* Regular Posts Grid Header */}
-        <div className="flex items-center justify-between border-b border-slate-200 pb-2 pt-4">
+        <motion.div variants={fadeUp} className="flex items-center justify-between border-b border-slate-200 pb-2 pt-4">
           <h2 className="text-xl font-bold text-slate-900">
             {searchQuery ? 'Search Results' : (selectedCategory !== 'All' ? `${selectedCategory} Articles` : 'All Articles')}
           </h2>
           <span className="text-sm font-medium text-slate-500">{displayPosts.length} Results</span>
-        </div>
+        </motion.div>
 
         {/* Regular Posts Grid */}
         {displayPosts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {displayPosts.map(post => (
               <ArticleCard key={post.id} post={post} layout="vertical" />
             ))}
-          </div>
+          </motion.div>
         ) : (
           <div className="text-center py-24 bg-white rounded-3xl border border-slate-100 shadow-sm">
             <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -445,7 +460,7 @@ export function BlogPage({ user }) {
             </button>
           </div>
         )}
-      </div>
+      </motion.div>
 
       {/* --- Full Page Article Overlay with AI Tools --- */}
       {activeArticle && (
