@@ -3,12 +3,11 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { User } from "../../models/User.js";
+import { PendingUser } from "../../models/PendingUser.js";
 import { env } from "../../config/env.js";
 import { emailService } from "../../services/email.service.js";
 
 const router = Router();
-
-const pendingRegistrations = new Map();
 
 router.post("/register/part1", async (req, res, next) => {
   try {
@@ -29,6 +28,11 @@ router.post("/register/part1", async (req, res, next) => {
         await User.findByIdAndDelete(existingUser._id);
       }
     }
+    
+    const existingPending = await PendingUser.findOne({ email: email.toLowerCase() });
+    if (existingPending) {
+      await PendingUser.findByIdAndDelete(existingPending._id);
+    }
 
     const passwordHash = await bcrypt.hash(password, 10);
     
@@ -36,9 +40,7 @@ router.post("/register/part1", async (req, res, next) => {
     const firstName = nameParts[0] || "Unknown";
     const lastName = nameParts.slice(1).join(" ") || "Unknown";
 
-    const pendingId = new mongoose.Types.ObjectId().toString();
-
-    pendingRegistrations.set(pendingId, {
+    const pendingUser = await PendingUser.create({
       firstName,
       lastName,
       email: email.toLowerCase(),
@@ -49,7 +51,7 @@ router.post("/register/part1", async (req, res, next) => {
 
     res.status(201).json({
       message: "Part 1 successful",
-      userId: pendingId
+      userId: pendingUser._id
     });
   } catch (error) {
     next(error);
@@ -58,9 +60,7 @@ router.post("/register/part1", async (req, res, next) => {
 
 router.post("/register/cancel/:userId", async (req, res, next) => {
   try {
-    if (pendingRegistrations.has(req.params.userId)) {
-      pendingRegistrations.delete(req.params.userId);
-    }
+    await PendingUser.findByIdAndDelete(req.params.userId);
     res.status(200).json({ message: "Registration cancelled" });
   } catch (error) {
     next(error);
@@ -71,7 +71,7 @@ router.post("/register/part2", async (req, res, next) => {
   try {
     const { userId, personalInfo, education, experience, internships, resumeText, resumeFileName, declaredSkills } = req.body;
 
-    const pendingUser = pendingRegistrations.get(userId);
+    const pendingUser = await PendingUser.findById(userId);
     if (!pendingUser) {
       return res.status(404).json({ message: "User not found or registration session expired." });
     }
@@ -103,6 +103,8 @@ router.post("/register/part2", async (req, res, next) => {
     pendingUser.otp = otp;
     pendingUser.otpExpires = new Date(Date.now() + 10 * 60000); // 10 mins
 
+    await pendingUser.save();
+
     let previewUrl = null;
     try {
       previewUrl = await emailService.sendOTP(pendingUser.email, otp);
@@ -124,7 +126,7 @@ router.post("/register/verify", async (req, res, next) => {
   try {
     const { userId, otp } = req.body;
 
-    const pendingUser = pendingRegistrations.get(userId);
+    const pendingUser = await PendingUser.findById(userId);
     if (!pendingUser) {
       return res.status(404).json({ message: "User not found or registration session expired." });
     }
@@ -133,14 +135,27 @@ router.post("/register/verify", async (req, res, next) => {
       return res.status(400).json({ message: "Invalid or expired OTP." });
     }
 
-    pendingUser.isVerified = true;
-    pendingUser.otp = "";
-    
     // Save to MongoDB only now
-    const user = await User.create(pendingUser);
+    const user = await User.create({
+      firstName: pendingUser.firstName,
+      lastName: pendingUser.lastName,
+      email: pendingUser.email,
+      passwordHash: pendingUser.passwordHash,
+      targetRole: pendingUser.targetRole,
+      dob: pendingUser.dob,
+      gender: pendingUser.gender,
+      phone: pendingUser.phone,
+      address: pendingUser.address,
+      education: pendingUser.education,
+      internships: pendingUser.internships,
+      resumeText: pendingUser.resumeText,
+      resumeFileName: pendingUser.resumeFileName,
+      declaredSkills: pendingUser.declaredSkills,
+      isVerified: true
+    });
     
-    // Remove from pending map
-    pendingRegistrations.delete(userId);
+    // Remove from pending collection
+    await PendingUser.findByIdAndDelete(userId);
 
     const token = jwt.sign({ userId: user._id }, env.jwtSecret, { expiresIn: "7d" });
 
