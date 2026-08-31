@@ -908,7 +908,7 @@ export function SkillGapFlow() {
                 </div>
                 <h3 className="text-2xl font-black text-gray-900 mb-3">No Reports Available Yet</h3>
                 <p className="text-gray-500 mb-8 max-w-md text-base font-medium leading-relaxed">You haven't completed any Technical Readiness Assessments. Take a quiz to generate your personalized skill gap analysis.</p>
-                <a href="/assessments/setup" className="bg-blue-600 text-white px-8 py-3.5 rounded-xl font-bold hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg">
+                <a href="/assessments/setup" className="bg-blue-600 text-white !text-white px-8 py-3.5 rounded-xl font-bold hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg">
                   Start an Assessment
                 </a>
               </motion.div>
