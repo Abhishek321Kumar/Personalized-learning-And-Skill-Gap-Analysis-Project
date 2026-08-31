@@ -31,6 +31,11 @@ const sortEducation = (eduArray) => {
   });
 };
 
+const toTitleCase = (str) => {
+  if (!str) return str;
+  return str.split(' ').map(w => w ? w[0].toUpperCase() + w.substring(1).toLowerCase() : '').join(' ');
+};
+
 export function ProfilePage({ user, onUserUpdate }) {
   const navigate = useNavigate();
 
@@ -289,8 +294,8 @@ export function ProfilePage({ user, onUserUpdate }) {
                       <span>{basicInfo.firstName} {basicInfo.lastName}</span>
                     ) : (
                       <>
-                        <input className={inputClass} value={basicInfo.firstName} onChange={e => setBasicInfo({...basicInfo, firstName: e.target.value})} placeholder="First Name"/>
-                        <input className={inputClass} value={basicInfo.lastName} onChange={e => setBasicInfo({...basicInfo, lastName: e.target.value})} placeholder="Last Name"/>
+                        <input className={inputClass} value={basicInfo.firstName} onChange={e => setBasicInfo({...basicInfo, firstName: toTitleCase(e.target.value)})} placeholder="First Name"/>
+                        <input className={inputClass} value={basicInfo.lastName} onChange={e => setBasicInfo({...basicInfo, lastName: toTitleCase(e.target.value)})} placeholder="Last Name"/>
                       </>
                     )}
                   </div>

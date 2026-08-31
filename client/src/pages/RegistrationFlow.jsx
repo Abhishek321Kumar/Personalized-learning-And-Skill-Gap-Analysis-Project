@@ -4,6 +4,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { api } from "../api/client";
 import { COUNTRY_CODES, LOCATION_DATA } from "../config/locationData";
 
+const toTitleCase = (str) => {
+  if (!str) return str;
+  return str.split(' ').map(w => w ? w[0].toUpperCase() + w.substring(1).toLowerCase() : '').join(' ');
+};
+
 export function RegistrationFlow({ onAuthSuccess }) {
   const [step, setStep] = useState(0); // 0: Create, 1: Part 1, 2: Part 2, 3: Verify
   const [loading, setLoading] = useState(false);
@@ -364,8 +369,8 @@ export function RegistrationFlow({ onAuthSuccess }) {
                 <div className={`mb-10 transition-opacity ${!resumeUploaded ? 'opacity-40 pointer-events-none' : 'opacity-100'}`}>
                   <h3 className="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2 mb-6">Personal Details</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-6">
-                    <div><label className="form-label">First Name<span className="required">*</span></label><input className={`form-input ${error && !part1Form.firstName ? 'border-red-500' : ''}`} placeholder="e.g. Aarav" required type="text" value={part1Form.firstName} onChange={e => setPart1Form({ ...part1Form, firstName: e.target.value })} disabled={!resumeUploaded} /></div>
-                    <div><label className="form-label">Last Name<span className="required">*</span></label><input className={`form-input ${error && !part1Form.lastName ? 'border-red-500' : ''}`} placeholder="e.g. Sharma" required type="text" value={part1Form.lastName} onChange={e => setPart1Form({ ...part1Form, lastName: e.target.value })} disabled={!resumeUploaded} /></div>
+                    <div><label className="form-label">First Name<span className="required">*</span></label><input className={`form-input ${error && !part1Form.firstName ? 'border-red-500' : ''}`} placeholder="e.g. Aarav" required type="text" value={part1Form.firstName} onChange={e => setPart1Form({ ...part1Form, firstName: toTitleCase(e.target.value) })} disabled={!resumeUploaded} /></div>
+                    <div><label className="form-label">Last Name<span className="required">*</span></label><input className={`form-input ${error && !part1Form.lastName ? 'border-red-500' : ''}`} placeholder="e.g. Sharma" required type="text" value={part1Form.lastName} onChange={e => setPart1Form({ ...part1Form, lastName: toTitleCase(e.target.value) })} disabled={!resumeUploaded} /></div>
                     <div>
                       <label className="form-label">Gender<span className="required">*</span></label>
                       <select className={`form-input ${error && !part1Form.gender ? 'border-red-500' : ''}`} required value={part1Form.gender} onChange={e => setPart1Form({ ...part1Form, gender: e.target.value })} disabled={!resumeUploaded}>
