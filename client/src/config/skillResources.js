@@ -385,7 +385,7 @@ export const SKILL_RESOURCES = [
     {
       "platform": "Coursera",
       "title": "Building Microservices",
-      "url": "https://www.coursera.org/learn/microservices-architecture"
+      "url": "https://aws.amazon.com/microservices/"
     }
   ]
 },
