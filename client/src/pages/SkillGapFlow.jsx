@@ -334,11 +334,16 @@ function ReportDetails({ report, user, onBack }) {
                   // Find static resource, or mock a default if not found (so it never looks empty)
                   let staticResource = SKILL_RESOURCES.find(r => r.skill === skill.name);
                   if (!staticResource) {
+                    const titles1 = ["Fundamentals", "Masterclass", "Crash Course", "for Beginners", "Essentials"];
+                    const titles2 = ["Advanced Concepts", "Bootcamp", "in Practice", "Deep Dive", "Zero to Hero"];
+                    const idx1 = skill.name.length % titles1.length;
+                    const idx2 = (skill.name.length + 3) % titles2.length;
+                    
                     staticResource = {
                       coreConcepts: ["Foundational principles", "Industry best practices", "Advanced application"],
                       courses: [
-                        { platform: "Coursera", title: `${skill.name} Masterclass`, url: `https://www.coursera.org/search?query=${encodeURIComponent(skill.name)}` },
-                        { platform: "Udemy", title: `Complete ${skill.name} Bootcamp`, url: `https://www.udemy.com/courses/search/?src=ukw&q=${encodeURIComponent(skill.name)}` }
+                        { platform: "Coursera", title: `${skill.name} ${titles1[idx1]}`, url: `https://www.coursera.org/search?query=${encodeURIComponent(skill.name)}` },
+                        { platform: "Udemy", title: `Complete ${skill.name} ${titles2[idx2]}`, url: `https://www.udemy.com/courses/search/?src=ukw&q=${encodeURIComponent(skill.name)}` }
                       ]
                     };
                   }
