@@ -1,15 +1,29 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import abhishekImg from "../images/img_26.png";
 import salmanImg from "../images/salman.jpeg";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
 
 export function AboutPage() {
   const [activeTab, setActiveTab] = useState("mission");
 
   return (
-    <div className="flex flex-col min-h-screen bg-white font-sans">
+    <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="flex flex-col min-h-screen bg-white font-sans">
       {/* Hero Section */}
-      <section 
+      <motion.section variants={fadeUp}
         className="text-white pt-24 pb-32 px-8 rounded-b-[3rem] text-center relative overflow-hidden bg-cover bg-center"
         style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop")' }}
       >
@@ -22,10 +36,10 @@ export function AboutPage() {
           </p>
 
         </div>
-      </section>
+      </motion.section>
 
       {/* Mission/Vision Section */}
-      <section className="py-24 px-8 md:px-12 lg:px-24 max-w-7xl mx-auto w-full">
+      <motion.section variants={fadeUp} className="py-24 px-8 md:px-12 lg:px-24 max-w-7xl mx-auto w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="space-y-8">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
@@ -90,10 +104,10 @@ export function AboutPage() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Application Working Section */}
-      <section className="py-20 px-8 md:px-12 lg:px-24 bg-slate-50 text-center">
+      <motion.section variants={fadeUp} className="py-20 px-8 md:px-12 lg:px-24 bg-slate-50 text-center">
         <div className="max-w-3xl mx-auto mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Take A Vital Look At Our <br /> Application working
@@ -109,10 +123,10 @@ export function AboutPage() {
              </div>
            </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Stats Section */}
-      <section className="py-16 px-8 max-w-7xl mx-auto w-full">
+      <motion.section variants={fadeUp} className="py-16 px-8 max-w-7xl mx-auto w-full">
          <div className="flex flex-wrap justify-center gap-12 md:gap-24 text-center">
            <div>
              <div className="text-4xl font-bold text-gray-900 mb-2">10+</div>
@@ -131,10 +145,10 @@ export function AboutPage() {
              <div className="text-sm text-gray-500 uppercase tracking-wider font-semibold">Trusted Partners</div>
            </div>
          </div>
-      </section>
+      </motion.section>
 
       {/* Developers Section */}
-      <section className="py-24 px-8 bg-[#f8faff]">
+      <motion.section variants={fadeUp} className="py-24 px-8 bg-[#f8faff]">
         <div className="max-w-7xl mx-auto text-center mb-16">
           <div className="text-[#0052FF] text-sm font-bold uppercase tracking-widest mb-4">Developers</div>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Meet the Developers</h2>
@@ -170,10 +184,10 @@ export function AboutPage() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Features List Section */}
-      <section className="py-24 px-8 max-w-7xl mx-auto w-full">
+      <motion.section variants={fadeUp} className="py-24 px-8 max-w-7xl mx-auto w-full">
          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             <div className="space-y-12">
                <div className="flex gap-6">
@@ -227,8 +241,8 @@ export function AboutPage() {
                </div>
             </div>
          </div>
-      </section>
+      </motion.section>
 
-    </div>
+    </motion.div>
   );
 }
