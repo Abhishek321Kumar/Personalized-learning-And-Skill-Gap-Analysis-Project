@@ -224,14 +224,19 @@ export function DashboardPage({ user }) {
     const lowestComp = competencies.length > 0 ? [...competencies].sort((a, b) => a.score - b.score)[0] : null;
     const verdict = lowestComp ? `Focus on your ${lowestComp.name} skills to improve.` : '';
 
+    let backendMissing = latestAnalysis.missingSkills?.length > 0 ? latestAnalysis.missingSkills : (latestAnalysis.improvementPriorities || []);
+    if (backendMissing.length === 0 && finalSkills.length > 0) {
+      backendMissing = finalSkills.filter(s => s.score < 80).map(s => s.name);
+    }
+
     setData({
       jobReadiness: jobReadiness,
       matchedSkills: latestAnalysis.matchedSkills?.length || 0,
-      missingSkills: latestAnalysis.missingSkills?.length || 0,
+      missingSkills: backendMissing.length,
       quizzesTaken: filteredAttempts.length,
       avgScore: avgScore,
       resumeScore: latestAnalysis.resumeScore ?? null,
-      topMissing: latestAnalysis.missingSkills?.slice(0, 3) || [],
+      topMissing: backendMissing.slice(0, 3),
       skills: finalSkills,
       competencies: competencies,
       percentile: percentile,
