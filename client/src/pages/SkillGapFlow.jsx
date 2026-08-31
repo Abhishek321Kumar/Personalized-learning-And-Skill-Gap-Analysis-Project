@@ -776,8 +776,8 @@ export function SkillGapFlow() {
                     return { ...skill, effortTag: tag };
                 });
             } else if (latestAnalysis && latestAnalysis.matchPercentage >= 0) {
-                // If it ran but has no missing skills, they did perfectly
-                dynamicMissingSkills = [];
+                // If it ran but has no missing skills, fallback to template's missing skills so the roadmap is never completely blank unless they scored 100% on everything
+                dynamicMissingSkills = template.missingSkills ? [...template.missingSkills] : [];
             }
 
             let dynamicVerifiedSkills = template.verifiedSkills;
