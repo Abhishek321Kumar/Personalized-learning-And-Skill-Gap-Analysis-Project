@@ -253,6 +253,446 @@ export const SKILL_RESOURCES = [
       { platform: "Memorisely", title: "Design Systems Bootcamp", url: "https://www.interaction-design.org/courses/design-systems" }
     ]
   }
+,
+{
+  "skill": "Data Visualization (Tableau/PowerBI)",
+  "applicableRoles": [
+    "Senior Data Analyst"
+  ],
+  "coreConcepts": [
+    "Dashboard Design",
+    "DAX & Calculated Fields",
+    "Data Storytelling",
+    "Interactive Filtering"
+  ],
+  "courses": [
+    {
+      "platform": "Coursera",
+      "title": "Data Visualization with Tableau",
+      "url": "https://www.coursera.org/specializations/data-visualization"
+    }
+  ]
+},
+{
+  "skill": "Python (Data Science Stack)",
+  "applicableRoles": [
+    "Data Scientist",
+    "Senior Data Analyst"
+  ],
+  "coreConcepts": [
+    "Pandas & Data Wrangling",
+    "NumPy & Vectorization",
+    "Scikit-Learn Fundamentals",
+    "Matplotlib & Seaborn"
+  ],
+  "courses": [
+    {
+      "platform": "Coursera",
+      "title": "Applied Data Science with Python",
+      "url": "https://www.coursera.org/specializations/data-science-python"
+    }
+  ]
+},
+{
+  "skill": "Web Performance Optimization",
+  "applicableRoles": [
+    "Front-end Developer"
+  ],
+  "coreConcepts": [
+    "Core Web Vitals",
+    "Code Splitting & Lazy Loading",
+    "Image Optimization",
+    "Caching Strategies"
+  ],
+  "courses": [
+    {
+      "platform": "Udacity",
+      "title": "Website Performance Optimization",
+      "url": "https://www.udacity.com/course/website-performance-optimization--ud884"
+    }
+  ]
+},
+{
+  "skill": "React & Next.js Architecture",
+  "applicableRoles": [
+    "Front-end Developer"
+  ],
+  "coreConcepts": [
+    "Server Components",
+    "Routing & Layouts",
+    "Data Fetching Patterns",
+    "Static Site Generation"
+  ],
+  "courses": [
+    {
+      "platform": "Next.js Learn",
+      "title": "Next.js Official Course",
+      "url": "https://nextjs.org/learn"
+    }
+  ]
+},
+{
+  "skill": "UI Component Styling",
+  "applicableRoles": [
+    "Front-end Developer",
+    "Full-stack Engineer"
+  ],
+  "coreConcepts": [
+    "Tailwind CSS Utility Classes",
+    "CSS Modules",
+    "Responsive Design",
+    "CSS-in-JS"
+  ],
+  "courses": [
+    {
+      "platform": "Frontend Masters",
+      "title": "CSS In-Depth",
+      "url": "https://frontendmasters.com/courses/css-in-depth-v2/"
+    }
+  ]
+},
+{
+  "skill": "Accessibility (a11y)",
+  "applicableRoles": [
+    "Front-end Developer"
+  ],
+  "coreConcepts": [
+    "WCAG Guidelines",
+    "ARIA Roles",
+    "Keyboard Navigation",
+    "Screen Reader Testing"
+  ],
+  "courses": [
+    {
+      "platform": "Udacity",
+      "title": "Web Accessibility",
+      "url": "https://www.udacity.com/course/web-accessibility--ud891"
+    }
+  ]
+},
+{
+  "skill": "Microservices",
+  "applicableRoles": [
+    "Full-stack Engineer"
+  ],
+  "coreConcepts": [
+    "Service Discovery",
+    "API Gateways",
+    "Inter-service Communication",
+    "Distributed Tracing"
+  ],
+  "courses": [
+    {
+      "platform": "Coursera",
+      "title": "Building Microservices",
+      "url": "https://www.coursera.org/learn/microservices-architecture"
+    }
+  ]
+},
+{
+  "skill": "CI/CD Pipelines",
+  "applicableRoles": [
+    "Full-stack Engineer"
+  ],
+  "coreConcepts": [
+    "GitHub Actions",
+    "Docker & Containerization",
+    "Automated Testing in Pipeline",
+    "Deployment Strategies"
+  ],
+  "courses": [
+    {
+      "platform": "Udemy",
+      "title": "DevOps Bootcamp",
+      "url": "https://www.udemy.com/course/decodingdevops/"
+    }
+  ]
+},
+{
+  "skill": "REST API Integration",
+  "applicableRoles": [
+    "Full-stack Engineer"
+  ],
+  "coreConcepts": [
+    "HTTP Methods & Status Codes",
+    "Authentication (JWT/OAuth)",
+    "Pagination & Filtering",
+    "Error Handling"
+  ],
+  "courses": [
+    {
+      "platform": "Codecademy",
+      "title": "Learn REST APIs",
+      "url": "https://www.codecademy.com/learn/learn-rest-apis"
+    }
+  ]
+},
+{
+  "skill": "Product Vision & Strategy",
+  "applicableRoles": [
+    "Product Manager"
+  ],
+  "coreConcepts": [
+    "OKRs & Goal Setting",
+    "Competitive Analysis",
+    "Product Roadmapping",
+    "Value Proposition Design"
+  ],
+  "courses": [
+    {
+      "platform": "Reforge",
+      "title": "Product Strategy",
+      "url": "https://www.reforge.com/courses/product-strategy"
+    }
+  ]
+},
+{
+  "skill": "Market Research",
+  "applicableRoles": [
+    "Product Manager"
+  ],
+  "coreConcepts": [
+    "Customer Interviews",
+    "Survey Design",
+    "TAM/SAM/SOM Analysis",
+    "Trend Forecasting"
+  ],
+  "courses": [
+    {
+      "platform": "Coursera",
+      "title": "Market Research Specialization",
+      "url": "https://www.coursera.org/specializations/market-research"
+    }
+  ]
+},
+{
+  "skill": "User Story Mapping",
+  "applicableRoles": [
+    "Product Manager"
+  ],
+  "coreConcepts": [
+    "Epic Breakdown",
+    "Acceptance Criteria",
+    "Agile Estimation",
+    "Backlog Grooming"
+  ],
+  "courses": [
+    {
+      "platform": "Udemy",
+      "title": "Agile Crash Course",
+      "url": "https://www.udemy.com/course/agile-crash-course/"
+    }
+  ]
+},
+{
+  "skill": "User Research Methods",
+  "applicableRoles": [
+    "UI/UX Designer"
+  ],
+  "coreConcepts": [
+    "Usability Testing",
+    "Contextual Inquiry",
+    "Affinity Mapping",
+    "Persona Development"
+  ],
+  "courses": [
+    {
+      "platform": "Interaction Design Foundation",
+      "title": "User Research",
+      "url": "https://www.interaction-design.org/courses/user-research-methods-and-best-practices"
+    }
+  ]
+},
+{
+  "skill": "Information Architecture",
+  "applicableRoles": [
+    "UI/UX Designer"
+  ],
+  "coreConcepts": [
+    "Card Sorting",
+    "Tree Testing",
+    "Site Mapping",
+    "Navigation Patterns"
+  ],
+  "courses": [
+    {
+      "platform": "Coursera",
+      "title": "Information Architecture",
+      "url": "https://www.coursera.org/learn/information-architecture"
+    }
+  ]
+},
+{
+  "skill": "Prototyping & Wireframing",
+  "applicableRoles": [
+    "UI/UX Designer"
+  ],
+  "coreConcepts": [
+    "Low-fi vs High-fi",
+    "User Flows",
+    "Rapid Prototyping",
+    "Feedback Iteration"
+  ],
+  "courses": [
+    {
+      "platform": "Coursera",
+      "title": "Wireframes and Prototypes",
+      "url": "https://www.coursera.org/learn/wireframes-low-fidelity-prototypes"
+    }
+  ]
+},
+{
+  "skill": "Figma Fundamentals",
+  "applicableRoles": [
+    "UI/UX Designer"
+  ],
+  "coreConcepts": [
+    "Auto Layout",
+    "Components & Variants",
+    "Prototyping Tools",
+    "Plugins & Exporting"
+  ],
+  "courses": [
+    {
+      "platform": "Figma Academy",
+      "title": "Learn Figma",
+      "url": "https://www.figma.com/resources/learn-design/"
+    }
+  ]
+},
+{
+  "skill": "Content Strategy & Branding",
+  "applicableRoles": [
+    "Marketing Manager"
+  ],
+  "coreConcepts": [
+    "Brand Voice & Tone",
+    "Content Calendars",
+    "Storytelling",
+    "Omnichannel Distribution"
+  ],
+  "courses": [
+    {
+      "platform": "HubSpot",
+      "title": "Content Marketing Certification",
+      "url": "https://academy.hubspot.com/courses/content-marketing"
+    }
+  ]
+},
+{
+  "skill": "Budget Tracking",
+  "applicableRoles": [
+    "Marketing Manager"
+  ],
+  "coreConcepts": [
+    "Spend Allocation",
+    "ROI Forecasting",
+    "P&L Management",
+    "Variance Analysis"
+  ],
+  "courses": [
+    {
+      "platform": "LinkedIn Learning",
+      "title": "Marketing Budgeting",
+      "url": "https://www.linkedin.com/learning/marketing-budgeting"
+    }
+  ]
+},
+{
+  "skill": "Social Media Metrics",
+  "applicableRoles": [
+    "Marketing Manager"
+  ],
+  "coreConcepts": [
+    "Engagement Rates",
+    "Conversion Tracking",
+    "Audience Insights",
+    "Social Listening"
+  ],
+  "courses": [
+    {
+      "platform": "Meta Blueprint",
+      "title": "Social Media Marketing",
+      "url": "https://www.facebook.com/business/learn"
+    }
+  ]
+},
+{
+  "skill": "Advanced Statistical Modeling",
+  "applicableRoles": [
+    "Data Scientist"
+  ],
+  "coreConcepts": [
+    "Bayesian Statistics",
+    "GLMs",
+    "Markov Chains",
+    "Monte Carlo Simulations"
+  ],
+  "courses": [
+    {
+      "platform": "Coursera",
+      "title": "Advanced Statistics",
+      "url": "https://www.coursera.org/learn/advanced-statistics-data-science"
+    }
+  ]
+},
+{
+  "skill": "SQL & Data Wrangling",
+  "applicableRoles": [
+    "Data Scientist"
+  ],
+  "coreConcepts": [
+    "Complex ETL Pipelines",
+    "Data Cleaning Strategies",
+    "Window Functions",
+    "Regex in SQL"
+  ],
+  "courses": [
+    {
+      "platform": "Udacity",
+      "title": "Data Wrangling with MongoDB",
+      "url": "https://www.udacity.com/course/data-wrangling-with-mongodb--ud032"
+    }
+  ]
+},
+{
+  "skill": "Cross-functional Collaboration",
+  "applicableRoles": [
+    "Data Scientist"
+  ],
+  "coreConcepts": [
+    "Translating Tech to Business",
+    "Stakeholder Alignment",
+    "Agile Workflows",
+    "Effective Presentations"
+  ],
+  "courses": [
+    {
+      "platform": "LinkedIn Learning",
+      "title": "Cross-Functional Teams",
+      "url": "https://www.linkedin.com/learning/working-on-a-cross-functional-team-2"
+    }
+  ]
+},
+{
+  "skill": "General Skill Review",
+  "applicableRoles": [
+    "All"
+  ],
+  "coreConcepts": [
+    "Industry Standards",
+    "Practical Application",
+    "Theory vs Practice",
+    "Continuous Learning"
+  ],
+  "courses": [
+    {
+      "platform": "Coursera",
+      "title": "Learning How to Learn",
+      "url": "https://www.coursera.org/learn/learning-how-to-learn"
+    }
+  ]
+}
 ];
 
 export const ROLE_INTERVIEW_GUIDES = [
