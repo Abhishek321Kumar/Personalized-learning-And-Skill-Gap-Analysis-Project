@@ -303,7 +303,7 @@ export function DashboardPage({ user }) {
               {firstName.charAt(0)}
             </div>
             <div>
-              <h1 className="text-4xl md:text-5xl font-semibold tracking-tight">Hi, {firstName}</h1>
+              <h1 className="text-4xl md:text-5xl font-semibold tracking-tight capitalize">Hi, {firstName}</h1>
               {targetRole && (
                 <div className="flex flex-wrap items-center text-lg md:text-xl text-gray-500 font-normal mt-1 gap-2">
                   targeting 

@@ -291,7 +291,7 @@ export function ProfilePage({ user, onUserUpdate }) {
                 <div className="flex-1 space-y-3">
                   <div className={`flex gap-2 text-gray-900 ${!isEditingBasic ? 'text-xl font-bold' : ''}`}>
                     {!isEditingBasic ? (
-                      <span>{basicInfo.firstName} {basicInfo.lastName}</span>
+                      <span className="capitalize">{basicInfo.firstName} {basicInfo.lastName}</span>
                     ) : (
                       <>
                         <input className={inputClass} value={basicInfo.firstName} onChange={e => setBasicInfo({...basicInfo, firstName: toTitleCase(e.target.value)})} placeholder="First Name"/>
