@@ -20,7 +20,7 @@ export function RegistrationFlow({ onAuthSuccess }) {
   const [resumeUploaded, setResumeUploaded] = useState(false);
   const [resumeText, setResumeText] = useState("");
   const [part1Form, setPart1Form] = useState({
-    firstName: "", lastName: "", dob: "", gender: "", email: "", phone: "", country: "in", residentialAddress: "", city: "", state: "", pincode: ""
+    firstName: "", lastName: "", dob: "", gender: "", email: "", phone: "+91 ", country: "in", residentialAddress: "", city: "", state: "", pincode: ""
   });
 
   // Step 2: Part 2 Form
@@ -371,7 +371,6 @@ export function RegistrationFlow({ onAuthSuccess }) {
                     </div>
                     <div><label className="form-label">Date of Birth<span className="required">*</span></label><input className={`form-input ${error && !part1Form.dob ? 'border-red-500' : ''}`} required type="date" value={part1Form.dob} onChange={e => setPart1Form({ ...part1Form, dob: e.target.value })} disabled={!resumeUploaded} /></div>
                     <div><label className="form-label">Email Address<span className="required">*</span></label><input className={`form-input ${error && !part1Form.email ? 'border-red-500' : ''}`} placeholder="aarav.s@skillbridge.edu" required type="email" value={part1Form.email} onChange={e => setPart1Form({ ...part1Form, email: e.target.value })} disabled={!resumeUploaded} /></div>
-                    <div><label className="form-label">Phone Number<span className="required">*</span></label><input className={`form-input ${error && !part1Form.phone ? 'border-red-500' : ''}`} placeholder="XXXXXXXXXX" required type="tel" value={part1Form.phone} onChange={e => setPart1Form({ ...part1Form, phone: e.target.value })} disabled={!resumeUploaded} /></div>
                     <div>
                       <label className="form-label">Country<span className="required">*</span></label>
                       <select className={`form-input ${error && !part1Form.country ? 'border-red-500' : ''}`} required value={part1Form.country} onChange={e => {
@@ -402,6 +401,7 @@ export function RegistrationFlow({ onAuthSuccess }) {
                         <option value="it">Italy</option>
                       </select>
                     </div>
+                    <div><label className="form-label">Phone Number<span className="required">*</span></label><input className={`form-input ${error && !part1Form.phone ? 'border-red-500' : ''}`} placeholder="+91 XXXXXXXXXX" required type="tel" value={part1Form.phone} onChange={e => setPart1Form({ ...part1Form, phone: e.target.value })} disabled={!resumeUploaded} /></div>
                   </div>
                 </div>
 
