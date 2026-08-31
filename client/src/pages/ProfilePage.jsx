@@ -406,19 +406,6 @@ export function ProfilePage({ user, onUserUpdate }) {
               </div>
               <div className="grid grid-cols-2 gap-8">
                 <div>
-                  <span className={labelClass}>City</span>
-                  {!isEditingAddress ? (
-                    <span className="text-sm text-gray-700 capitalize">{address.city || "-"}</span>
-                  ) : (
-                    <select className={inputClass} value={address.city} onChange={e => setAddress({...address, city: e.target.value})}>
-                      <option value="">Select City</option>
-                      {basicInfo.country && address.state && LOCATION_DATA[basicInfo.country]?.[address.state]?.map(c => (
-                        <option key={c} value={c}>{c}</option>
-                      ))}
-                    </select>
-                  )}
-                </div>
-                <div>
                   <span className={labelClass}>State</span>
                   {!isEditingAddress ? (
                     <span className="text-sm text-gray-700 capitalize">{address.state || "-"}</span>
@@ -427,6 +414,19 @@ export function ProfilePage({ user, onUserUpdate }) {
                       <option value="">Select State</option>
                       {basicInfo.country && LOCATION_DATA[basicInfo.country] && Object.keys(LOCATION_DATA[basicInfo.country]).map(s => (
                         <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
+                  )}
+                </div>
+                <div>
+                  <span className={labelClass}>City</span>
+                  {!isEditingAddress ? (
+                    <span className="text-sm text-gray-700 capitalize">{address.city || "-"}</span>
+                  ) : (
+                    <select className={inputClass} value={address.city} onChange={e => setAddress({...address, city: e.target.value})}>
+                      <option value="">Select City</option>
+                      {basicInfo.country && address.state && LOCATION_DATA[basicInfo.country]?.[address.state]?.map(c => (
+                        <option key={c} value={c}>{c}</option>
                       ))}
                     </select>
                   )}

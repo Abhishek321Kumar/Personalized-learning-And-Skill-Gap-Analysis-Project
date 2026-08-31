@@ -410,20 +410,20 @@ export function RegistrationFlow({ onAuthSuccess }) {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-6">
                     <div className="md:col-span-3"><label className="form-label">Residential Address<span className="required">*</span></label><input className={`form-input ${error && !part1Form.residentialAddress ? 'border-red-500' : ''}`} placeholder="House no, Building, Street name" required type="text" value={part1Form.residentialAddress} onChange={e => setPart1Form({ ...part1Form, residentialAddress: e.target.value })} disabled={!resumeUploaded} /></div>
                     <div>
-                      <label className="form-label">City<span className="required">*</span></label>
-                      <select className={`form-input ${error && !part1Form.city ? 'border-red-500' : ''}`} required value={part1Form.city} onChange={e => setPart1Form({ ...part1Form, city: e.target.value })} disabled={!resumeUploaded}>
-                        <option value="">Select City</option>
-                        {part1Form.country && part1Form.state && LOCATION_DATA[part1Form.country]?.[part1Form.state]?.map(c => (
-                          <option key={c} value={c}>{c}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
                       <label className="form-label">State<span className="required">*</span></label>
                       <select className={`form-input ${error && !part1Form.state ? 'border-red-500' : ''}`} required value={part1Form.state} onChange={e => setPart1Form({ ...part1Form, state: e.target.value, city: "" })} disabled={!resumeUploaded}>
                         <option value="">Select State</option>
                         {part1Form.country && LOCATION_DATA[part1Form.country] && Object.keys(LOCATION_DATA[part1Form.country]).map(s => (
                           <option key={s} value={s}>{s}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="form-label">City<span className="required">*</span></label>
+                      <select className={`form-input ${error && !part1Form.city ? 'border-red-500' : ''}`} required value={part1Form.city} onChange={e => setPart1Form({ ...part1Form, city: e.target.value })} disabled={!resumeUploaded}>
+                        <option value="">Select City</option>
+                        {part1Form.country && part1Form.state && LOCATION_DATA[part1Form.country]?.[part1Form.state]?.map(c => (
+                          <option key={c} value={c}>{c}</option>
                         ))}
                       </select>
                     </div>
