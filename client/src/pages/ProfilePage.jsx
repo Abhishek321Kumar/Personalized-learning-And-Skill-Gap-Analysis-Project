@@ -115,6 +115,13 @@ export function ProfilePage({ user, onUserUpdate }) {
           return;
         }
 
+        if (!address.state || !address.city || !address.residentialAddress || !address.pincode) {
+          alert("Please also fill all mandatory Address details since they may have been reset.");
+          setIsEditingAddress(true);
+          setIsSaving(false);
+          return;
+        }
+
         const birthDate = new Date(basicInfo.dob);
         const today = new Date();
         let age = today.getFullYear() - birthDate.getFullYear();
@@ -361,6 +368,7 @@ export function ProfilePage({ user, onUserUpdate }) {
                         }
                         setBasicInfo({...basicInfo, country: newCountry, phone: code + " " + newPhone.trim()});
                         setAddress({...address, state: "", city: ""}); // clear address state/city when country changes
+                        setIsEditingAddress(true); // Automatically expand the Address editor
                       }}>
                         <option value="in">India</option>
                         <option value="us">United States</option>
