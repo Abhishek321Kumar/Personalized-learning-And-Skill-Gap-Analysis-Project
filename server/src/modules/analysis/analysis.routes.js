@@ -10,6 +10,7 @@ import { User } from "../../models/User.js";
 import { JobRole } from "../../models/JobRole.js";
 import { AnalysisSnapshot } from "../../models/AnalysisSnapshot.js";
 import { AssessmentAttempt } from "../../models/AssessmentAttempt.js";
+import { LOCATION_DATA } from "../../config/locationData.js";
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -143,14 +144,46 @@ router.post("/parse-resume", upload.single("resume"), async (req, res, next) => 
       internship.duration = "3"; // Mock duration
     }
 
+    let parsedPhone = "";
+    if (phoneMatch) {
+      const rawPhone = phoneMatch[0].replace(/\D/g, ""); // strip all non-digits
+      if (rawPhone.length >= 10) {
+        parsedPhone = rawPhone.slice(-10); // take the last 10 digits
+      } else {
+        parsedPhone = rawPhone;
+      }
+    }
+
+    let extractedCountry = "";
+    let extractedState = "";
+    let extractedCity = "";
+    const textLowerForLoc = textLower.replace(/[\n\r]/g, " ");
+    
+    for (const [cCode, statesMap] of Object.entries(LOCATION_DATA)) {
+      for (const [stateName, citiesList] of Object.entries(statesMap)) {
+        if (textLowerForLoc.includes(stateName.toLowerCase())) {
+          extractedState = stateName;
+          extractedCountry = cCode;
+        }
+        for (const cityName of citiesList) {
+          const cityRegex = new RegExp(`\\b${cityName.toLowerCase()}\\b`);
+          if (cityRegex.test(textLowerForLoc)) {
+            extractedCity = cityName;
+            extractedState = stateName;
+            extractedCountry = cCode;
+          }
+        }
+      }
+    }
+
     res.status(200).json({
       firstName,
       lastName,
       email: emailMatch ? emailMatch[0] : "",
-      phone: phoneMatch ? phoneMatch[0] : "",
-      city: "",
-      state: "",
-      country: "",
+      phone: parsedPhone,
+      city: extractedCity,
+      state: extractedState,
+      country: extractedCountry,
       pincode: "",
       residentialAddress: "",
       education,
