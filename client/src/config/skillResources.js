@@ -266,7 +266,7 @@ export const ROLE_INTERVIEW_GUIDES = [
       },
       { 
         title: "A/B Testing Interview Prep", 
-        url: "https://www.simplilearn.com/tutorials/data-science-tutorial/ab-testing-interview-questions", 
+        url: "https://www.geeksforgeeks.org/a-b-testing-in-data-science/", 
         description: "Focuses on statistical foundations and real-world scenario questions." 
       }
     ]
