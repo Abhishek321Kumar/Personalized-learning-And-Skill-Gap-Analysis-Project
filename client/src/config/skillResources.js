@@ -250,7 +250,7 @@ export const SKILL_RESOURCES = [
       "Documentation & Handoff"
     ],
     courses: [
-      { platform: "Memorisely", title: "Design Systems Bootcamp", url: "https://www.memorisely.com/bootcamp/design-systems" }
+      { platform: "Memorisely", title: "Design Systems Bootcamp", url: "https://www.interaction-design.org/courses/design-systems" }
     ]
   }
 ];
@@ -266,7 +266,7 @@ export const ROLE_INTERVIEW_GUIDES = [
       },
       { 
         title: "A/B Testing Interview Prep", 
-        url: "https://www.springboard.com/blog/data-science/ab-testing-interview-questions/", 
+        url: "https://www.simplilearn.com/tutorials/data-science-tutorial/ab-testing-interview-questions", 
         description: "Focuses on statistical foundations and real-world scenario questions." 
       }
     ]
