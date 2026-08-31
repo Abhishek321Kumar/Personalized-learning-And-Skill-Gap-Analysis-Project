@@ -2,6 +2,20 @@ import { useState, useEffect } from "react";
 import { api } from "../api/client";
 import { useNavigate } from "react-router-dom";
 import { roleTemplates } from "../config/roleTemplates";
+import { motion } from "framer-motion";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
 
 const sortEducation = (eduArray) => {
   return [...(eduArray || [])].sort((a, b) => {
@@ -212,19 +226,19 @@ export function ProfilePage({ user, onUserUpdate }) {
 
   return (
     <div className="bg-[#f4f7f6] min-h-screen pt-20 pb-16 font-sans">
-      <div className="max-w-[1200px] mx-auto px-6">
+      <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="max-w-[1200px] mx-auto px-6">
         
         {/* Page Header Tabs */}
-        <div className="flex gap-8 border-b border-gray-200 mb-6">
+        <motion.div variants={fadeUp} className="flex gap-8 border-b border-gray-200 mb-6">
           <button className="pb-3 text-sm font-semibold text-blue-700 border-b-2 border-blue-700">Personal info</button>
-        </div>
+        </motion.div>
 
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Personal info</h1>
+        <motion.h1 variants={fadeUp} className="text-2xl font-bold text-gray-900 mb-6">Personal info</motion.h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
           {/* Basic Information Card */}
-          <div className="md:col-span-2 bg-white rounded-xl shadow-sm p-6 border border-gray-100 relative">
+          <motion.div variants={fadeUp} className="md:col-span-2 bg-white rounded-xl shadow-sm p-6 border border-gray-100 relative">
             <div className="flex justify-between items-start mb-6">
               <h2 className="text-lg font-semibold text-gray-800">Basic information</h2>
               {!isEditingBasic ? (
@@ -322,10 +336,10 @@ export function ProfilePage({ user, onUserUpdate }) {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Address Card */}
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 relative">
+          <motion.div variants={fadeUp} className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 relative">
             <div className="flex justify-between items-start mb-6">
               <h2 className="text-lg font-semibold text-gray-800">Address</h2>
               {!isEditingAddress ? (
@@ -378,10 +392,10 @@ export function ProfilePage({ user, onUserUpdate }) {
                 )}
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Education Card */}
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 relative">
+          <motion.div variants={fadeUp} className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 relative">
             <div className="flex justify-between items-start mb-6">
               <h2 className="text-lg font-semibold text-gray-800">Education</h2>
               {!isEditingEdu ? (
@@ -433,10 +447,10 @@ export function ProfilePage({ user, onUserUpdate }) {
                 <button onClick={() => setEducation([...education, { level: "", institution: "", degree: "", score: "", gradYear: "" }])} className="ml-8 text-sm text-blue-600 font-medium hover:underline">+ Add Education</button>
               )}
             </div>
-          </div>
+          </motion.div>
 
           {/* Internships Card */}
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 relative">
+          <motion.div variants={fadeUp} className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 relative">
             <div className="flex justify-between items-start mb-6">
               <h2 className="text-lg font-semibold text-gray-800">Internship Experience</h2>
               {!isEditingInt ? (
@@ -482,10 +496,10 @@ export function ProfilePage({ user, onUserUpdate }) {
                 <button onClick={() => setInternships([...internships, { role: "", company: "", duration: "" }])} className="text-sm text-blue-600 font-medium hover:underline">+ Add Internship</button>
               )}
             </div>
-          </div>
+          </motion.div>
 
           {/* Resume Card */}
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 relative md:col-span-2">
+          <motion.div variants={fadeUp} className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 relative md:col-span-2">
             <div className="flex justify-between items-start mb-6">
               <h2 className="text-lg font-semibold text-gray-800">Resume</h2>
             </div>
@@ -521,11 +535,11 @@ export function ProfilePage({ user, onUserUpdate }) {
                 <p className="text-xs text-gray-400 mt-2">Uploading a new resume will update it across all your target assessments.</p>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Delete Account Section */}
-        <div className="mt-12 flex justify-end">
+        <motion.div variants={fadeUp} className="mt-12 flex justify-end">
           <button 
             onClick={handleDeleteAccount} 
             disabled={isDeleting}
@@ -534,9 +548,9 @@ export function ProfilePage({ user, onUserUpdate }) {
             <span className="material-symbols-outlined text-[18px]">delete</span>
             {isDeleting ? "Deleting..." : "Delete Account"}
           </button>
-        </div>
+        </motion.div>
 
-      </div>
+      </motion.div>
     </div>
   );
 }
