@@ -103,17 +103,23 @@ export function RegistrationFlow({ onAuthSuccess }) {
     setError("");
     try {
       const data = await api.parseResume(file);
+      
+      const nextCountry = data.country || part1Form.country;
+      const defaultPhone = (COUNTRY_CODES[part1Form.country] || "") + " ";
+      const nextPhone = data.phone ? (COUNTRY_CODES[nextCountry] || "") + " " + data.phone : part1Form.phone;
+
       setPart1Form({
         ...part1Form,
         firstName: part1Form.firstName || data.firstName || "",
         lastName: part1Form.lastName || data.lastName || "",
         gender: part1Form.gender || data.gender || "",
         email: part1Form.email || data.email || "",
-        phone: part1Form.phone || data.phone || "",
-        city: data.city || "",
-        state: data.state || "",
-        pincode: data.pincode || "",
-        residentialAddress: data.residentialAddress || ""
+        country: nextCountry,
+        phone: nextPhone,
+        city: data.city || part1Form.city || "",
+        state: data.state || part1Form.state || "",
+        pincode: data.pincode || part1Form.pincode || "",
+        residentialAddress: data.residentialAddress || part1Form.residentialAddress || ""
       });
 
       if (data.education || data.internship) {
